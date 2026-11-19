@@ -1,15 +1,51 @@
 # Thoth Community Data
 
-This is the public repository for the community diagram catalog of Thoth, an interactive tool for building, animating, and sharing architecture diagrams. [Open Thoth](https://thoth.velrino.co/)
+`velrino/thoth-data` is the default official catalog repository for Thoth, an interactive tool for building, animating, and sharing architecture diagrams. This public repository gives people a place to inspect diagram JSON, review changes in Git, and propose additions or corrections. [Open Thoth](https://thoth.velrino.co/)
 
-## Why this repository exists
+The catalog includes **Public References**, which explain real systems and cite their sources, and **Studies**, which teach or compare software concepts. A fork can also hold workspaces published by its owner.
 
-Diagram content belongs in a place where anyone can read it, see how it changes, and propose improvements. A public catalog gives contributors a way to add an example, correct a workflow, or improve an explanation through a pull request.
+## Contribute to the official catalog
 
-## What belongs here
+1. [Fork this repository](https://github.com/velrino/thoth-data/fork) and create a branch in your fork.
+2. Create or update a diagram in Thoth and export the workspace as JSON. Save it as `workspace.json` in the appropriate folder under `content/public/` or `content/studies/`.
+3. Keep the workspace folder ID stable when updating an existing diagram. Put card metadata, attribution, and source links in `metadata.json`. If you include a Brazilian Portuguese translation, put it in `locales/pt-BR.json`.
+4. Open a pull request against `velrino/thoth-data`. Explain what the diagram teaches or what your change corrects. Reviewed changes become eligible for inclusion in the official catalog.
 
-- **Public References** are diagrams that explain how real systems work and link to their sources.
-- **Studies** are original teaching diagrams that explain or compare software concepts.
-- **Diagram JSON** describes the blocks, connections, and walkthrough content that Thoth can render. Keeping it in Git makes each change reviewable and gives readers the option to inspect or reuse the data.
+## Publish workspaces in your own fork
 
-The catalog is being set up. This first commit introduces its purpose and contribution model.
+1. [Fork this repository](https://github.com/velrino/thoth-data/fork) into your GitHub account.
+2. Export a workspace from Thoth and add it to your fork at `content/workspaces/<workspace-id>/workspace.json`. Commit each version you want to publish. Review the exported file before committing, since anyone can read a public fork.
+3. When GitHub linking is available in Thoth, connect that fork to your account. Thoth will use `content/workspaces/` for your public library. The official examples inherited by the fork stay in their own folders.
+4. Keep personal workspace changes in your fork. Open an upstream pull request when you want to propose a diagram for the official catalog.
+
+## Content layout
+
+```text
+content/
+├── public/
+│   └── <company-id>/<workspace-id>/
+│       ├── workspace.json
+│       ├── metadata.json
+│       └── locales/pt-BR.json
+├── studies/
+│   └── <topic-id>/<workspace-id>/
+│       ├── workspace.json
+│       └── metadata.json
+└── workspaces/
+    └── <workspace-id>/
+        └── workspace.json
+```
+
+Every workspace uses the same filename and Thoth's portable JSON format. The workspace contains the blocks, connections, walkthrough steps, and source text in English (`en-US`). Metadata stores fields the workspace format does not already provide, such as the card summary and source links. Optional locale files contain translations keyed by stable IDs. Missing translations fall back to the English text.
+
+Thoth will generate the catalog indexes from these files. Titles and step counts come from the workspace so edits stay in sync with what readers see on the card.
+
+## Catalog sources
+
+Thoth will start with this repository as the default official source. The same layout is intended to work in any compatible repository. If Thoth adds more official catalogs, users will be able to choose which ones to browse. A workspace is identified by its repository and its stable path, so different catalogs can use the same workspace ID. A Git commit SHA identifies the exact version a reader is viewing.
+
+Official catalog selection and personal fork linking serve different purposes. Choosing an official catalog changes what you browse in Explore. Linking your fork identifies where your own public workspaces are published.
+
+## Project status
+
+The layout above describes the planned catalog. The official diagram migration, catalog selection, GitHub account linking, and publishing directly from Thoth are planned features. You can fork this repository or propose documentation changes on GitHub today.
