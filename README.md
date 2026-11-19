@@ -7,14 +7,14 @@ The catalog includes **Public References**, which explain real systems and cite 
 ## Contribute to the official catalog
 
 1. [Fork this repository](https://github.com/velrino/thoth-data/fork) and create a branch in your fork.
-2. Create or update a diagram in Thoth and export the workspace as JSON. Save it as `workspace.json` in the appropriate folder under `content/public/` or `content/studies/`.
+2. Create or update a diagram in Thoth and export the workspace as JSON. Save the exported `workspace` object as `workspace.json` in the appropriate folder under `content/public/` or `content/studies/`.
 3. Keep the workspace folder ID stable when updating an existing diagram. Put card metadata, attribution, and source links in `metadata.json`. If you include a Brazilian Portuguese translation, put it in `locales/pt-BR.json`.
 4. Open a pull request against `velrino/thoth-data`. Explain what the diagram teaches or what your change corrects. Reviewed changes become eligible for inclusion in the official catalog.
 
 ## Publish workspaces in your own fork
 
 1. [Fork this repository](https://github.com/velrino/thoth-data/fork) into your GitHub account.
-2. Export a workspace from Thoth and add it to your fork at `content/workspaces/<workspace-id>/workspace.json`. Commit each version you want to publish. Review the exported file before committing, since anyone can read a public fork.
+2. Export a workspace from Thoth and add its `workspace` object to your fork at `content/workspaces/<workspace-id>/workspace.json`. Commit each version you want to publish. Review the exported file before committing, since anyone can read a public fork.
 3. When GitHub linking is available in Thoth, connect that fork to your account. Thoth will use `content/workspaces/` for your public library. The official examples inherited by the fork stay in their own folders.
 4. Keep personal workspace changes in your fork. Open an upstream pull request when you want to propose a diagram for the official catalog.
 
@@ -46,6 +46,10 @@ Thoth will start with this repository as the default official source. The same l
 
 Official catalog selection and personal fork linking serve different purposes. Choosing an official catalog changes what you browse in Explore. Linking your fork identifies where your own public workspaces are published.
 
+## Contribution guides
+
+Use the [contribution guide](CONTRIBUTING.md) for file formats and validation. When using an AI assistant, point it to [AGENTS.md](AGENTS.md) or give it the [catalog contribution skill](.agents/skills/thoth-catalog-contribution/SKILL.md). The instructions work from a regular checkout and require no assistant-specific runtime.
+
 ## Project status
 
-The layout above describes the planned catalog. The official diagram migration, catalog selection, GitHub account linking, and publishing directly from Thoth are planned features. You can fork this repository or propose documentation changes on GitHub today.
+The official references and studies are available in this repository. You can fork the content, propose changes by PR, and track public workspace versions in Git today. Thoth can use the catalog snapshot in builds that include the integration. The account connection and publishing flow require a configured GitHub App.
