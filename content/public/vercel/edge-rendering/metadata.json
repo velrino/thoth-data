@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Vercel",
+  "pattern": "SSR & edge delivery",
+  "summary": "Follow cache hits, request routing, server rendering and revalidation.",
+  "scope": "A product-level teaching flow based on Vercel documentation. Edge delivery and regional compute are separate; functions do not automatically run beside every visitor or every database.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Vercel CDN",
+      "url": "https://vercel.com/docs/cdn"
+    },
+    {
+      "title": "Function regions",
+      "url": "https://vercel.com/docs/functions/configuring-functions/region"
+    },
+    {
+      "title": "Edge runtime",
+      "url": "https://vercel.com/docs/functions/runtimes/edge"
+    },
+    {
+      "title": "Incremental static regeneration",
+      "url": "https://vercel.com/docs/incremental-static-regeneration"
+    }
+  ],
+  "componentNotes": {
+    "client": "Requests static assets or a rendered page and submits actions.",
+    "edge": "Serves cached responses and routes misses toward a regional deployment.",
+    "cache": "Keeps a response available near the visitor for repeat reads.",
+    "routing": "Chooses the regional function for dynamic requests.",
+    "render": "Reads application data and produces the requested page.",
+    "db": "Stores the data used by rendering and validated mutations.",
+    "assets": "Provides static files independently of page rendering.",
+    "revalidate": "Generates a fresh response and replaces the cached representation.",
+    "api": "Validates dynamic actions and writes application changes."
+  }
+}

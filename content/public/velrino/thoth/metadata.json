@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Velrino",
+  "pattern": "Local-first editor and event-driven billing",
+  "summary": "Follow a diagram from the browser to the Go API, then see how Stripe events reach a worker through MongoDB and Amazon SQS.",
+  "scope": "First-party walkthrough of Thoth's architecture. The Next.js editor runs on Vercel and the Go API runs on AWS Lightsail. Cloud storage and sharing are API capabilities gated by a paid subscription. The last two steps show the implemented billing flow, currently disabled in production. Flow animations illustrate requests and jobs.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Thoth web app",
+      "url": "https://thoth.velrino.co/"
+    },
+    {
+      "title": "Thoth API reference",
+      "url": "https://api.thoth.velrino.co/docs"
+    },
+    {
+      "title": "Stripe subscription webhooks",
+      "url": "https://docs.stripe.com/billing/subscriptions/webhooks"
+    },
+    {
+      "title": "Amazon SQS at-least-once delivery",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html"
+    }
+  ],
+  "componentNotes": {
+    "client": "The Next.js editor saves on the device and can keep working when the API is unavailable. The browser sends Firebase ID tokens on authenticated API requests.",
+    "local": "The browser persists the editable workspace in localStorage. JSON export lets the user keep a portable copy.",
+    "api": "One Go process serves the API. It verifies identity, checks tenant membership and paid entitlements, and composes the storage, cache, queue and payment adapters.",
+    "mongo": "Atlas stores application records and tenant-scoped workspaces. MongoDB transactions enforce quotas, idempotency and subscription updates.",
+    "redis": "Redis supplies a disposable cache. The API checks its connectivity through health. Identity and paid access are resolved from the services that verify them.",
+    "posthog": "The browser sends selected anonymous events, including native pageviews. Diagram content and URL query parameters stay out of the event payload.",
+    "sentry": "The Go API reports sanitized errors and sampled request traces. Reports use route templates and omit request bodies and credentials.",
+    "firebase": "Firebase supplies Google and passwordless email sign-in. The Go API verifies the token and current verified identity before resolving access.",
+    "checkout": "Stripe hosts the payment form. The server chooses the price and seat count. Returning from Checkout cannot grant a subscription.",
+    "inbox": "The verified Stripe event ID and publication intent are committed together in MongoDB before acknowledgement. The inbox gives the worker a durable recovery source.",
+    "queue": "Amazon SQS Standard delivers jobs at least once. The message carries an event ID. A failed attempt can be retried and repeated failures reach the dead-letter queue.",
+    "worker": "The Go API runs the worker when billing is enabled. It reads Stripe's current state, applies a fenced MongoDB transaction and acknowledges completed work after the commit."
+  }
+}

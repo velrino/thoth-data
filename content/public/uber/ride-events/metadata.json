@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Uber",
+  "pattern": "Event-driven architecture",
+  "summary": "Trace location events, independent consumers and a ride assignment.",
+  "scope": "Kafka usage is documented by Uber. The matching, pricing and notification path here is an illustrative teaching flow, not a claim that every ride decision travels through Kafka.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Kafka async queuing with consumer proxy",
+      "url": "https://www.uber.com/us/en/blog/kafka-async-queuing-with-consumer-proxy/"
+    },
+    {
+      "title": "Disaster recovery for multi-region Kafka",
+      "url": "https://www.uber.com/ca/en/blog/kafka/"
+    }
+  ],
+  "componentNotes": {
+    "client": "Requests a ride and reads the current assignment.",
+    "driver": "Publishes position updates and receives assignment notifications.",
+    "ingest": "Collects driver locations for the event log.",
+    "api": "Accepts ride requests and reads current ride state.",
+    "broker": "Retains ride and location events for independent consumers.",
+    "location": "Builds a recent view of driver locations from position events.",
+    "matching": "Reads ride events and persists candidate assignments.",
+    "pricing": "Computes demand signals independently of matching.",
+    "store": "Keeps the durable ride and assignment state.",
+    "push": "Delivers notifications after assignment state has been saved."
+  }
+}

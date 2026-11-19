@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "title": "Fluxo de trabalho com Git",
+  "pattern": "Alterações locais e remotas",
+  "summary": "Acompanhe alterações na área de trabalho, na área de preparação e nos repositórios local e remoto.",
+  "steps": {
+    "git-workflow-step-1": {
+      "title": "Prepare, registre e publique",
+      "description": "Use git add para preparar as alterações selecionadas. Git commit registra o conteúdo preparado e avança a branch local. Git push envia os objetos necessários e solicita a atualização da branch main em origin."
+    },
+    "git-workflow-step-2": {
+      "title": "Inspecione alterações preparadas e pendentes",
+      "description": "Git diff compara a área de trabalho com a área de preparação. Git diff --staged compara a área de preparação com HEAD e mostra o que entraria no próximo commit. Os dois comandos apenas consultam o estado."
+    },
+    "git-workflow-step-3": {
+      "title": "Busque e integre alterações remotas",
+      "description": "Git fetch baixa o histórico remoto e atualiza origin/main localmente. Git merge origin/main integra esse histórico à branch atual. Git pull combina a busca com a integração, que pode usar merge ou rebase conforme a configuração."
+    }
+  }
+}

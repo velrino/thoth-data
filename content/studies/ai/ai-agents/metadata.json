@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "groupName": "AI",
+  "pattern": "From inference to orchestration",
+  "summary": "Follow one model call as it gains document context, tools, memory, a decision loop and coordinated workers.",
+  "scope": "A capability progression inspired by Rakesh Gohel’s illustration. Each step adds a design option. Real systems can choose the simplest combination that meets their needs.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Illustration by Rakesh Gohel",
+      "url": "https://www.linkedin.com/in/rakeshgohel01/"
+    },
+    {
+      "title": "Anthropic · Building effective agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents"
+    },
+    {
+      "title": "OpenAI · Agents",
+      "url": "https://platform.openai.com/docs/guides/agents"
+    }
+  ],
+  "componentNotes": {
+    "model": "Produces an answer or proposes the next action from the context it receives.",
+    "prepare": "Extracts and bounds input before it reaches inference. File contents stay untrusted.",
+    "format": "Validates the output shape and renders a usable answer or artifact.",
+    "tools": "Validates tool arguments and enforces permissions before executing a call.",
+    "knowledge": "Returns candidate passages and source metadata for the current task.",
+    "session": "Keeps the working context for this run. State can expire at the end of the session.",
+    "memory": "Stores selected facts or preferences under an explicit retention policy.",
+    "episodes": "Keeps summaries of relevant past runs for later retrieval.",
+    "decision": "Checks the result, remaining budget and required approvals before choosing whether to continue.",
+    "orchestrator": "Assigns scoped work and tracks deadlines, retries and results.",
+    "review": "Checks evidence and policy before a result is delivered or returned for revision.",
+    "approval": "A person reviews sensitive actions before the system can proceed.",
+    "trace": "Records decisions, tool calls and outcomes for debugging and evaluation."
+  }
+}

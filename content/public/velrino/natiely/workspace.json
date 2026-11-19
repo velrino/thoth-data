@@ -1,0 +1,1260 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-velrino-natiely",
+  "title": "Velrino",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "getting-started",
+      "title": "Velrino",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "natiely-systems",
+          "title": "Natiely · Behind the adventure",
+          "complete": false,
+          "steps": [
+            {
+              "id": "multiplayer",
+              "title": "Play Natiely together",
+              "description": "You and a teammate join the same Natiely room over WebSocket. The API gateway checks identity and routes inputs to the room authority. The server validates movement and broadcasts snapshots to both players. Redis caches presence and room lookup; durable checkpoints live in the database. Clients send intent, not trusted positions or rewards.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Natiely · You",
+                    "role": "mobile",
+                    "color": "sky",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "teammate",
+                    "label": "Natiely · Teammate",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": -7
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "API gateway",
+                    "role": "gateway",
+                    "color": "lavender",
+                    "technology": "nodejs",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "room",
+                    "label": "Room authority",
+                    "role": "service",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "redis",
+                    "label": "Redis · Presence",
+                    "role": "cache",
+                    "color": "peach",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": 7
+                  },
+                  {
+                    "id": "checkpoints",
+                    "label": "Room checkpoints",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 7,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "you-socket",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "WebSocket · your input"
+                  },
+                  {
+                    "id": "peer-socket",
+                    "from": "teammate",
+                    "to": "gateway",
+                    "label": "WebSocket · teammate input"
+                  },
+                  {
+                    "id": "room-input",
+                    "from": "gateway",
+                    "to": "room",
+                    "label": "Validated input / snapshots"
+                  },
+                  {
+                    "id": "presence",
+                    "from": "gateway",
+                    "to": "redis",
+                    "label": "Presence cache · TTL"
+                  },
+                  {
+                    "id": "checkpoint",
+                    "from": "room",
+                    "to": "checkpoints",
+                    "label": "Durable room checkpoint"
+                  },
+                  {
+                    "id": "you-socket-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Authoritative room updates"
+                  },
+                  {
+                    "id": "peer-socket-return",
+                    "from": "gateway",
+                    "to": "teammate",
+                    "label": "Authoritative room updates"
+                  },
+                  {
+                    "id": "room-input-return",
+                    "from": "room",
+                    "to": "gateway",
+                    "label": "Room snapshots"
+                  },
+                  {
+                    "id": "presence-return",
+                    "from": "redis",
+                    "to": "gateway",
+                    "label": "Presence lookup result"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "you-play",
+                    "route": [
+                      "you-socket",
+                      "room-input"
+                    ],
+                    "kind": "request",
+                    "rate": 0.3,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "peer-play",
+                    "route": [
+                      "peer-socket",
+                      "room-input"
+                    ],
+                    "kind": "request",
+                    "rate": 0.22,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "save-room",
+                    "route": [
+                      "checkpoint"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": true
+                  },
+                  {
+                    "id": "you-socket-return-flow",
+                    "route": [
+                      "you-socket-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "peer-socket-return-flow",
+                    "route": [
+                      "peer-socket-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "room-input-return-flow",
+                    "route": [
+                      "room-input-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "presence-return-flow",
+                    "route": [
+                      "presence-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "checkout",
+              "title": "Buy a Gold pack",
+              "description": "The Unity client checks its wallet through the Go API and records the pending product on-device. The RevenueCat SDK opens the native App Store or Google Play purchase. The purchase callback lets the app reconcile with the backend. Gold appears only after the server confirms the credit.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Natiely · Store",
+                    "role": "mobile",
+                    "color": "sky",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "API gateway",
+                    "role": "gateway",
+                    "color": "lavender",
+                    "technology": "nodejs",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "commerce",
+                    "label": "Commerce API",
+                    "role": "api",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "wallet",
+                    "label": "Wallet + inventory",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "provider",
+                    "label": "RevenueCat",
+                    "role": "external",
+                    "color": "peach",
+                    "technology": "revenuecat",
+                    "appearance": "icon",
+                    "group": "Native billing",
+                    "x": -14,
+                    "z": -7
+                  },
+                  {
+                    "id": "store",
+                    "label": "App Store / Google Play",
+                    "role": "external",
+                    "color": "sand",
+                    "group": "Native billing",
+                    "x": -14,
+                    "z": -14
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "buy",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "Check wallet before purchase"
+                  },
+                  {
+                    "id": "authorize-order",
+                    "from": "gateway",
+                    "to": "commerce",
+                    "label": "Authenticated wallet lookup"
+                  },
+                  {
+                    "id": "wallet-status",
+                    "from": "commerce",
+                    "to": "wallet",
+                    "label": "Read confirmed credits"
+                  },
+                  {
+                    "id": "native-purchase",
+                    "from": "client",
+                    "to": "provider",
+                    "label": "RevenueCat SDK · purchase Gold"
+                  },
+                  {
+                    "id": "store-purchase",
+                    "from": "provider",
+                    "to": "store",
+                    "label": "Native store purchase"
+                  },
+                  {
+                    "id": "buy-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Wallet state"
+                  },
+                  {
+                    "id": "authorize-order-return",
+                    "from": "commerce",
+                    "to": "gateway",
+                    "label": "Confirmed top-ups"
+                  },
+                  {
+                    "id": "wallet-status-return",
+                    "from": "wallet",
+                    "to": "commerce",
+                    "label": "Saved Gold credits"
+                  },
+                  {
+                    "id": "native-purchase-return",
+                    "from": "provider",
+                    "to": "client",
+                    "label": "Native purchase callback"
+                  },
+                  {
+                    "id": "store-purchase-return",
+                    "from": "store",
+                    "to": "provider",
+                    "label": "Store purchase result"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "wallet-check",
+                    "route": [
+                      "buy",
+                      "authorize-order",
+                      "wallet-status"
+                    ],
+                    "kind": "request",
+                    "rate": 0.3,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "checkout",
+                    "route": [
+                      "native-purchase",
+                      "store-purchase"
+                    ],
+                    "kind": "request",
+                    "rate": 0.3,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "buy-return-flow",
+                    "route": [
+                      "buy-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "authorize-order-return-flow",
+                    "route": [
+                      "authorize-order-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "wallet-status-return-flow",
+                    "route": [
+                      "wallet-status-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "native-purchase-return-flow",
+                    "route": [
+                      "native-purchase-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "store-purchase-return-flow",
+                    "route": [
+                      "store-purchase-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "purchase-delivery",
+              "title": "Deliver Gold safely",
+              "description": "RevenueCat sends an authenticated purchase event to the Go API. This walkthrough illustrates an outbox dispatcher publishing a delivery job to Asynq on Redis. The Go worker credits the durable wallet once per order, and the realtime gateway tells Natiely to refresh the balance. Reconnecting players read the saved balance.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "provider",
+                    "label": "RevenueCat",
+                    "role": "external",
+                    "color": "peach",
+                    "technology": "revenuecat",
+                    "appearance": "icon",
+                    "group": "Native billing",
+                    "x": -14,
+                    "z": -7
+                  },
+                  {
+                    "id": "webhook",
+                    "label": "Webhook API",
+                    "role": "api",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": -7
+                  },
+                  {
+                    "id": "orders",
+                    "label": "Orders + outbox",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": -7
+                  },
+                  {
+                    "id": "dispatcher",
+                    "label": "Outbox dispatcher",
+                    "role": "worker",
+                    "color": "sand",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "jobs",
+                    "label": "Purchase queue · Asynq",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "grant-worker",
+                    "label": "Grant worker",
+                    "role": "worker",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "wallet",
+                    "label": "Wallet + inventory",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": 7
+                  },
+                  {
+                    "id": "realtime",
+                    "label": "Realtime gateway",
+                    "role": "gateway",
+                    "color": "lavender",
+                    "technology": "nodejs",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "client",
+                    "label": "Natiely · Gold ready",
+                    "role": "mobile",
+                    "color": "sky",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "webhook",
+                    "from": "provider",
+                    "to": "webhook",
+                    "label": "Authenticated purchase event"
+                  },
+                  {
+                    "id": "paid",
+                    "from": "webhook",
+                    "to": "orders",
+                    "label": "Paid order + outbox · atomic"
+                  },
+                  {
+                    "id": "poll",
+                    "from": "dispatcher",
+                    "to": "orders",
+                    "label": "Read committed outbox"
+                  },
+                  {
+                    "id": "dispatch",
+                    "from": "dispatcher",
+                    "to": "jobs",
+                    "label": "Publish delivery job"
+                  },
+                  {
+                    "id": "consume",
+                    "from": "jobs",
+                    "to": "grant-worker",
+                    "label": "At-least-once delivery"
+                  },
+                  {
+                    "id": "credit",
+                    "from": "grant-worker",
+                    "to": "wallet",
+                    "label": "Idempotent Gold credit"
+                  },
+                  {
+                    "id": "notify",
+                    "from": "grant-worker",
+                    "to": "realtime",
+                    "label": "Balance changed"
+                  },
+                  {
+                    "id": "push",
+                    "from": "realtime",
+                    "to": "client",
+                    "label": "WebSocket · refresh balance"
+                  },
+                  {
+                    "id": "webhook-return",
+                    "from": "webhook",
+                    "to": "provider",
+                    "label": "Acknowledgement after durable commit"
+                  },
+                  {
+                    "id": "poll-return",
+                    "from": "orders",
+                    "to": "dispatcher",
+                    "label": "Pending delivery intents"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "verified-payment",
+                    "route": [
+                      "webhook",
+                      "paid"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "outbox-read",
+                    "route": [
+                      "poll"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "grant-gold",
+                    "route": [
+                      "dispatch",
+                      "consume",
+                      "credit"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "notify-player",
+                    "route": [
+                      "notify",
+                      "push"
+                    ],
+                    "kind": "request",
+                    "rate": 0.22,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "webhook-return-flow",
+                    "route": [
+                      "webhook-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "poll-return-flow",
+                    "route": [
+                      "poll-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "world-bundles",
+              "title": "Download an extra world",
+              "description": "Natiely checks world access through Content API and reads a versioned manifest. A build worker prepares platform-specific asset bundles; a validation worker checks their hashes before publishing immutable files to object storage. The CDN serves those files through a private origin. Natiely downloads over HTTPS, validates the bundle and caches it locally. Interrupted downloads can resume or retry; an incomplete world is never marked ready. Bundles contain game assets, not executable updates.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Natiely · New world",
+                    "role": "mobile",
+                    "color": "sky",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "content-api",
+                    "label": "Content API",
+                    "role": "api",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -14,
+                    "z": -7
+                  },
+                  {
+                    "id": "access",
+                    "label": "World access + manifest",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": -7
+                  },
+                  {
+                    "id": "cdn",
+                    "label": "World CDN",
+                    "role": "cdn",
+                    "color": "lavender",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "AWS delivery",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "bundles",
+                    "label": "Bundle storage",
+                    "role": "storage",
+                    "color": "sand",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "AWS delivery",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "build-worker",
+                    "label": "Bundle builder",
+                    "role": "worker",
+                    "color": "sage",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Build pipeline",
+                    "x": 0,
+                    "z": 14
+                  },
+                  {
+                    "id": "validator",
+                    "label": "Bundle validator",
+                    "role": "worker",
+                    "color": "peach",
+                    "technology": "python",
+                    "appearance": "icon",
+                    "group": "Build pipeline",
+                    "x": 0,
+                    "z": 7
+                  },
+                  {
+                    "id": "local-cache",
+                    "label": "Device bundle cache",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": 7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "access",
+                    "from": "client",
+                    "to": "content-api",
+                    "label": "HTTPS · world access"
+                  },
+                  {
+                    "id": "manifest",
+                    "from": "content-api",
+                    "to": "access",
+                    "label": "Access + versioned manifest"
+                  },
+                  {
+                    "id": "download",
+                    "from": "client",
+                    "to": "cdn",
+                    "label": "Download world bundle"
+                  },
+                  {
+                    "id": "origin",
+                    "from": "cdn",
+                    "to": "bundles",
+                    "label": "Private origin · cache miss"
+                  },
+                  {
+                    "id": "build",
+                    "from": "build-worker",
+                    "to": "validator",
+                    "label": "Platform bundle + hash"
+                  },
+                  {
+                    "id": "publish",
+                    "from": "validator",
+                    "to": "bundles",
+                    "label": "Publish immutable release"
+                  },
+                  {
+                    "id": "cache",
+                    "from": "client",
+                    "to": "local-cache",
+                    "label": "Validate hash + cache locally"
+                  },
+                  {
+                    "id": "access-return",
+                    "from": "content-api",
+                    "to": "client",
+                    "label": "Authorized bundle manifest"
+                  },
+                  {
+                    "id": "manifest-return",
+                    "from": "access",
+                    "to": "content-api",
+                    "label": "Access and version result"
+                  },
+                  {
+                    "id": "download-return",
+                    "from": "cdn",
+                    "to": "client",
+                    "label": "Versioned bundle bytes"
+                  },
+                  {
+                    "id": "origin-return",
+                    "from": "bundles",
+                    "to": "cdn",
+                    "label": "Private bundle bytes"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "world-access",
+                    "route": [
+                      "access",
+                      "manifest"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "world-download",
+                    "route": [
+                      "download",
+                      "origin"
+                    ],
+                    "kind": "request",
+                    "rate": 0.24,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "publish-bundle",
+                    "route": [
+                      "build",
+                      "publish"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "cache-bundle",
+                    "route": [
+                      "cache"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "access-return-flow",
+                    "route": [
+                      "access-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "manifest-return-flow",
+                    "route": [
+                      "manifest-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "download-return-flow",
+                    "route": [
+                      "download-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "origin-return-flow",
+                    "route": [
+                      "origin-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "match-recovery",
+              "title": "Finish a match, reconnect",
+              "description": "The room authority records the terminal checkpoint and a durable reward intent. An outbox dispatcher feeds the result queue, and the settlement worker grants Gold and inventory once per match. Rejoining restores the last committed room state and reads the durable wallet. The public ranking API serves a separate request: it reads a short-lived Redis snapshot and loads the group ranking from MongoDB on a cache miss.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Natiely · Reconnect",
+                    "role": "mobile",
+                    "color": "sky",
+                    "technology": "unity",
+                    "appearance": "icon",
+                    "group": "Unity clients",
+                    "x": -14,
+                    "z": -7
+                  },
+                  {
+                    "id": "room",
+                    "label": "Room authority",
+                    "role": "service",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": -7
+                  },
+                  {
+                    "id": "checkpoints",
+                    "label": "Results + outbox",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": -7
+                  },
+                  {
+                    "id": "dispatcher",
+                    "label": "Outbox dispatcher",
+                    "role": "worker",
+                    "color": "sand",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "jobs",
+                    "label": "Match queue · Redis",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "settlement",
+                    "label": "Settlement worker",
+                    "role": "worker",
+                    "color": "sage",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "wallet",
+                    "label": "Wallet + inventory",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Natiely backend",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "redis",
+                    "label": "Redis · Leaderboard",
+                    "role": "cache",
+                    "color": "peach",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Public leaderboard",
+                    "x": -21,
+                    "z": 0
+                  },
+                  {
+                    "id": "ranking-api",
+                    "label": "Public ranking API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Public leaderboard",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "ranking-db",
+                    "label": "MongoDB · Group ranking",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "group": "Public leaderboard",
+                    "x": -14,
+                    "z": 7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "reconnect",
+                    "from": "client",
+                    "to": "room",
+                    "label": "WebSocket · authenticated rejoin"
+                  },
+                  {
+                    "id": "result",
+                    "from": "room",
+                    "to": "checkpoints",
+                    "label": "Terminal checkpoint + reward intent"
+                  },
+                  {
+                    "id": "poll",
+                    "from": "dispatcher",
+                    "to": "checkpoints",
+                    "label": "Read committed rewards"
+                  },
+                  {
+                    "id": "dispatch",
+                    "from": "dispatcher",
+                    "to": "jobs",
+                    "label": "Publish match reward"
+                  },
+                  {
+                    "id": "settle",
+                    "from": "jobs",
+                    "to": "settlement",
+                    "label": "Retryable result job"
+                  },
+                  {
+                    "id": "grant",
+                    "from": "settlement",
+                    "to": "wallet",
+                    "label": "Grant once per match"
+                  },
+                  {
+                    "id": "ranking-query",
+                    "from": "client",
+                    "to": "ranking-api",
+                    "label": "GET /maze/groups/ranking"
+                  },
+                  {
+                    "id": "ranking-cache",
+                    "from": "ranking-api",
+                    "to": "redis",
+                    "label": "Read cached leaderboard"
+                  },
+                  {
+                    "id": "ranking-source",
+                    "from": "ranking-api",
+                    "to": "ranking-db",
+                    "label": "Cache miss · query group ranking"
+                  },
+                  {
+                    "id": "restore-wallet",
+                    "from": "room",
+                    "to": "wallet",
+                    "label": "Read durable balance on rejoin"
+                  },
+                  {
+                    "id": "reconnect-return",
+                    "from": "room",
+                    "to": "client",
+                    "label": "Recovered room state"
+                  },
+                  {
+                    "id": "poll-return",
+                    "from": "checkpoints",
+                    "to": "dispatcher",
+                    "label": "Pending reward intents"
+                  },
+                  {
+                    "id": "ranking-query-return",
+                    "from": "ranking-api",
+                    "to": "client",
+                    "label": "Public top nine"
+                  },
+                  {
+                    "id": "ranking-cache-return",
+                    "from": "redis",
+                    "to": "ranking-api",
+                    "label": "Cached entries by role"
+                  },
+                  {
+                    "id": "ranking-source-return",
+                    "from": "ranking-db",
+                    "to": "ranking-api",
+                    "label": "Group ranking entries"
+                  },
+                  {
+                    "id": "restore-wallet-return",
+                    "from": "wallet",
+                    "to": "room",
+                    "label": "Durable balance"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "restore-session",
+                    "route": [
+                      "reconnect",
+                      "restore-wallet"
+                    ],
+                    "kind": "request",
+                    "rate": 0.22,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "checkpoint",
+                    "route": [
+                      "result"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": true
+                  },
+                  {
+                    "id": "poll-results",
+                    "route": [
+                      "poll"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "match-reward",
+                    "route": [
+                      "dispatch",
+                      "settle",
+                      "grant"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "read-ranking",
+                    "route": [
+                      "ranking-query",
+                      "ranking-cache"
+                    ],
+                    "kind": "request",
+                    "rate": 0.2,
+                    "speed": 0.7,
+                    "bounce": false
+                  },
+                  {
+                    "id": "reconnect-return-flow",
+                    "route": [
+                      "reconnect-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "poll-return-flow",
+                    "route": [
+                      "poll-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "ranking-query-return-flow",
+                    "route": [
+                      "ranking-query-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "ranking-cache-return-flow",
+                    "route": [
+                      "ranking-cache-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "ranking-source-return-flow",
+                    "route": [
+                      "ranking-source-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "restore-wallet-return-flow",
+                    "route": [
+                      "restore-wallet-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

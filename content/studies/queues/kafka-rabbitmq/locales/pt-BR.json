@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "title": "Kafka vs RabbitMQ vs Redis",
+  "pattern": "Logs de eventos e filas de trabalho",
+  "summary": "Compare como Kafka, RabbitMQ e Redis Streams publicam pedidos, registram o progresso e recuperam tarefas pendentes.",
+  "steps": {
+    "kafka-rabbitmq-step-1": {
+      "title": "Publique, entregue e confirme",
+      "description": "Imagine um pedido feito numa loja. A loja, que é o produtor, envia uma mensagem. Um consumidor ou worker recebe a mensagem e age sobre ela. Uma seta mostra para onde a mensagem vai. Duas setas mostram a entrega e a confirmação. Kafka guarda a posição de leitura de cada grupo. RabbitMQ remove uma tarefa após a confirmação. Redis registra a confirmação sem apagar a mensagem do stream.",
+      "nodes": {
+        "client": {
+          "label": "Produtor"
+        },
+        "log": {
+          "label": "Partição"
+        },
+        "consumers": {
+          "label": "Grupos"
+        },
+        "publisher": {
+          "label": "Produtor"
+        },
+        "exchange": {
+          "label": "Exchange"
+        },
+        "queue": {
+          "label": "Fila"
+        },
+        "worker": {
+          "label": "Worker"
+        },
+        "redis-producer": {
+          "label": "Produtor"
+        },
+        "stream": {
+          "label": "Stream"
+        },
+        "redis-worker": {
+          "label": "Worker"
+        }
+      }
+    }
+  },
+  "componentNotes": {
+    "client": "A loja é o produtor. Quando alguém faz um pedido, ela envia uma mensagem com o número do pedido ao Kafka.",
+    "publisher": "A loja é o produtor. Ela envia ao RabbitMQ uma tarefa para preparar o pedido para envio.",
+    "redis-producer": "A loja é o produtor. Ela adiciona o pedido ao stream do Redis com XADD para que um worker possa processá-lo."
+  }
+}

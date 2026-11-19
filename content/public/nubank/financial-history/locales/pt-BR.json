@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Comandos, projeções e histórico financeiro",
+  "pattern": "CQRS e armazenamento de eventos",
+  "summary": "Separe um comando financeiro dos dados usados para consulta e do histórico de auditoria."
+}

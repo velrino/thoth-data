@@ -1,0 +1,841 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-vercel-edge-rendering",
+  "title": "Vercel",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "vercel-folder",
+      "title": "Vercel",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "edge-rendering",
+          "title": "From global delivery to regional rendering",
+          "complete": false,
+          "steps": [
+            {
+              "id": "edge-rendering-step-1",
+              "title": "Reach the global network",
+              "description": "The browser reaches the CDN. Static assets and eligible cached responses can be served without running the application’s dynamic rendering path for every request.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Visitor · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "edge",
+                    "label": "Global CDN",
+                    "role": "cdn",
+                    "color": "sky",
+                    "technology": "vercel",
+                    "appearance": "icon",
+                    "group": "Global delivery",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "assets",
+                    "label": "Static assets",
+                    "role": "storage",
+                    "color": "sand",
+                    "group": "Global delivery",
+                    "x": 0,
+                    "z": 7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "edge",
+                    "label": "HTTPS request"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "edge",
+                    "to": "assets",
+                    "label": "Static asset"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "edge",
+                    "to": "client",
+                    "label": "Asset response"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "assets",
+                    "to": "edge",
+                    "label": "Static bytes from origin or cache"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "edge-rendering-step-2",
+              "title": "Serve a cache hit",
+              "description": "An eligible cached page is delivered from the cache. Authentication rules and cache keys matter: a personalized response must not accidentally become a public cached page.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Visitor · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "edge",
+                    "label": "Global CDN",
+                    "role": "cdn",
+                    "color": "sky",
+                    "technology": "vercel",
+                    "appearance": "icon",
+                    "group": "Global delivery",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "cache",
+                    "label": "Cached response",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Global delivery",
+                    "x": 0,
+                    "z": -7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "edge",
+                    "label": "Public page"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "edge",
+                    "to": "cache",
+                    "label": "Cache hit"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "edge",
+                    "to": "client",
+                    "label": "Cached page response"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "cache",
+                    "to": "edge",
+                    "label": "Cached page bytes"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "edge-rendering-step-3",
+              "title": "Render on a miss",
+              "description": "A cache miss reaches request routing and a regional renderer. The renderer queries application data and produces the response; choose compute regions with data locality in mind.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Visitor · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "edge",
+                    "label": "Global CDN",
+                    "role": "cdn",
+                    "color": "sky",
+                    "technology": "vercel",
+                    "appearance": "icon",
+                    "group": "Global delivery",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "routing",
+                    "label": "Request routing",
+                    "role": "proxy",
+                    "color": "sky",
+                    "group": "Global delivery",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "render",
+                    "label": "Regional renderer",
+                    "role": "function",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Regional compute",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "db",
+                    "label": "Application data",
+                    "role": "database",
+                    "color": "sand",
+                    "x": 14,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "edge",
+                    "label": "Dynamic page"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "edge",
+                    "to": "routing",
+                    "label": "Cache miss"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "routing",
+                    "to": "render",
+                    "label": "Render request"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "render",
+                    "to": "db",
+                    "label": "Read data"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "edge",
+                    "to": "client",
+                    "label": "Rendered HTML"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "routing",
+                    "to": "edge",
+                    "label": "Regional render result"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "render",
+                    "to": "routing",
+                    "label": "SSR response"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "db",
+                    "to": "render",
+                    "label": "Page data"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "edge-rendering-step-4",
+              "title": "Handle dynamic actions",
+              "description": "A dynamic action reaches an API function rather than a static file. The API checks authorization and commits data; global edge delivery does not remove database round-trip costs.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Visitor · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "edge",
+                    "label": "Global CDN",
+                    "role": "cdn",
+                    "color": "sky",
+                    "technology": "vercel",
+                    "appearance": "icon",
+                    "group": "Global delivery",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "routing",
+                    "label": "Request routing",
+                    "role": "proxy",
+                    "color": "sky",
+                    "group": "Global delivery",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Regional API function",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Regional compute",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "db",
+                    "label": "Application data",
+                    "role": "database",
+                    "color": "sand",
+                    "x": 14,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "edge",
+                    "label": "Submit action"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "edge",
+                    "to": "routing",
+                    "label": "Dynamic route"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "routing",
+                    "to": "api",
+                    "label": "Invoke function"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "api",
+                    "to": "db",
+                    "label": "Validate and write"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "edge",
+                    "to": "client",
+                    "label": "Validated action response"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "routing",
+                    "to": "edge",
+                    "label": "Regional response"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "api",
+                    "to": "routing",
+                    "label": "Action result"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "db",
+                    "to": "api",
+                    "label": "Write confirmation"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "edge-rendering-step-5",
+              "title": "Refresh cached content",
+              "description": "A revalidation path refreshes eligible cached content after a data change or freshness policy. Cache behavior depends on framework and configuration, not a universal instant update guarantee.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Visitor · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "edge",
+                    "label": "Global CDN",
+                    "role": "cdn",
+                    "color": "sky",
+                    "technology": "vercel",
+                    "appearance": "icon",
+                    "group": "Global delivery",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "cache",
+                    "label": "Cached response",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Global delivery",
+                    "x": 0,
+                    "z": -7
+                  },
+                  {
+                    "id": "revalidate",
+                    "label": "Revalidation work",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Regional compute",
+                    "x": 7,
+                    "z": 7
+                  },
+                  {
+                    "id": "render",
+                    "label": "Regional renderer",
+                    "role": "function",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Regional compute",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "db",
+                    "label": "Application data",
+                    "role": "database",
+                    "color": "sand",
+                    "x": 14,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "edge",
+                    "label": "Read public page"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "edge",
+                    "to": "cache",
+                    "label": "Cached response"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "cache",
+                    "to": "revalidate",
+                    "label": "Stale entry · schedule refresh"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "revalidate",
+                    "to": "render",
+                    "label": "Regenerate page"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "render",
+                    "to": "db",
+                    "label": "Fresh data"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "revalidate",
+                    "to": "cache",
+                    "label": "Publish refreshed entry"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "edge",
+                    "to": "client",
+                    "label": "Cached page response"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "cache",
+                    "to": "edge",
+                    "label": "Cached representation"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "render",
+                    "to": "revalidate",
+                    "label": "Regenerated HTML"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "db",
+                    "to": "render",
+                    "label": "Updated page data"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

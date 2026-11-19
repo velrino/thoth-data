@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Discord",
+  "pattern": "Realtime communication & durable messaging",
+  "summary": "From a macro view to messaging, presence, media, voice and a complete system map.",
+  "scope": "An educational architecture inspired by public Discord engineering articles and the supplied sketch, not an exact current deployment. Elixir gateway/guild processes, Rust data services and ScyllaDB are documented. Authentication internals, TTL cache, generic event delivery and supporting consumer boundaries are illustrative; the sketch does not establish that Discord uses PostgreSQL or Kafka for every depicted role.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "How Discord stores trillions of messages",
+      "url": "https://discord.com/blog/how-discord-stores-trillions-of-messages"
+    },
+    {
+      "title": "Discord voice, gateway and guild signaling",
+      "url": "https://discord.com/blog/how-discord-handles-two-and-half-million-concurrent-voice-users-using-webrtc"
+    },
+    {
+      "title": "Realtime fanout and large guilds",
+      "url": "https://discord.com/blog/maxjourney-pushing-discords-limits-with-a-million-plus-online-users-in-a-single-server"
+    },
+    {
+      "title": "ScyllaDB operations at Discord",
+      "url": "https://discord.com/blog/how-discord-automates-scylladb-clusters-at-scale"
+    }
+  ],
+  "componentNotes": {
+    "client": "The desktop or mobile app used to browse servers, read messages and join calls. HTTPS loads resources; WebSocket receives live updates. Voice and video follow a separate media path.",
+    "lb": "Distributes incoming connections across available servers. It is the entry point, not the place where chat history or permission rules are stored.",
+    "api": "Handles HTTP requests such as reading history or sending a message. It validates identity and permissions before calling the appropriate subsystem. This is a simplified API boundary, not a claim about every Discord endpoint.",
+    "auth": "Establishes who the user is and validates session credentials. Authentication proves identity; guild and channel permission checks decide what that identity may access. Internal implementation is illustrative here.",
+    "users": "Durable identity records used by authentication, such as account and credential metadata. The database boundary is illustrative; this diagram does not establish a specific database product.",
+    "guilds": "A guild is a Discord server. Guild processes coordinate membership, channel subscriptions and permission-related state. Discord has documented Elixir processes for realtime guild coordination; this box simplifies their responsibilities.",
+    "guild-db": "Stores durable guild information such as channels, membership and roles. Unlike online presence, this information must survive a reconnect or process restart. The storage implementation here is illustrative.",
+    "gateway": "Maintains long-lived WebSocket connections and delivers live events to connected clients. A persistent connection avoids asking the API repeatedly for updates. Signaling may pass through it, but voice media does not need to.",
+    "presence": "Tracks ephemeral availability such as online, idle or offline. A missed heartbeat or expired entry can remove stale state. This is a teaching boundary; presence is not the source of truth for message history.",
+    "redis": "A short-lived cache for presence in this teaching model. TTL means time to live: entries expire unless refreshed. Cache loss can be recovered by rebuilding current state; it should not erase durable chat history.",
+    "messages": "The data-access boundary for storing and retrieving messages. Discord has documented Rust data services in front of ScyllaDB. Durable writes and reads are separated here from realtime delivery and optional background consumers.",
+    "message-db": "Durable message history. Discord has documented migrating trillions of messages to ScyllaDB, a distributed database designed for large workloads. Partitioning and request coordination matter when many people read a popular channel.",
+    "bus": "An illustrative asynchronous event-delivery boundary after a message has been committed. It lets background consumers progress independently. It does not assert that a particular Kafka or Redis Streams deployment powers every Discord event.",
+    "fanout": "Expands one event into deliveries for the connected recipients who need it. Large guilds can have many subscribers, so realtime routing must avoid sending everything to everyone. Discord documents Elixir-based realtime coordination.",
+    "voice": "SFU means selective forwarding unit. It forwards audio or video streams to participants without routing those media packets through the message database. Gateway and guild signaling establish the call; the media path carries the actual conversation.",
+    "media": "Illustrative attachment processing, including file validation and preparation before delivery. Large media bytes belong in object storage rather than inside each message record. Authorization and content checks still apply.",
+    "storage": "Object storage holds attachment bytes; a CDN serves cached content near users. Messages can reference these objects. Exact vendors and upload details are intentionally unspecified in this educational map.",
+    "notify": "An illustrative consumer that turns eligible events into push or other notifications. It should respect preferences and tolerate retries without notifying the same user repeatedly for the same event.",
+    "search": "An illustrative consumer that builds a searchable view of messages. Indexing can lag behind durable writes, so a saved message and a searchable message are different states. Access checks must also protect search results.",
+    "moderation": "An illustrative background boundary for policy checks and abuse signals. Real systems may also enforce synchronous checks before accepting content; this diagram does not imply that all moderation happens after delivery.",
+    "analytics": "An illustrative consumer that aggregates usage events separately from interactive chat. Delays here should not stop users from sending messages. Aggregation and data minimization are preferable to copying unnecessary message content.",
+    "warehouse": "Illustrative storage for aggregated analytical results and reports. It is separate from the operational message database so reporting workloads do not compete directly with interactive history reads."
+  }
+}

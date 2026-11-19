@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Como manter a reprodução independente",
+  "pattern": "Microsserviços",
+  "summary": "Separe a navegação, a autorização e a entrega de vídeo para entender como a reprodução continua quando outras funções falham."
+}

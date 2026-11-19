@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Da entrega global à renderização regional",
+  "pattern": "SSR e entrega na borda",
+  "summary": "Acompanhe acertos de cache, roteamento, renderização no servidor e revalidação."
+}

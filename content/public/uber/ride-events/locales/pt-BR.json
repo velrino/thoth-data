@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Da localização à corrida",
+  "pattern": "Arquitetura orientada a eventos",
+  "summary": "Acompanhe eventos de localização, consumidores independentes e a atribuição de uma corrida."
+}

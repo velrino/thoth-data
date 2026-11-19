@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Thoth · Edição local, armazenamento em nuvem e cobrança",
+  "pattern": "Editor com foco local e cobrança orientada a eventos",
+  "summary": "Acompanhe um diagrama do navegador até a API em Go e veja como eventos da Stripe chegam a um worker via MongoDB e Amazon SQS."
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Velrino",
+  "pattern": "Modular monolith & AI workflows",
+  "summary": "Prepare a mission, publish private materials, play with Mia and build grounded learning insights.",
+  "scope": "A first-party walkthrough adapted from the ClassGame architecture generator and mission sequence guides. Workflows are packages inside one Go module, not independent microservices. Optional background jobs default off; this is not a claim of a hosted deployment. This example uses Vertex AI for Gemini inference; the Gemini API is an alternative.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "ClassGame architecture and mission flows",
+      "url": "https://github.com/velrino/classgame#architecture"
+    },
+    {
+      "title": "ClassGame source diagrams",
+      "url": "https://github.com/velrino/classgame/tree/master/assets/diagrams/steps"
+    }
+  ],
+  "componentNotes": {
+    "client": "The browser handles teacher and student interactions and streams draft progress.",
+    "api": "The Go API authorizes requests and invokes the relevant in-process workflow.",
+    "mission": "Builds and validates a draft before publishing a pinned mission revision.",
+    "tutor": "Uses the pinned mission and the current attempt to return grounded feedback.",
+    "learning": "Builds learning summaries from validated, bounded evidence.",
+    "policy": "Limits prompt context and keeps model calls behind a provider boundary.",
+    "vertex": "Provides the managed inference endpoint used to call Gemini.",
+    "model": "Generates structured questions, feedback and summaries from bounded context.",
+    "db": "Stores durable mission revisions, attempt evidence and generation results.",
+    "broker": "Queues optional background work independently of synchronous learning requests.",
+    "worker": "Reuses the Go workflows to process queued work with version checks.",
+    "upload": "Receives temporary files while a teacher prepares a mission.",
+    "storage": "Keeps validated published files behind private access.",
+    "outbox": "Keeps pending answers on the device until the API accepts them.",
+    "limits": "Keeps concurrent AI usage within shared admission limits."
+  }
+}

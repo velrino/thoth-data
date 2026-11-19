@@ -1,0 +1,298 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-studies-git-workflow",
+  "title": "Git",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "studies-folder",
+      "title": "Git",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "git-workflow",
+          "title": "Git Workflow",
+          "complete": false,
+          "steps": [
+            {
+              "id": "git-workflow-step-1",
+              "title": "Stage, commit and publish",
+              "description": "Use git add to stage the selected file changes. Git commit records the staged snapshot and advances your local branch. Git push sends needed objects and requests an update to main on origin.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Working tree",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Local checkout",
+                    "x": -21,
+                    "z": 0
+                  },
+                  {
+                    "id": "index",
+                    "label": "Staging area",
+                    "role": "storage",
+                    "color": "sand",
+                    "group": "Local checkout",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "local",
+                    "label": "Local main",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "git",
+                    "appearance": "icon",
+                    "group": "Local checkout",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "remote",
+                    "label": "Remote main",
+                    "role": "external",
+                    "color": "sky",
+                    "group": "Remote repository",
+                    "x": 22.400000000000002,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "index",
+                    "label": "git add"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "index",
+                    "to": "local",
+                    "label": "git commit"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "local",
+                    "to": "remote",
+                    "label": "git push"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "git-workflow-step-2",
+              "title": "Inspect staged and unstaged changes",
+              "description": "Git diff compares the working tree with the index to show unstaged changes. Git diff --staged compares the index with HEAD to show what the next commit would record. Both commands are read-only.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Working tree",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Local checkout",
+                    "x": -21,
+                    "z": 0
+                  },
+                  {
+                    "id": "index",
+                    "label": "Staging area",
+                    "role": "storage",
+                    "color": "sand",
+                    "group": "Local checkout",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "local",
+                    "label": "Local main",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "git",
+                    "appearance": "icon",
+                    "group": "Local checkout",
+                    "x": 7,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "index",
+                    "label": "git diff"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "index",
+                    "to": "local",
+                    "label": "git diff --staged"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "git-workflow-step-3",
+              "title": "Fetch and integrate remote changes",
+              "description": "Git fetch downloads remote history and updates origin/main locally. Git merge origin/main integrates that history into the current branch and updates the checkout when successful. Git pull combines fetch with integration, which can merge or rebase depending on configuration.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Working tree",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Local checkout",
+                    "x": -21,
+                    "z": 0
+                  },
+                  {
+                    "id": "remote",
+                    "label": "Remote main",
+                    "role": "external",
+                    "color": "sky",
+                    "group": "Remote repository",
+                    "x": 22.400000000000002,
+                    "z": 0
+                  },
+                  {
+                    "id": "tracking",
+                    "label": "origin/main",
+                    "role": "storage",
+                    "color": "sand",
+                    "group": "Local checkout",
+                    "x": 7,
+                    "z": -13.299999999999999
+                  },
+                  {
+                    "id": "local",
+                    "label": "Local main",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "git",
+                    "appearance": "icon",
+                    "group": "Local checkout",
+                    "x": 7,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "remote",
+                    "to": "tracking",
+                    "label": "git fetch"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "tracking",
+                    "to": "local",
+                    "label": "git merge"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "local",
+                    "to": "client",
+                    "label": "Update checkout"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

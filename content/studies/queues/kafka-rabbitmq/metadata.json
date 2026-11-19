@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Queues",
+  "pattern": "Event logs and work queues",
+  "summary": "Compare how Kafka, RabbitMQ and Redis Streams publish orders, track progress and recover unfinished work.",
+  "scope": "Three lanes use the same illustrative order workflow: a Kafka partition, a RabbitMQ work queue, and a Redis Stream with a consumer group.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Apache Kafka · Event streaming and partitions",
+      "url": "https://kafka.apache.org/intro/"
+    },
+    {
+      "title": "RabbitMQ · Exchanges, bindings and queues",
+      "url": "https://www.rabbitmq.com/tutorials/amqp-concepts"
+    },
+    {
+      "title": "RabbitMQ · Consumer acknowledgements",
+      "url": "https://www.rabbitmq.com/docs/confirms"
+    },
+    {
+      "title": "Redis · Streams and consumer groups",
+      "url": "https://redis.io/docs/latest/develop/data-types/streams/"
+    },
+    {
+      "title": "Redis · Claim idle pending entries",
+      "url": "https://redis.io/docs/latest/commands/xautoclaim/"
+    }
+  ],
+  "componentNotes": {
+    "client": "The online store is the producer. When a customer places an order, the store sends Kafka a message with the order number so other parts of the system can react.",
+    "publisher": "The online store is the producer. It sends RabbitMQ a job to prepare the order for shipping. A worker picks up the job and does the work.",
+    "redis-producer": "The online store is the producer. It adds a new order to the Redis stream with the XADD command so a worker can pick it up.",
+    "log": "Records receive offsets within this partition and remain readable according to retention settings.",
+    "consumers": "Independent consumer groups can read the same partition at different paces. Each group commits its own offsets.",
+    "exchange": "Routes messages to queues according to exchange type and bindings. Multiple matching queues can receive copies.",
+    "queue": "Holds work until delivery and tracks unacknowledged deliveries. A delivered message can return to the queue if its consumer disconnects.",
+    "worker": "Acknowledges a delivery after processing succeeds.",
+    "stream": "XADD appends an entry with a stream ID. An acknowledgement clears the pending entry for that group. Retention is managed separately.",
+    "redis-worker": "XREADGROUP assigns entries to a consumer and tracks them as pending. A worker acknowledges completed entries with XACK or claims idle pending entries with XAUTOCLAIM."
+  }
+}

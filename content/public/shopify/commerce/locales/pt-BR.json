@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Uma compra dentro de um monólito modular",
+  "pattern": "Monólito modular",
+  "summary": "Acompanhe uma solicitação da loja em uma aplicação Rails com limites claros entre módulos."
+}

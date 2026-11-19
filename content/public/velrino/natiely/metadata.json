@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Velrino",
+  "pattern": "Multiplayer & commerce",
+  "summary": "Play together, buy Gold, deliver rewards, download worlds and recover a match.",
+  "scope": "A first-party teaching demo from Velrino. Flows are illustrative architecture, not live game traffic or an exact production inventory.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Velrino · Creator",
+      "url": "https://github.com/velrino/"
+    }
+  ],
+  "componentNotes": {
+    "gateway": "Routes authenticated requests and live game traffic to the relevant service.",
+    "room": "Owns authoritative match state and sends snapshots to players.",
+    "checkpoints": "Keeps recoverable room and reward state beyond the live session.",
+    "provider": "RevenueCat connects Unity purchases to the native stores and reports purchase events to the backend.",
+    "jobs": "Buffers work for retryable delivery to Go workers.",
+    "wallet": "Stores the durable Gold balance and prevents duplicate grants.",
+    "ranking-api": "Serves the public top nine per role. On a cache miss, it queries the MongoDB projection and refills the short-lived Redis snapshot.",
+    "ranking-db": "Keeps the durable group ranking projection used to populate the public cache.",
+    "cdn": "Serves immutable world bundles near players and uses the private origin on misses."
+  }
+}

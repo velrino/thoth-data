@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Netflix",
+  "pattern": "Microservices",
+  "summary": "Separate browsing, playback authorization and video delivery, then examine graceful degradation.",
+  "scope": "A simplified streaming journey based on public resilience and delivery material. Service names and dependencies illustrate the pattern, not Netflix’s complete internal topology.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Service-level prioritized load shedding",
+      "url": "https://netflixtechblog.com/enhancing-netflix-reliability-with-service-level-prioritized-load-shedding-e735e6ce8f7d"
+    },
+    {
+      "title": "Open Connect overview",
+      "url": "https://openconnect.netflix.com/en/"
+    },
+    {
+      "title": "Making the Netflix API more resilient",
+      "url": "https://netflixtechblog.com/making-the-netflix-api-more-resilient-a8ec62159c2d"
+    }
+  ],
+  "componentNotes": {
+    "client": "Requests browse results and playback, then downloads video segments separately.",
+    "gateway": "Routes browse and playback calls to independent services.",
+    "catalog": "Returns title metadata without depending on playback authorization.",
+    "recommend": "Personalizes the browse experience and can fail independently of playback.",
+    "play": "Creates a playback session and checks playback entitlement.",
+    "account": "Decides whether the current viewer can play the title.",
+    "cdn": "Delivers encoded video segments outside the application request path.",
+    "cache": "Supplies a browse fallback when personalization responds slowly.",
+    "events": "Buffers viewing events separately from the playback path.",
+    "analytics": "Consumes viewing events without blocking the player."
+  }
+}

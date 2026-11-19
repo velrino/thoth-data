@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Shopify",
+  "pattern": "Modular monolith",
+  "summary": "Follow a storefront request through a single Rails deployment with explicit module boundaries.",
+  "scope": "A teaching model inspired by Shopify’s published modularity work. Module names and request paths are illustrative, not an inventory of the current platform.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "A Packwerk retrospective",
+      "url": "https://shopify.engineering/a-packwerk-retrospective"
+    },
+    {
+      "title": "Enforcing modularity in Rails apps",
+      "url": "https://shopify.engineering/enforcing-modularity-rails-apps-packwerk"
+    }
+  ],
+  "componentNotes": {
+    "client": "Browses the storefront and submits checkout requests.",
+    "edge": "Receives storefront traffic and routes dynamic requests to Rails.",
+    "app": "Hosts commerce modules in one deployment with explicit interfaces.",
+    "catalog": "Owns product lookup and exposes its results through a module API.",
+    "checkout": "Coordinates a purchase through inventory and order boundaries.",
+    "inventory": "Reserves stock before checkout confirms the order.",
+    "db": "Stores product, inventory and order data behind module boundaries.",
+    "jobs": "Queues follow-up work outside the checkout response.",
+    "worker": "Handles the receipt job independently of the shopper request."
+  }
+}

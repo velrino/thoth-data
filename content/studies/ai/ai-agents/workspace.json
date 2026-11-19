@@ -1,0 +1,1453 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-studies-ai-agents",
+  "title": "AI",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "studies-folder",
+      "title": "AI",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "ai-agents",
+          "title": "Evolution of AI Agents",
+          "complete": false,
+          "steps": [
+            {
+              "id": "ai-agents-step-1",
+              "title": "Ask the model",
+              "description": "A single text prompt goes to the model. The model generates a text result from the supplied context. One request can handle a bounded task such as rewriting a paragraph.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "User input",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Language model",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "response",
+                    "label": "Result",
+                    "role": "client",
+                    "color": "sky",
+                    "x": 7,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "model",
+                    "label": "Text prompt"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "model",
+                    "to": "response",
+                    "label": "Generated text"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ai-agents-step-2",
+              "title": "Add documents and structured results",
+              "description": "The application extracts and limits text from a supplied document before building the prompt. It validates the model’s structured response and turns it into a usable result, such as a summary with fields.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "User input",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -23.8,
+                    "z": 0
+                  },
+                  {
+                    "id": "prepare",
+                    "label": "Input preparation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": -12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Language model",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "format",
+                    "label": "Output validation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "response",
+                    "label": "Result",
+                    "role": "client",
+                    "color": "sky",
+                    "x": 23.8,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "prepare",
+                    "label": "Prompt and document"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "prepare",
+                    "to": "model",
+                    "label": "Bounded document context"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "model",
+                    "to": "format",
+                    "label": "Structured result"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "format",
+                    "to": "response",
+                    "label": "Validated summary"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ai-agents-step-3",
+              "title": "Call tools and retrieve evidence",
+              "description": "The model can request a search when the input lacks evidence. The application validates the call, retrieves relevant passages and returns them as a tool result. The model uses that evidence to answer with source references.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "User input",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -23.8,
+                    "z": 0
+                  },
+                  {
+                    "id": "prepare",
+                    "label": "Input preparation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": -12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Language model",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "tools",
+                    "label": "Tool runtime",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Tools and retrieval",
+                    "x": 7.700000000000001,
+                    "z": 14.700000000000001
+                  },
+                  {
+                    "id": "knowledge",
+                    "label": "Search index",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Tools and retrieval",
+                    "x": 18.55,
+                    "z": 14.700000000000001
+                  },
+                  {
+                    "id": "format",
+                    "label": "Output validation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "response",
+                    "label": "Result",
+                    "role": "client",
+                    "color": "sky",
+                    "x": 23.8,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "prepare",
+                    "label": "Question"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "prepare",
+                    "to": "model",
+                    "label": "Task and tool definitions"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "model",
+                    "to": "tools",
+                    "label": "Search request"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "tools",
+                    "to": "knowledge",
+                    "label": "Retrieve relevant passages"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "model",
+                    "to": "format",
+                    "label": "Draft answer with sources"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "format",
+                    "to": "response",
+                    "label": "Grounded answer"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "tools",
+                    "to": "model",
+                    "label": "Passages and sources"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "knowledge",
+                    "to": "tools",
+                    "label": "Matches and metadata"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ai-agents-step-4",
+              "title": "Support multimodal input and memory",
+              "description": "The application prepares supported images or documents alongside text. Working memory carries context across turns. Selected facts can be read from or written to longer-lived storage, with consent and retention rules.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "User input",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -23.8,
+                    "z": 0
+                  },
+                  {
+                    "id": "prepare",
+                    "label": "Input preparation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": -12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Language model",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "tools",
+                    "label": "Tool runtime",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Tools and retrieval",
+                    "x": 7.700000000000001,
+                    "z": 14.700000000000001
+                  },
+                  {
+                    "id": "knowledge",
+                    "label": "Search index",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Tools and retrieval",
+                    "x": 18.55,
+                    "z": 14.700000000000001
+                  },
+                  {
+                    "id": "session",
+                    "label": "Working memory",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Agent state",
+                    "x": 0,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "memory",
+                    "label": "Long-term memory",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Agent state",
+                    "x": -11.200000000000001,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "format",
+                    "label": "Output validation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "response",
+                    "label": "Result",
+                    "role": "client",
+                    "color": "sky",
+                    "x": 23.8,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "prepare",
+                    "label": "Text, documents or images"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "prepare",
+                    "to": "model",
+                    "label": "Supported multimodal context"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "model",
+                    "to": "tools",
+                    "label": "Request evidence"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "tools",
+                    "to": "knowledge",
+                    "label": "Retrieve passages"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "model",
+                    "to": "session",
+                    "label": "Read or update working state"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "session",
+                    "to": "memory",
+                    "label": "Read or persist selected facts"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "model",
+                    "to": "format",
+                    "label": "Answer or artifact specification"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "format",
+                    "to": "response",
+                    "label": "Text or supported artifact"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "tools",
+                    "to": "model",
+                    "label": "Tool observation"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "knowledge",
+                    "to": "tools",
+                    "label": "Ranked matches"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "session",
+                    "to": "model",
+                    "label": "Relevant context"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "memory",
+                    "to": "session",
+                    "label": "Stored facts"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ai-agents-step-5",
+              "title": "Run a bounded decision loop",
+              "description": "After each observation, the runtime can ask the model to revise its plan, call a tool, request approval or finish. The loop stops when the goal is met, a policy blocks the action or a budget runs out. Working state, durable facts and summaries of past runs serve different needs.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "User input",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -23.8,
+                    "z": 0
+                  },
+                  {
+                    "id": "prepare",
+                    "label": "Input preparation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": -12.6,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Language model",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "session",
+                    "label": "Working memory",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Agent state",
+                    "x": 0,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "memory",
+                    "label": "Long-term memory",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Agent state",
+                    "x": -11.200000000000001,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "episodes",
+                    "label": "Past run summaries",
+                    "role": "storage",
+                    "color": "sand",
+                    "group": "Agent state",
+                    "x": -21.7,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "decision",
+                    "label": "Decision and budget",
+                    "role": "gateway",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 9.1,
+                    "z": 0
+                  },
+                  {
+                    "id": "tools",
+                    "label": "Tool runtime",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Tools and retrieval",
+                    "x": 9.1,
+                    "z": 14.700000000000001
+                  },
+                  {
+                    "id": "knowledge",
+                    "label": "Search index",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Tools and retrieval",
+                    "x": 18.55,
+                    "z": 14.700000000000001
+                  },
+                  {
+                    "id": "approval",
+                    "label": "Human review",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Oversight",
+                    "x": 19.25,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "format",
+                    "label": "Output validation",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 18.900000000000002,
+                    "z": 0
+                  },
+                  {
+                    "id": "response",
+                    "label": "Result",
+                    "role": "client",
+                    "color": "sky",
+                    "x": 29.050000000000004,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "prepare",
+                    "label": "Goal and inputs"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "prepare",
+                    "to": "model",
+                    "label": "Context and constraints"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "model",
+                    "to": "session",
+                    "label": "Read or update working state"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "session",
+                    "to": "memory",
+                    "label": "Retrieve durable facts"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "memory",
+                    "to": "episodes",
+                    "label": "Find relevant past runs"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "model",
+                    "to": "decision",
+                    "label": "Proposed action"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "decision",
+                    "to": "tools",
+                    "label": "Execute allowed tool"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "tools",
+                    "to": "knowledge",
+                    "label": "Look up evidence"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "decision",
+                    "to": "approval",
+                    "label": "Escalate sensitive action"
+                  },
+                  {
+                    "id": "edge-9",
+                    "from": "decision",
+                    "to": "format",
+                    "label": "Finish or report stop reason"
+                  },
+                  {
+                    "id": "edge-10",
+                    "from": "format",
+                    "to": "response",
+                    "label": "Result and status"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "session",
+                    "to": "model",
+                    "label": "Working context"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "memory",
+                    "to": "session",
+                    "label": "Relevant facts"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "episodes",
+                    "to": "memory",
+                    "label": "Run summaries"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "decision",
+                    "to": "model",
+                    "label": "Observation for replanning"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "tools",
+                    "to": "decision",
+                    "label": "Execution result"
+                  },
+                  {
+                    "id": "edge-7-return",
+                    "from": "knowledge",
+                    "to": "tools",
+                    "label": "Retrieved evidence"
+                  },
+                  {
+                    "id": "edge-8-return",
+                    "from": "approval",
+                    "to": "decision",
+                    "label": "Approve or deny"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-8",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-9",
+                    "route": [
+                      "edge-9"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-10",
+                    "route": [
+                      "edge-10"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-7-return",
+                    "route": [
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-8-return",
+                    "route": [
+                      "edge-8-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ai-agents-step-6",
+              "title": "Coordinate specialized workers",
+              "description": "An orchestrator can delegate bounded tasks and collect results before delivery. This example separates research, synthesis and verification. Traces support debugging and evaluation, while sensitive actions can still reach a human checkpoint.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "User input",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": -21.7,
+                    "z": 0
+                  },
+                  {
+                    "id": "orchestrator",
+                    "label": "Orchestrator",
+                    "role": "gateway",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": -10.85,
+                    "z": 0
+                  },
+                  {
+                    "id": "session",
+                    "label": "Working memory",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Agent state",
+                    "x": -10.85,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "research",
+                    "label": "Research worker",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Tools and retrieval",
+                    "x": 0,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "knowledge",
+                    "label": "Search index",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Tools and retrieval",
+                    "x": 11.549999999999999,
+                    "z": -15.680000000000001
+                  },
+                  {
+                    "id": "model",
+                    "label": "Language model",
+                    "role": "function",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "trace",
+                    "label": "Traces and evaluations",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Oversight",
+                    "x": -10.85,
+                    "z": 15.680000000000001
+                  },
+                  {
+                    "id": "review",
+                    "label": "Result verification",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Application runtime",
+                    "x": 11.549999999999999,
+                    "z": 0
+                  },
+                  {
+                    "id": "approval",
+                    "label": "Human review",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Oversight",
+                    "x": 11.549999999999999,
+                    "z": 15.680000000000001
+                  },
+                  {
+                    "id": "response",
+                    "label": "Result",
+                    "role": "client",
+                    "color": "sky",
+                    "x": 22.75,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "orchestrator",
+                    "label": "Goal and constraints"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "orchestrator",
+                    "to": "session",
+                    "label": "Save run state"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "orchestrator",
+                    "to": "research",
+                    "label": "Delegate research"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "research",
+                    "to": "knowledge",
+                    "label": "Find sources"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "orchestrator",
+                    "to": "model",
+                    "label": "Delegate synthesis with evidence"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "orchestrator",
+                    "to": "trace",
+                    "label": "Record runs and outcomes"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "model",
+                    "to": "review",
+                    "label": "Verify result"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "review",
+                    "to": "approval",
+                    "label": "Escalate if policy requires"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "review",
+                    "to": "response",
+                    "label": "Deliver verified result"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "session",
+                    "to": "orchestrator",
+                    "label": "Current run state"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "research",
+                    "to": "orchestrator",
+                    "label": "Evidence and sources"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "knowledge",
+                    "to": "research",
+                    "label": "Relevant evidence"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "model",
+                    "to": "orchestrator",
+                    "label": "Draft result"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "review",
+                    "to": "model",
+                    "label": "Revision request"
+                  },
+                  {
+                    "id": "edge-7-return",
+                    "from": "approval",
+                    "to": "review",
+                    "label": "Approval decision"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-8",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-7-return",
+                    "route": [
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

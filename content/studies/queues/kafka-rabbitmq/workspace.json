@@ -1,0 +1,293 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-studies-kafka-rabbitmq",
+  "title": "Queues",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "studies-folder",
+      "title": "Queues",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "kafka-rabbitmq",
+          "title": "Kafka vs RabbitMQ vs Redis",
+          "complete": false,
+          "steps": [
+            {
+              "id": "kafka-rabbitmq-step-1",
+              "title": "Publish, deliver and confirm",
+              "description": "Imagine a customer placing an order. The store (the producer) sends a message, and another part of the system (the consumer or worker) acts on it. A single arrow shows where the message goes. Where you see two arrows, one shows delivery and the other shows the worker reporting back. Kafka saves where each group stopped reading. RabbitMQ removes a job after the worker confirms it is done. Redis marks the job as done for that group and keeps the original message in the stream.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Producer",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Kafka · Event log",
+                    "x": -18.900000000000002,
+                    "z": -10.85
+                  },
+                  {
+                    "id": "log",
+                    "label": "Partition",
+                    "role": "storage",
+                    "color": "sand",
+                    "technology": "apachekafka",
+                    "appearance": "icon",
+                    "group": "Kafka · Event log",
+                    "x": -1.05,
+                    "z": -10.85
+                  },
+                  {
+                    "id": "consumers",
+                    "label": "Groups",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Kafka · Event log",
+                    "x": 16.8,
+                    "z": -10.85
+                  },
+                  {
+                    "id": "publisher",
+                    "label": "Producer",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "RabbitMQ · Work queue",
+                    "x": -18.900000000000002,
+                    "z": 0
+                  },
+                  {
+                    "id": "exchange",
+                    "label": "Exchange",
+                    "role": "gateway",
+                    "color": "sky",
+                    "technology": "rabbitmq",
+                    "appearance": "icon",
+                    "group": "RabbitMQ · Work queue",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "queue",
+                    "label": "Queue",
+                    "role": "queue",
+                    "color": "lavender",
+                    "group": "RabbitMQ · Work queue",
+                    "x": 4.8999999999999995,
+                    "z": 0
+                  },
+                  {
+                    "id": "worker",
+                    "label": "Worker",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "RabbitMQ · Work queue",
+                    "x": 16.8,
+                    "z": 0
+                  },
+                  {
+                    "id": "redis-producer",
+                    "label": "Producer",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "Redis · Streams",
+                    "x": -18.900000000000002,
+                    "z": 10.85
+                  },
+                  {
+                    "id": "stream",
+                    "label": "Stream",
+                    "role": "storage",
+                    "color": "sand",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Redis · Streams",
+                    "x": -1.05,
+                    "z": 10.85
+                  },
+                  {
+                    "id": "redis-worker",
+                    "label": "Worker",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Redis · Streams",
+                    "x": 16.8,
+                    "z": 10.85
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "log",
+                    "label": "Append order event"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "log",
+                    "to": "consumers",
+                    "label": "Read records"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "publisher",
+                    "to": "exchange",
+                    "label": "Publish fulfillment job"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "exchange",
+                    "to": "queue",
+                    "label": "Route by binding"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "queue",
+                    "to": "worker",
+                    "label": "Deliver job"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "redis-producer",
+                    "to": "stream",
+                    "label": "XADD"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "stream",
+                    "to": "redis-worker",
+                    "label": "Read with XREADGROUP"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "consumers",
+                    "to": "log",
+                    "label": "Commit offset"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "worker",
+                    "to": "queue",
+                    "label": "Acknowledge job"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "redis-worker",
+                    "to": "stream",
+                    "label": "XACK"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

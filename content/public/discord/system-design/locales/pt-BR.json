@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "title": "Arquitetura do Discord",
+  "pattern": "Comunicação em tempo real e mensagens duráveis",
+  "summary": "Explore a arquitetura do Discord, das mensagens e da presença até mídia, voz e o mapa completo do sistema."
+}

@@ -1,0 +1,875 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-netflix-streaming",
+  "title": "Netflix",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "netflix-folder",
+      "title": "Netflix",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "streaming",
+          "title": "Keep playback independent",
+          "complete": false,
+          "steps": [
+            {
+              "id": "streaming-step-1",
+              "title": "Browse on a TV",
+              "description": "A TV requests a browsing screen. The client API composes catalog and recommendation results from separate services.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Viewer · TV",
+                    "role": "client",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "Client API",
+                    "role": "gateway",
+                    "color": "sky",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "catalog",
+                    "label": "Catalog service",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Browse services",
+                    "x": 0,
+                    "z": -7
+                  },
+                  {
+                    "id": "recommend",
+                    "label": "Recommendations",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Browse services",
+                    "x": 0,
+                    "z": 7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "Browse"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "gateway",
+                    "to": "catalog",
+                    "label": "Titles"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "gateway",
+                    "to": "recommend",
+                    "label": "Personalization"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Browse results"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "catalog",
+                    "to": "gateway",
+                    "label": "Catalog results"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "recommend",
+                    "to": "gateway",
+                    "label": "Recommended titles"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "streaming-step-2",
+              "title": "Authorize playback",
+              "description": "Selecting a title starts a distinct playback path. The playback service checks entitlement before returning session information; browsing success alone is not permission to stream.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Viewer · TV",
+                    "role": "client",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "Client API",
+                    "role": "gateway",
+                    "color": "sky",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "play",
+                    "label": "Playback service",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Playback authorization",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "account",
+                    "label": "Account entitlement",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Playback authorization",
+                    "x": 7,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "Play title"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "gateway",
+                    "to": "play",
+                    "label": "Create session"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "play",
+                    "to": "account",
+                    "label": "Check entitlement"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Playback session details"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "play",
+                    "to": "gateway",
+                    "label": "Playback authorization result"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "account",
+                    "to": "play",
+                    "label": "Entitlement result"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "streaming-step-3",
+              "title": "Deliver the video",
+              "description": "The TV fetches video segments from Open Connect. Separating the media delivery path from browsing services limits how much optional homepage work is needed during playback.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Viewer · TV",
+                    "role": "client",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "Client API",
+                    "role": "gateway",
+                    "color": "sky",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "play",
+                    "label": "Playback service",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Playback authorization",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "account",
+                    "label": "Account entitlement",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Playback authorization",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "cdn",
+                    "label": "Open Connect",
+                    "role": "cdn",
+                    "color": "sky",
+                    "group": "Video delivery",
+                    "x": -14,
+                    "z": 7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "Playback session"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "gateway",
+                    "to": "play",
+                    "label": "Authorize"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "play",
+                    "to": "account",
+                    "label": "Entitlement"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "client",
+                    "to": "cdn",
+                    "label": "Video segments"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Manifest and session response"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "play",
+                    "to": "gateway",
+                    "label": "Authorized playback"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "account",
+                    "to": "play",
+                    "label": "Entitlement decision"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "cdn",
+                    "to": "client",
+                    "label": "Encoded segments"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "streaming-step-4",
+              "title": "Degrade optional features",
+              "description": "When recommendations time out, the browsing path can use fallback results. Isolation and bounded waits reduce cascading failures; entitlement and other critical checks still cannot simply be skipped.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Viewer · TV",
+                    "role": "client",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "Client API",
+                    "role": "gateway",
+                    "color": "sky",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "recommend",
+                    "label": "Recommendations",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Browse services",
+                    "x": 0,
+                    "z": 7
+                  },
+                  {
+                    "id": "cache",
+                    "label": "Fallback results",
+                    "role": "cache",
+                    "color": "sky",
+                    "group": "Browse services",
+                    "x": 7,
+                    "z": 7
+                  },
+                  {
+                    "id": "play",
+                    "label": "Playback service",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Playback authorization",
+                    "x": 0,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "Browse"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "gateway",
+                    "to": "recommend",
+                    "label": "Personalization request"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "gateway",
+                    "to": "cache",
+                    "label": "On timeout · read fallback"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "gateway",
+                    "to": "play",
+                    "label": "Playback path"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Browse results"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "recommend",
+                    "to": "gateway",
+                    "label": "Timeout"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "cache",
+                    "to": "gateway",
+                    "label": "Cached catalog results"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "play",
+                    "to": "gateway",
+                    "label": "Playback session response"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "failure",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "streaming-step-5",
+              "title": "Observe asynchronously",
+              "description": "Viewing events feed an asynchronous consumer. Under pressure, systems can prioritize essential playback requests over optional work; this is an isolation strategy, not a guarantee against every outage.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Viewer · TV",
+                    "role": "client",
+                    "color": "sky",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "Client API",
+                    "role": "gateway",
+                    "color": "sky",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "play",
+                    "label": "Playback service",
+                    "role": "service",
+                    "color": "sky",
+                    "group": "Playback authorization",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "cdn",
+                    "label": "Open Connect",
+                    "role": "cdn",
+                    "color": "sky",
+                    "group": "Video delivery",
+                    "x": -14,
+                    "z": 7
+                  },
+                  {
+                    "id": "events",
+                    "label": "Viewing events",
+                    "role": "queue",
+                    "color": "lavender",
+                    "group": "Viewing telemetry",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "analytics",
+                    "label": "Async analytics",
+                    "role": "worker",
+                    "color": "sky",
+                    "group": "Viewing telemetry",
+                    "x": 14,
+                    "z": -7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "gateway",
+                    "label": "Essential playback"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "gateway",
+                    "to": "play",
+                    "label": "Priority request"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "client",
+                    "to": "cdn",
+                    "label": "Video segments"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "gateway",
+                    "to": "events",
+                    "label": "Viewing event"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "events",
+                    "to": "analytics",
+                    "label": "Process later"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "gateway",
+                    "to": "client",
+                    "label": "Playback response"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "play",
+                    "to": "gateway",
+                    "label": "Session result"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "cdn",
+                    "to": "client",
+                    "label": "Encoded segments"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

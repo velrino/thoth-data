@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Nubank",
+  "pattern": "CQRS & event sourcing",
+  "summary": "Separate a financial command from a read model and an auditable history.",
+  "scope": "Nubank documents Clojure, Datomic, Kafka and event-sourcing experience. This CQRS walkthrough is a conceptual combination; Datomic facts are not automatically the same as a domain event store.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "A digital pine forest: the evergreen cache",
+      "url": "https://building.nu.com/the-evergreen-cache/"
+    },
+    {
+      "title": "Nubank and Datomic",
+      "url": "https://www.datomic.com/stories/nubank.html"
+    }
+  ],
+  "componentNotes": {
+    "client": "Submits transfers and reads the current account view.",
+    "api": "Routes financial commands and balance queries to separate handlers.",
+    "command": "Validates transfer intent before committing financial facts.",
+    "ledger": "Preserves immutable financial records for audit and reconstruction.",
+    "events": "Makes committed changes available to independent consumers.",
+    "projector": "Builds the queryable balance view from committed changes.",
+    "read": "Stores prepared balances for inexpensive reads.",
+    "query": "Serves balance and account views from the read model.",
+    "audit": "Reads historical facts to support replay and audit."
+  }
+}

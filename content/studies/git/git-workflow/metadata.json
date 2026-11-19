@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "groupName": "Git",
+  "pattern": "Local and remote changes",
+  "summary": "Trace changes through the working tree, staging area, local branch and remote repository.",
+  "scope": "A simple main-branch workflow with one remote named origin. The integration example assumes a clean working tree and a successful merge.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Pro Git · Recording changes",
+      "url": "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository"
+    },
+    {
+      "title": "Pro Git · Remote branches",
+      "url": "https://git-scm.com/book/en/v2/Git-Branching-Remote-Branches"
+    },
+    {
+      "title": "Git · git pull",
+      "url": "https://git-scm.com/docs/git-pull"
+    }
+  ],
+  "componentNotes": {
+    "client": "Files you can edit in the checkout, including unstaged changes.",
+    "index": "The snapshot prepared for the next commit. Git also calls it the index.",
+    "local": "The checked-out main branch. HEAD points to this branch in the example.",
+    "remote": "The main branch stored in the remote repository.",
+    "tracking": "A local remote-tracking reference. It records the last known position of main on origin."
+  },
+  "showConnectionLabels": true
+}

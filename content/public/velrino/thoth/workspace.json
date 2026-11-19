@@ -1,0 +1,1289 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-velrino-thoth",
+  "title": "Velrino",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "velrino-folder",
+      "title": "Velrino",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "thoth",
+          "title": "Thoth · Local editing, cloud storage and billing",
+          "complete": false,
+          "steps": [
+            {
+              "id": "thoth-step-1",
+              "title": "Edit locally, discover the API",
+              "description": "Vercel serves the Next.js editor. The browser saves diagrams on this device and checks the Go API through Caddy on Lightsail. Health probes include MongoDB Atlas, Redis and Amazon SQS. PostHog receives browser events and Sentry receives sanitized API telemetry. The editor works locally if the API is unavailable.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Next.js editor",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local storage",
+                    "x": -18.2,
+                    "z": 0
+                  },
+                  {
+                    "id": "hosting",
+                    "label": "Vercel",
+                    "role": "cdn",
+                    "color": "sky",
+                    "technology": "vercel",
+                    "appearance": "icon",
+                    "x": -18.2,
+                    "z": -9.799999999999999
+                  },
+                  {
+                    "id": "local",
+                    "label": "Browser storage",
+                    "role": "storage",
+                    "color": "sand",
+                    "group": "Browser and local storage",
+                    "x": -18.2,
+                    "z": 9.450000000000001
+                  },
+                  {
+                    "id": "posthog",
+                    "label": "PostHog",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "posthog",
+                    "appearance": "icon",
+                    "x": -27.3,
+                    "z": 0
+                  },
+                  {
+                    "id": "proxy",
+                    "label": "Caddy · Lightsail",
+                    "role": "gateway",
+                    "color": "sky",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": -8.049999999999999,
+                    "z": -3.15
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": 0,
+                    "z": 3.15
+                  },
+                  {
+                    "id": "mongo",
+                    "label": "MongoDB Atlas",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "x": 8.049999999999999,
+                    "z": -10.5
+                  },
+                  {
+                    "id": "redis",
+                    "label": "Redis",
+                    "role": "cache",
+                    "color": "sky",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "x": 12.25,
+                    "z": -1.4000000000000001
+                  },
+                  {
+                    "id": "queue",
+                    "label": "Amazon SQS",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "Amazon SQS",
+                    "x": 12.950000000000001,
+                    "z": 7.3500000000000005
+                  },
+                  {
+                    "id": "sentry",
+                    "label": "Sentry",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "sentry",
+                    "appearance": "icon",
+                    "x": 0,
+                    "z": 11.549999999999999
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "hosting",
+                    "to": "client",
+                    "label": "Serve editor"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "client",
+                    "to": "local",
+                    "label": "Save workspace"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "client",
+                    "to": "posthog",
+                    "label": "Browser events"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "client",
+                    "to": "proxy",
+                    "label": "GET / health"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "proxy",
+                    "to": "api",
+                    "label": "Forward HTTPS request"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "api",
+                    "to": "mongo",
+                    "label": "Database check"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "api",
+                    "to": "redis",
+                    "label": "Cache check"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "api",
+                    "to": "queue",
+                    "label": "Queue check"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "api",
+                    "to": "sentry",
+                    "label": "Errors and traces"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "proxy",
+                    "to": "client",
+                    "label": "Dependency status"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "api",
+                    "to": "proxy",
+                    "label": "Health JSON"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "mongo",
+                    "to": "api",
+                    "label": "Connection result"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "redis",
+                    "to": "api",
+                    "label": "Cache status"
+                  },
+                  {
+                    "id": "edge-7-return",
+                    "from": "queue",
+                    "to": "api",
+                    "label": "Queue status"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-8",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-7-return",
+                    "route": [
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "thoth-step-2",
+              "title": "Sign in and resolve a tenant",
+              "description": "Firebase Auth provides Google and passwordless email sign-in. The browser sends a Firebase ID token to the API. Go verifies the user and resolves their personal or organization workspace from MongoDB before granting access.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Next.js editor",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local storage",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "firebase",
+                    "label": "Firebase Auth",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "firebase",
+                    "appearance": "icon",
+                    "x": -7,
+                    "z": -8.75
+                  },
+                  {
+                    "id": "proxy",
+                    "label": "Caddy · Lightsail",
+                    "role": "gateway",
+                    "color": "sky",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "mongo",
+                    "label": "MongoDB Atlas",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "x": 10.15,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "firebase",
+                    "label": "Google or email link"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "client",
+                    "to": "proxy",
+                    "label": "Bearer ID token"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "proxy",
+                    "to": "api",
+                    "label": "Forward session request"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "api",
+                    "to": "firebase",
+                    "label": "Verify identity"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "api",
+                    "to": "mongo",
+                    "label": "Resolve profile and membership"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "firebase",
+                    "to": "client",
+                    "label": "Firebase ID token"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "proxy",
+                    "to": "client",
+                    "label": "Session profile"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "api",
+                    "to": "proxy",
+                    "label": "Verified session"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "firebase",
+                    "to": "api",
+                    "label": "Verified user identity"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "mongo",
+                    "to": "api",
+                    "label": "Profile and workspace access"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "thoth-step-3",
+              "title": "Authorize cloud saves and sharing",
+              "description": "The cloud API checks membership, roles and an active entitlement for the chosen tenant. Writes validate the workspace, enforce quotas and check the current version. Shared reads use the current visibility and grants for that tenant.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Next.js editor",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local storage",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "reader",
+                    "label": "Shared link reader",
+                    "role": "browser",
+                    "color": "sky",
+                    "x": 0,
+                    "z": 8.75
+                  },
+                  {
+                    "id": "mongo",
+                    "label": "MongoDB Atlas",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "x": 10.15,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Tenant-scoped save or share"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "reader",
+                    "to": "api",
+                    "label": "Request shared diagram"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "mongo",
+                    "label": "Check scoped data and access"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Save or hosted link result"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "api",
+                    "to": "reader",
+                    "label": "Authorized diagram payload"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "mongo",
+                    "to": "api",
+                    "label": "Scoped result"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "thoth-step-4",
+              "title": "Start a Stripe subscription",
+              "description": "Billing flow when enabled. The tenant owner requests a monthly or annual plan. Go reserves an eligible founder price in MongoDB, then creates Stripe Checkout with the selected plan and any additional organization seats. The customer pays on Stripe.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Next.js editor",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local storage",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "mongo",
+                    "label": "MongoDB Atlas",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "x": 0,
+                    "z": 8.75
+                  },
+                  {
+                    "id": "stripe",
+                    "label": "Stripe Billing API",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "stripe",
+                    "appearance": "icon",
+                    "group": "Stripe billing",
+                    "x": 10.15,
+                    "z": 0
+                  },
+                  {
+                    "id": "checkout",
+                    "label": "Stripe Checkout",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "stripe",
+                    "appearance": "icon",
+                    "group": "Stripe billing",
+                    "x": 10.15,
+                    "z": -9.450000000000001
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Request Checkout"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "api",
+                    "to": "mongo",
+                    "label": "Reserve price and intent"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "stripe",
+                    "label": "Create Checkout session"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "client",
+                    "to": "checkout",
+                    "label": "Open hosted payment"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "checkout",
+                    "to": "stripe",
+                    "label": "Complete payment"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Hosted Checkout URL"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "mongo",
+                    "to": "api",
+                    "label": "Reserved price and intent"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "stripe",
+                    "to": "api",
+                    "label": "Checkout session URL"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "checkout",
+                    "to": "client",
+                    "label": "Hosted Checkout form"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "thoth-step-5",
+              "title": "Process verified billing events",
+              "description": "Billing flow when enabled. Go verifies Stripe's signature and records the event with a publication intent in MongoDB. A dispatcher publishes the event ID to SQS. A worker confirms current Stripe state and commits the tenant entitlement before acknowledging the message. Full refunds and disputes suspend access; partial refunds preserve it.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "Next.js editor",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local storage",
+                    "x": -19.599999999999998,
+                    "z": 7
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Lightsail API",
+                    "x": -9.799999999999999,
+                    "z": 0
+                  },
+                  {
+                    "id": "stripe",
+                    "label": "Stripe Billing API",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "stripe",
+                    "appearance": "icon",
+                    "group": "Stripe billing",
+                    "x": -9.799999999999999,
+                    "z": -9.799999999999999
+                  },
+                  {
+                    "id": "inbox",
+                    "label": "MongoDB inbox",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "x": 0,
+                    "z": 7
+                  },
+                  {
+                    "id": "dispatcher",
+                    "label": "Dispatcher",
+                    "role": "service",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Billing workers",
+                    "x": 9.799999999999999,
+                    "z": 0
+                  },
+                  {
+                    "id": "queue",
+                    "label": "Amazon SQS",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "Amazon SQS",
+                    "x": 19.599999999999998,
+                    "z": 7
+                  },
+                  {
+                    "id": "worker",
+                    "label": "Go billing worker",
+                    "role": "worker",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Billing workers",
+                    "x": 19.599999999999998,
+                    "z": -9.799999999999999
+                  },
+                  {
+                    "id": "entitlement",
+                    "label": "MongoDB entitlements",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "mongodb",
+                    "appearance": "icon",
+                    "x": 9.799999999999999,
+                    "z": -17.5
+                  },
+                  {
+                    "id": "dlq",
+                    "label": "SQS dead-letter queue",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "amazonwebservices",
+                    "appearance": "icon",
+                    "group": "Amazon SQS",
+                    "x": 19.599999999999998,
+                    "z": 16.099999999999998
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Check cloud access"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "stripe",
+                    "to": "api",
+                    "label": "Send signed webhook"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "inbox",
+                    "label": "Commit event and intent"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "dispatcher",
+                    "to": "inbox",
+                    "label": "Read pending event IDs"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "dispatcher",
+                    "to": "queue",
+                    "label": "Publish event ID"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "queue",
+                    "to": "worker",
+                    "label": "Deliver job"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "worker",
+                    "to": "stripe",
+                    "label": "Verify current Stripe state"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "worker",
+                    "to": "entitlement",
+                    "label": "Commit tenant access"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "queue",
+                    "to": "dlq",
+                    "label": "Redrive repeated failures"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Subscription entitlements"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "api",
+                    "to": "stripe",
+                    "label": "Acknowledgement after durable commit",
+                    "notes": "Stripe receives success only after the event and its publication intent are safely stored."
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "inbox",
+                    "to": "api",
+                    "label": "Commit confirmation"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "inbox",
+                    "to": "dispatcher",
+                    "label": "Claimable event IDs"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "stripe",
+                    "to": "worker",
+                    "label": "Current subscription or invoice"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-8",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "failure",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

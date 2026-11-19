@@ -1,0 +1,1743 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-velrino-classgame",
+  "title": "Velrino",
+  "entries": [
+    {
+      "kind": "folder",
+      "id": "velrino-folder",
+      "title": "Velrino",
+      "children": [
+        {
+          "kind": "lesson",
+          "id": "classgame",
+          "title": "ClassGame · From lesson to learning evidence",
+          "complete": false,
+          "steps": [
+            {
+              "id": "classgame-step-1",
+              "title": "Prepare a mission draft",
+              "description": "A teacher uploads optional material directly to temporary intake, then calls the Go API. The mission workflow summarizes supported material, validates generated questions and saves a draft revision. Preview progress streams through SSE.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "ClassGame · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local answers",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "upload",
+                    "label": "Uploadcare · Temporary intake",
+                    "role": "storage",
+                    "color": "sand",
+                    "x": -14,
+                    "z": -7
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "mission",
+                    "label": "Mission workflow · In-process",
+                    "role": "service",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": 0,
+                    "z": -7
+                  },
+                  {
+                    "id": "policy",
+                    "label": "AI policy & provider port",
+                    "role": "gateway",
+                    "color": "sky",
+                    "group": "Go application",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "vertex",
+                    "label": "Vertex AI endpoint",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "vertexai",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 14,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Gemini model",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "gemini",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 21,
+                    "z": 0
+                  },
+                  {
+                    "id": "db",
+                    "label": "Firestore · Durable evidence",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "firebase",
+                    "appearance": "icon",
+                    "x": 0,
+                    "z": -14
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "upload",
+                    "label": "Temporary upload"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Goal + attachment metadata"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "mission",
+                    "label": "Prepare draft · SSE"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "mission",
+                    "to": "policy",
+                    "label": "Bounded context"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "policy",
+                    "to": "vertex",
+                    "label": "Structured generation"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "vertex",
+                    "to": "model",
+                    "label": "Gemini inference"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "mission",
+                    "to": "db",
+                    "label": "Validated draft + revision"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "upload",
+                    "to": "client",
+                    "label": "Temporary file reference"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Preview progress and draft"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "mission",
+                    "to": "api",
+                    "label": "Draft progress events"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "policy",
+                    "to": "mission",
+                    "label": "Generated draft content"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "vertex",
+                    "to": "policy",
+                    "label": "Structured questions"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "model",
+                    "to": "vertex",
+                    "label": "Generated model output"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "db",
+                    "to": "mission",
+                    "label": "Saved revision"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "classgame-step-2",
+              "title": "Review, publish and protect files",
+              "description": "The teacher reviews a draft revision. When jobs are enabled, file-copy work is enqueued before the publication transaction. Workers verify the published revision and copy validated sources to private storage; failed jobs retry.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "ClassGame · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local answers",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "mission",
+                    "label": "Mission workflow · In-process",
+                    "role": "service",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": 0,
+                    "z": -7
+                  },
+                  {
+                    "id": "db",
+                    "label": "Firestore · Durable evidence",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "firebase",
+                    "appearance": "icon",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "broker",
+                    "label": "Optional job broker · Asynq",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Optional background jobs",
+                    "x": -7,
+                    "z": 7
+                  },
+                  {
+                    "id": "worker",
+                    "label": "Go worker · Optional",
+                    "role": "worker",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Optional background jobs",
+                    "x": -7,
+                    "z": 14
+                  },
+                  {
+                    "id": "upload",
+                    "label": "Uploadcare · Temporary intake",
+                    "role": "storage",
+                    "color": "sand",
+                    "x": -14,
+                    "z": 14
+                  },
+                  {
+                    "id": "storage",
+                    "label": "Private Cloud Storage",
+                    "role": "storage",
+                    "color": "sand",
+                    "technology": "googlecloud",
+                    "appearance": "icon",
+                    "x": 0,
+                    "z": 14
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Expected draft revision"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "api",
+                    "to": "mission",
+                    "label": "Validate access + review"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "mission",
+                    "to": "db",
+                    "label": "Publish transaction"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "mission",
+                    "to": "broker",
+                    "label": "Optional scoped job"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "broker",
+                    "to": "worker",
+                    "label": "At-least-once delivery"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "worker",
+                    "to": "upload",
+                    "label": "Validated source"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "worker",
+                    "to": "storage",
+                    "label": "Private file copy"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Published revision"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "mission",
+                    "to": "api",
+                    "label": "Review result"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "db",
+                    "to": "mission",
+                    "label": "Commit confirmation"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "upload",
+                    "to": "worker",
+                    "label": "Validated file bytes"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "storage",
+                    "to": "worker",
+                    "label": "Stored object reference"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "classgame-step-3",
+              "title": "Play a question with Mia",
+              "description": "A student answer is saved locally before a grounded tutoring request. Mia responds synchronously through the shared policy and provider port. Shared Redis admission bounds model work; the tutor is not a background queue consumer.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "ClassGame · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local answers",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "outbox",
+                    "label": "IndexedDB · Answer outbox",
+                    "role": "database",
+                    "color": "sand",
+                    "group": "Browser and local answers",
+                    "x": -14,
+                    "z": 7
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "tutor",
+                    "label": "Mia tutor · Synchronous",
+                    "role": "service",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": 0,
+                    "z": 0
+                  },
+                  {
+                    "id": "db",
+                    "label": "Firestore · Durable evidence",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "firebase",
+                    "appearance": "icon",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "policy",
+                    "label": "AI policy & provider port",
+                    "role": "gateway",
+                    "color": "sky",
+                    "group": "Go application",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "vertex",
+                    "label": "Vertex AI endpoint",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "vertexai",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 14,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Gemini model",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "gemini",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 21,
+                    "z": 0
+                  },
+                  {
+                    "id": "limits",
+                    "label": "Shared AI admission",
+                    "role": "cache",
+                    "color": "sky",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "x": 7,
+                    "z": 7
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "outbox",
+                    "label": "Persist pending answer"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Answer + attempt scope"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "tutor",
+                    "label": "Synchronous tutoring"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "tutor",
+                    "to": "db",
+                    "label": "Pinned mission context"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "tutor",
+                    "to": "policy",
+                    "label": "Validated bounded prompt"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "policy",
+                    "to": "vertex",
+                    "label": "Feedback request"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "vertex",
+                    "to": "model",
+                    "label": "Gemini inference"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "policy",
+                    "to": "limits",
+                    "label": "Reserve / release admission"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Tutoring feedback"
+                  },
+                  {
+                    "id": "edge-2-return",
+                    "from": "tutor",
+                    "to": "api",
+                    "label": "Validated feedback"
+                  },
+                  {
+                    "id": "edge-3-return",
+                    "from": "db",
+                    "to": "tutor",
+                    "label": "Mission revision and attempt state"
+                  },
+                  {
+                    "id": "edge-4-return",
+                    "from": "policy",
+                    "to": "tutor",
+                    "label": "Bounded model response"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "vertex",
+                    "to": "policy",
+                    "label": "Structured feedback"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "model",
+                    "to": "vertex",
+                    "label": "Generated model output"
+                  },
+                  {
+                    "id": "edge-7-return",
+                    "from": "limits",
+                    "to": "policy",
+                    "label": "Admission decision"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-2-return",
+                    "route": [
+                      "edge-2-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-3-return",
+                    "route": [
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-4-return",
+                    "route": [
+                      "edge-4-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-7-return",
+                    "route": [
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "classgame-step-4",
+              "title": "Commit completion, then finalize",
+              "description": "The API commits accepted answers and completion before insights finish. An optional worker claims scoped evidence, uses the same learning workflow, and commits version-checked private traces. Jobs disabled or unavailable use the same finalizer inline.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "ClassGame · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local answers",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "db",
+                    "label": "Firestore · Durable evidence",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "firebase",
+                    "appearance": "icon",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "broker",
+                    "label": "Optional job broker · Asynq",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Optional background jobs",
+                    "x": -14,
+                    "z": 7
+                  },
+                  {
+                    "id": "worker",
+                    "label": "Go worker · Optional",
+                    "role": "worker",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Optional background jobs",
+                    "x": -14,
+                    "z": 14
+                  },
+                  {
+                    "id": "learning",
+                    "label": "Learning workflow · In-process",
+                    "role": "service",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": 0,
+                    "z": 7
+                  },
+                  {
+                    "id": "policy",
+                    "label": "AI policy & provider port",
+                    "role": "gateway",
+                    "color": "sky",
+                    "group": "Go application",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "vertex",
+                    "label": "Vertex AI endpoint",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "vertexai",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 14,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Gemini model",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "gemini",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 21,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Complete attempt"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "api",
+                    "to": "db",
+                    "label": "Commit completion + pending trace"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "broker",
+                    "label": "Optional finalization job"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "broker",
+                    "to": "worker",
+                    "label": "IDs + expected versions"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "api",
+                    "to": "learning",
+                    "label": "Inline finalization if queue is unavailable"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "worker",
+                    "to": "learning",
+                    "label": "Shared Go workflow"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "learning",
+                    "to": "policy",
+                    "label": "Bounded evidence"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "policy",
+                    "to": "vertex",
+                    "label": "Private trace + memory"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "vertex",
+                    "to": "model",
+                    "label": "Gemini inference"
+                  },
+                  {
+                    "id": "edge-9",
+                    "from": "learning",
+                    "to": "db",
+                    "label": "Version-checked result"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Completion receipt"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "db",
+                    "to": "api",
+                    "label": "Committed result"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "learning",
+                    "to": "worker",
+                    "label": "Finalization result"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "policy",
+                    "to": "learning",
+                    "label": "Grounded insights"
+                  },
+                  {
+                    "id": "edge-7-return",
+                    "from": "vertex",
+                    "to": "policy",
+                    "label": "Structured insights"
+                  },
+                  {
+                    "id": "edge-8-return",
+                    "from": "model",
+                    "to": "vertex",
+                    "label": "Generated model output"
+                  },
+                  {
+                    "id": "edge-9-return",
+                    "from": "db",
+                    "to": "learning",
+                    "label": "Write result"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-8",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-9",
+                    "route": [
+                      "edge-9"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-7-return",
+                    "route": [
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-8-return",
+                    "route": [
+                      "edge-8-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-9-return",
+                    "route": [
+                      "edge-9-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            },
+            {
+              "id": "classgame-step-5",
+              "title": "Refresh class insights safely",
+              "description": "A class refresh consumes bounded, finalized evidence and persists a versioned summary. The teacher dashboard reads authorized paged insights through the API; scoped realtime invalidates views rather than streaming full history or private worksheets to the model.",
+              "metrics": [],
+              "scene": {
+                "nodes": [
+                  {
+                    "id": "client",
+                    "label": "ClassGame · Browser",
+                    "role": "browser",
+                    "color": "sky",
+                    "technology": "nextjs",
+                    "appearance": "icon",
+                    "group": "Browser and local answers",
+                    "x": -14,
+                    "z": 0
+                  },
+                  {
+                    "id": "api",
+                    "label": "Go API",
+                    "role": "api",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": -7,
+                    "z": 0
+                  },
+                  {
+                    "id": "db",
+                    "label": "Firestore · Durable evidence",
+                    "role": "database",
+                    "color": "sand",
+                    "technology": "firebase",
+                    "appearance": "icon",
+                    "x": 7,
+                    "z": -7
+                  },
+                  {
+                    "id": "broker",
+                    "label": "Optional job broker · Asynq",
+                    "role": "queue",
+                    "color": "lavender",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "group": "Optional background jobs",
+                    "x": -14,
+                    "z": 7
+                  },
+                  {
+                    "id": "worker",
+                    "label": "Go worker · Optional",
+                    "role": "worker",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Optional background jobs",
+                    "x": -14,
+                    "z": 14
+                  },
+                  {
+                    "id": "learning",
+                    "label": "Learning workflow · In-process",
+                    "role": "service",
+                    "color": "sky",
+                    "technology": "go",
+                    "appearance": "icon",
+                    "group": "Go application",
+                    "x": 0,
+                    "z": 7
+                  },
+                  {
+                    "id": "policy",
+                    "label": "AI policy & provider port",
+                    "role": "gateway",
+                    "color": "sky",
+                    "group": "Go application",
+                    "x": 7,
+                    "z": 0
+                  },
+                  {
+                    "id": "vertex",
+                    "label": "Vertex AI endpoint",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "vertexai",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 14,
+                    "z": 0
+                  },
+                  {
+                    "id": "model",
+                    "label": "Gemini model",
+                    "role": "external",
+                    "color": "sky",
+                    "technology": "gemini",
+                    "appearance": "icon",
+                    "group": "Model provider",
+                    "x": 21,
+                    "z": 0
+                  }
+                ],
+                "edges": [
+                  {
+                    "id": "edge-0",
+                    "from": "client",
+                    "to": "api",
+                    "label": "Teacher overview + cursor"
+                  },
+                  {
+                    "id": "edge-1",
+                    "from": "api",
+                    "to": "db",
+                    "label": "Authorized page + summary"
+                  },
+                  {
+                    "id": "edge-2",
+                    "from": "api",
+                    "to": "broker",
+                    "label": "Optional refresh after finalized evidence"
+                  },
+                  {
+                    "id": "edge-3",
+                    "from": "broker",
+                    "to": "worker",
+                    "label": "Class refresh job"
+                  },
+                  {
+                    "id": "edge-4",
+                    "from": "api",
+                    "to": "learning",
+                    "label": "Inline refresh when jobs are disabled"
+                  },
+                  {
+                    "id": "edge-5",
+                    "from": "worker",
+                    "to": "learning",
+                    "label": "Claim current generation"
+                  },
+                  {
+                    "id": "edge-6",
+                    "from": "learning",
+                    "to": "policy",
+                    "label": "Bounded class evidence"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "policy",
+                    "to": "vertex",
+                    "label": "Summary or observed fallback"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "vertex",
+                    "to": "model",
+                    "label": "Gemini inference"
+                  },
+                  {
+                    "id": "edge-9",
+                    "from": "learning",
+                    "to": "db",
+                    "label": "Summary + generation transaction"
+                  },
+                  {
+                    "id": "edge-0-return",
+                    "from": "api",
+                    "to": "client",
+                    "label": "Authorized class summary"
+                  },
+                  {
+                    "id": "edge-1-return",
+                    "from": "db",
+                    "to": "api",
+                    "label": "Class evidence page"
+                  },
+                  {
+                    "id": "edge-5-return",
+                    "from": "learning",
+                    "to": "worker",
+                    "label": "Claim outcome"
+                  },
+                  {
+                    "id": "edge-6-return",
+                    "from": "policy",
+                    "to": "learning",
+                    "label": "Grounded class summary"
+                  },
+                  {
+                    "id": "edge-7-return",
+                    "from": "vertex",
+                    "to": "policy",
+                    "label": "Structured summary result"
+                  },
+                  {
+                    "id": "edge-8-return",
+                    "from": "model",
+                    "to": "vertex",
+                    "label": "Generated model output"
+                  },
+                  {
+                    "id": "edge-9-return",
+                    "from": "db",
+                    "to": "learning",
+                    "label": "Committed generation"
+                  }
+                ],
+                "flows": [
+                  {
+                    "id": "flow-0",
+                    "route": [
+                      "edge-0"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
+                      "edge-1"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-2",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-3",
+                    "route": [
+                      "edge-3"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-4",
+                    "route": [
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-5",
+                    "route": [
+                      "edge-5"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-6",
+                    "route": [
+                      "edge-6"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-7",
+                    "route": [
+                      "edge-7"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-8",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-9",
+                    "route": [
+                      "edge-9"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-0-return",
+                    "route": [
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-1-return",
+                    "route": [
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-5-return",
+                    "route": [
+                      "edge-5-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-6-return",
+                    "route": [
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-7-return",
+                    "route": [
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-8-return",
+                    "route": [
+                      "edge-8-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-edge-9-return",
+                    "route": [
+                      "edge-9-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 0.6,
+                    "bounce": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

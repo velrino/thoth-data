@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "title": "Evolução dos agentes de IA",
+  "pattern": "Da inferência à orquestração",
+  "summary": "Veja uma chamada de modelo ganhar contexto documental, ferramentas, memória, um ciclo de decisão e trabalhadores especializados.",
+  "steps": {
+    "ai-agents-step-1": {
+      "title": "Consulte o modelo",
+      "description": "Um prompt de texto vai para o modelo, que gera uma resposta com base no contexto recebido. Uma solicitação pode resolver uma tarefa bem definida, como reescrever um parágrafo."
+    },
+    "ai-agents-step-2": {
+      "title": "Inclua documentos e resultados estruturados",
+      "description": "O aplicativo extrai e limita o texto do documento antes de montar o prompt. Depois, valida a estrutura da resposta e a transforma em algo útil, como um resumo com campos definidos."
+    },
+    "ai-agents-step-3": {
+      "title": "Use ferramentas para buscar evidências",
+      "description": "O modelo pode pedir uma busca quando faltam evidências. O aplicativo valida a chamada e devolve trechos relevantes com suas fontes. O modelo usa essas informações para responder."
+    },
+    "ai-agents-step-4": {
+      "title": "Adicione entradas multimodais e memória",
+      "description": "O aplicativo prepara imagens ou documentos compatíveis junto com o texto. A memória de trabalho mantém o contexto entre turnos. Informações selecionadas podem ser guardadas por mais tempo, com regras de consentimento e retenção."
+    },
+    "ai-agents-step-5": {
+      "title": "Execute um ciclo de decisão com limites",
+      "description": "Após cada observação, o modelo pode rever o plano, usar uma ferramenta, pedir aprovação ou encerrar. O ciclo para quando o objetivo é alcançado, uma política bloqueia a ação ou o orçamento acaba."
+    },
+    "ai-agents-step-6": {
+      "title": "Coordene agentes especializados",
+      "description": "Um orquestrador delega tarefas delimitadas e reúne os resultados antes da entrega. O exemplo separa pesquisa, síntese e verificação. Registros ajudam na avaliação e ações sensíveis podem exigir revisão humana."
+    }
+  }
+}
