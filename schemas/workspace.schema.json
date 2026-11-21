@@ -104,6 +104,27 @@
                               "type": "integer",
                               "minimum": 0,
                               "maximum": 5000
+                            },
+                            "transition": {
+                              "type": "string",
+                              "enum": ["glide", "cut"]
+                            },
+                            "orientation": {
+                              "type": "object",
+                              "properties": {
+                                "yawDegrees": {
+                                  "type": "number",
+                                  "minimum": -180,
+                                  "maximum": 180
+                                },
+                                "pitchDegrees": {
+                                  "type": "number",
+                                  "minimum": 25,
+                                  "maximum": 80
+                                }
+                              },
+                              "required": ["yawDegrees", "pitchDegrees"],
+                              "additionalProperties": false
                             }
                           },
                           "required": ["kind", "x", "z", "span", "moveMs"],
@@ -122,6 +143,27 @@
                               "type": "integer",
                               "minimum": 0,
                               "maximum": 5000
+                            },
+                            "transition": {
+                              "type": "string",
+                              "enum": ["glide", "cut"]
+                            },
+                            "orientation": {
+                              "type": "object",
+                              "properties": {
+                                "yawDegrees": {
+                                  "type": "number",
+                                  "minimum": -180,
+                                  "maximum": 180
+                                },
+                                "pitchDegrees": {
+                                  "type": "number",
+                                  "minimum": 25,
+                                  "maximum": 80
+                                }
+                              },
+                              "required": ["yawDegrees", "pitchDegrees"],
+                              "additionalProperties": false
                             }
                           },
                           "required": ["kind", "moveMs"],
