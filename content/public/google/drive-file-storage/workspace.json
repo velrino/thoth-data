@@ -547,24 +547,24 @@
                 "label": "REST gateway",
                 "role": "gateway",
                 "color": "peach",
-                "x": -25,
-                "z": -9
+                "x": -28,
+                "z": 0
               },
               {
                 "id": "sync",
                 "label": "Sync service",
                 "role": "service",
                 "color": "sage",
-                "x": -11,
-                "z": -9
+                "x": -14,
+                "z": 0
               },
               {
                 "id": "queue",
                 "label": "Change events",
                 "role": "queue",
                 "color": "sand",
-                "x": 3,
-                "z": -9,
+                "x": 0,
+                "z": 0,
                 "technology": "apachekafka"
               },
               {
@@ -572,16 +572,16 @@
                 "label": "Push gateway",
                 "role": "gateway",
                 "color": "sage",
-                "x": 17,
-                "z": -9
+                "x": 14,
+                "z": 0
               },
               {
                 "id": "other-desktop",
                 "label": "Desktop sync",
                 "role": "client",
                 "color": "sky",
-                "x": 5,
-                "z": 8,
+                "x": 29,
+                "z": -10,
                 "technology": "windows11"
               },
               {
@@ -589,8 +589,8 @@
                 "label": "Web browser",
                 "role": "browser",
                 "color": "sky",
-                "x": 17,
-                "z": 8,
+                "x": 29,
+                "z": 0,
                 "technology": "chrome"
               },
               {
@@ -599,7 +599,7 @@
                 "role": "mobile",
                 "color": "sky",
                 "x": 29,
-                "z": 8,
+                "z": 10,
                 "technology": "android"
               }
             ],
@@ -681,26 +681,17 @@
         {
           "id": "complete-architecture",
           "title": "Complete file storage architecture",
-          "description": "Start with the devices at the top and follow their requests into the gateway. The left side shows uploads, storage, file metadata and versions. The right side shows how devices hear about changes. The bottom shows search, previews, scanning, quota and retention. For discussion: What has to finish before the user sees Saved, and what can run in the background? Tech Fusionist’s educational illustration inspired this overview. The service topology and technologies illustrate one possible design.",
+          "description": "Start with the three clients on the left. Their requests meet at the load balancer before reaching the API. The upload path below the API leads to durable storage, file records and version history. The right-hand path shows how other devices hear about changes. At the bottom, background jobs handle search, previews, scanning, quota and retention. For discussion: What has to finish before the user sees Saved, and what can run in the background? The service topology and technologies illustrate one possible design inspired by Tech Fusionist’s educational diagram.",
           "metrics": [],
           "scene": {
             "nodes": [
-              {
-                "id": "user",
-                "label": "User",
-                "role": "user",
-                "color": "sky",
-                "x": -46,
-                "z": -36,
-                "group": "Client devices"
-              },
               {
                 "id": "desktop",
                 "label": "Desktop sync",
                 "role": "client",
                 "color": "sky",
-                "x": -33,
-                "z": -30,
+                "x": -47,
+                "z": -43,
                 "technology": "windows11",
                 "group": "Client devices"
               },
@@ -709,7 +700,7 @@
                 "label": "Web browser",
                 "role": "browser",
                 "color": "sky",
-                "x": -20,
+                "x": -47,
                 "z": -33,
                 "technology": "chrome",
                 "group": "Client devices"
@@ -719,8 +710,8 @@
                 "label": "Mobile app",
                 "role": "mobile",
                 "color": "sky",
-                "x": -7,
-                "z": -29,
+                "x": -47,
+                "z": -23,
                 "technology": "android",
                 "group": "Client devices"
               },
@@ -729,8 +720,8 @@
                 "label": "Load balancer",
                 "role": "load-balancer",
                 "color": "lavender",
-                "x": 9,
-                "z": -26,
+                "x": -30,
+                "z": -33,
                 "group": "API entry"
               },
               {
@@ -738,8 +729,8 @@
                 "label": "REST gateway",
                 "role": "gateway",
                 "color": "peach",
-                "x": 9,
-                "z": -17,
+                "x": -12,
+                "z": -33,
                 "group": "API entry"
               },
               {
@@ -747,8 +738,8 @@
                 "label": "Auth service",
                 "role": "service",
                 "color": "sage",
-                "x": -22,
-                "z": -17,
+                "x": -12,
+                "z": -47,
                 "technology": "oauth",
                 "group": "Identity"
               },
@@ -757,8 +748,8 @@
                 "label": "Users DB",
                 "role": "database",
                 "color": "sky",
-                "x": -39,
-                "z": -17,
+                "x": 5,
+                "z": -47,
                 "group": "Identity"
               },
               {
@@ -766,119 +757,119 @@
                 "label": "Upload session",
                 "role": "service",
                 "color": "sage",
-                "x": -43,
-                "z": -3,
-                "group": "Upload and storage"
+                "x": -42,
+                "z": -7,
+                "group": "File upload"
               },
               {
                 "id": "chunks",
                 "label": "Chunk and deduplicate",
                 "role": "worker",
                 "color": "sage",
-                "x": -25,
-                "z": -3,
-                "group": "Upload and storage"
+                "x": -26,
+                "z": -7,
+                "group": "File upload"
               },
               {
                 "id": "storage",
                 "label": "Object storage",
                 "role": "storage",
                 "color": "sky",
-                "x": -7,
-                "z": -3,
+                "x": -10,
+                "z": -7,
                 "technology": "googlecloud",
-                "group": "Upload and storage"
+                "group": "File upload"
               },
               {
                 "id": "metadata",
                 "label": "Metadata DB",
                 "role": "database",
                 "color": "sky",
-                "x": -43,
-                "z": 10,
+                "x": -10,
+                "z": 8,
                 "technology": "postgresql",
-                "group": "File records and access"
+                "group": "File records"
               },
               {
                 "id": "versions",
                 "label": "Version history",
                 "role": "service",
                 "color": "sage",
-                "x": -25,
-                "z": 10,
-                "group": "File records and access"
+                "x": 5,
+                "z": 8,
+                "group": "File records"
               },
               {
                 "id": "permissions",
                 "label": "Sharing and permissions",
                 "role": "service",
                 "color": "sand",
-                "x": -7,
-                "z": 10,
-                "group": "File records and access"
+                "x": 20,
+                "z": 8,
+                "group": "File records"
               },
               {
                 "id": "jobs",
                 "label": "Background jobs",
                 "role": "queue",
                 "color": "lavender",
-                "x": -15,
+                "x": -10,
                 "z": 22,
-                "group": "Background work"
+                "group": "Background"
               },
               {
                 "id": "search",
                 "label": "Search and OCR",
                 "role": "worker",
                 "color": "sage",
-                "x": -46,
-                "z": 35,
+                "x": -44,
+                "z": 36,
                 "technology": "elasticsearch",
-                "group": "Background work"
+                "group": "Background"
               },
               {
                 "id": "previews",
                 "label": "Previews",
                 "role": "worker",
                 "color": "sage",
-                "x": -31,
-                "z": 35,
-                "group": "Background work"
+                "x": -27,
+                "z": 36,
+                "group": "Background"
               },
               {
                 "id": "scan",
                 "label": "Malware scan and DLP",
                 "role": "worker",
                 "color": "sage",
-                "x": -15,
-                "z": 35,
-                "group": "Background work"
+                "x": -10,
+                "z": 36,
+                "group": "Background"
               },
               {
                 "id": "quota",
                 "label": "Quota and billing",
                 "role": "service",
                 "color": "sage",
-                "x": 1,
-                "z": 35,
-                "group": "Background work"
+                "x": 7,
+                "z": 36,
+                "group": "Background"
               },
               {
                 "id": "trash",
                 "label": "Trash and retention",
                 "role": "worker",
                 "color": "sage",
-                "x": 17,
-                "z": 35,
-                "group": "Background work"
+                "x": 24,
+                "z": 36,
+                "group": "Background"
               },
               {
                 "id": "sync",
                 "label": "Sync service",
                 "role": "service",
                 "color": "sage",
-                "x": 39,
-                "z": -17,
+                "x": 6,
+                "z": -33,
                 "group": "Change delivery"
               },
               {
@@ -886,8 +877,8 @@
                 "label": "Change events",
                 "role": "queue",
                 "color": "sand",
-                "x": 39,
-                "z": -4,
+                "x": 20,
+                "z": -33,
                 "technology": "apachekafka",
                 "group": "Change delivery"
               },
@@ -896,8 +887,8 @@
                 "label": "Push gateway",
                 "role": "gateway",
                 "color": "sage",
-                "x": 39,
-                "z": 9,
+                "x": 35,
+                "z": -33,
                 "group": "Change delivery"
               },
               {
@@ -905,20 +896,20 @@
                 "label": "Desktop sync",
                 "role": "client",
                 "color": "sky",
-                "x": 27,
-                "z": 32,
+                "x": 49,
+                "z": -21,
                 "technology": "windows11",
-                "group": "Receiving devices"
+                "group": "Other devices"
               },
               {
                 "id": "other-web",
                 "label": "Web browser",
                 "role": "browser",
                 "color": "sky",
-                "x": 38,
-                "z": 32,
+                "x": 49,
+                "z": -8,
                 "technology": "chrome",
-                "group": "Receiving devices"
+                "group": "Other devices"
               },
               {
                 "id": "other-mobile",
@@ -926,18 +917,12 @@
                 "role": "mobile",
                 "color": "sky",
                 "x": 49,
-                "z": 32,
+                "z": 5,
                 "technology": "android",
-                "group": "Receiving devices"
+                "group": "Other devices"
               }
             ],
             "edges": [
-              {
-                "id": "pick-desktop",
-                "from": "user",
-                "to": "desktop",
-                "label": ""
-              },
               {
                 "id": "desktop-lb",
                 "from": "desktop",
