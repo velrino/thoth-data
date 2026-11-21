@@ -17,14 +17,14 @@
           "steps": [
             {
               "id": "ride-events-step-1",
-              "title": "Publish driver locations",
-              "description": "The driver app sends location updates while a rider opens the app. An ingestion boundary validates events before they enter a distributed log.",
+              "title": "Put a driver on the map",
+              "description": "As Lia opens the rider app, a nearby driver’s phone reports a location. Follow that update into the shared log, a record other services can read. It describes where the driver was when the phone sent it.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Rider · Mobile",
+                    "label": "Rider’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -32,16 +32,15 @@
                   },
                   {
                     "id": "api",
-                    "label": "Ride API",
+                    "label": "Ride service",
                     "role": "api",
                     "color": "sky",
-                    "group": "API ingress",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "driver",
-                    "label": "Driver · Mobile",
+                    "label": "Driver’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -49,21 +48,19 @@
                   },
                   {
                     "id": "ingest",
-                    "label": "Location ingestion",
+                    "label": "Receive locations",
                     "role": "api",
                     "color": "sky",
-                    "group": "API ingress",
                     "x": -7,
                     "z": -7
                   },
                   {
                     "id": "broker",
-                    "label": "Kafka event log",
+                    "label": "Event history",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
                     "appearance": "icon",
-                    "group": "Event log",
                     "x": 0,
                     "z": -7
                   }
@@ -96,43 +93,25 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
                     "id": "flow-1",
                     "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
+                      "edge-1",
                       "edge-2"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
-                    "id": "flow-edge-0-return",
+                    "id": "flow-0",
                     "route": [
+                      "edge-0",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -140,14 +119,14 @@
             },
             {
               "id": "ride-events-step-2",
-              "title": "Consume independently",
-              "description": "Independent consumer groups can read the location stream for different purposes. One consumer’s progress does not require every other consumer to finish the same event first.",
+              "title": "Use one location twice",
+              "description": "The map and pricing services read the same location updates at their own pace. A slow pricing calculation can fall behind while the map keeps moving. The two services may briefly have different ideas of the driver’s latest position.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Rider · Mobile",
+                    "label": "Rider’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -155,7 +134,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Ride API",
+                    "label": "Ride service",
                     "role": "api",
                     "color": "sky",
                     "group": "API ingress",
@@ -164,7 +143,7 @@
                   },
                   {
                     "id": "location",
-                    "label": "Location consumer",
+                    "label": "Update the map",
                     "role": "worker",
                     "color": "sky",
                     "group": "Location and demand consumers",
@@ -173,7 +152,7 @@
                   },
                   {
                     "id": "driver",
-                    "label": "Driver · Mobile",
+                    "label": "Driver’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -181,7 +160,7 @@
                   },
                   {
                     "id": "ingest",
-                    "label": "Location ingestion",
+                    "label": "Receive locations",
                     "role": "api",
                     "color": "sky",
                     "group": "API ingress",
@@ -190,7 +169,7 @@
                   },
                   {
                     "id": "broker",
-                    "label": "Kafka event log",
+                    "label": "Event history",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
@@ -201,7 +180,7 @@
                   },
                   {
                     "id": "pricing",
-                    "label": "Pricing consumer",
+                    "label": "Update prices",
                     "role": "worker",
                     "color": "sky",
                     "group": "Location and demand consumers",
@@ -267,53 +246,15 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
                     "id": "flow-2",
                     "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-2",
+                      "edge-3",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
@@ -322,38 +263,8 @@
                       "edge-5"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-5-return",
-                    "route": [
-                      "edge-5-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -362,13 +273,13 @@
             {
               "id": "ride-events-step-3",
               "title": "Request a ride",
-              "description": "A rider submits a ride request. The illustrative API publishes a request event, and matching combines that request with available driver information.",
+              "description": "Lia taps Request. Follow her request to matching, which consults the available driver information and records an assignment. Receiving Lia’s request and finding a driver are two milestones she can distinguish in the app.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Rider · Mobile",
+                    "label": "Rider’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -376,48 +287,43 @@
                   },
                   {
                     "id": "api",
-                    "label": "Ride API",
+                    "label": "Ride service",
                     "role": "api",
                     "color": "sky",
-                    "group": "API ingress",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "broker",
-                    "label": "Kafka event log",
+                    "label": "Event history",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
                     "appearance": "icon",
-                    "group": "Event log",
                     "x": 0,
                     "z": -7
                   },
                   {
                     "id": "matching",
-                    "label": "Matching consumer",
+                    "label": "Find a driver",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Ride assignment",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "location",
-                    "label": "Location consumer",
+                    "label": "Update the map",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Location and demand consumers",
                     "x": 7,
                     "z": -14
                   },
                   {
                     "id": "store",
-                    "label": "Ride state",
+                    "label": "Saved rides",
                     "role": "database",
                     "color": "sand",
-                    "group": "Ride assignment",
                     "x": 14,
                     "z": 0
                   }
@@ -470,71 +376,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -542,14 +393,14 @@
             },
             {
               "id": "ride-events-step-4",
-              "title": "Confirm and notify",
-              "description": "An assignment is persisted before the notification boundary informs the rider and driver. Consumers must handle duplicate delivery without creating duplicate business actions.",
+              "title": "Tell both people",
+              "description": "Once the assignment is saved, both Lia and the driver can be notified. Their phones may receive the news at different times. If a notice is retried, it must still refer to the same ride.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Rider · Mobile",
+                    "label": "Rider’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -557,7 +408,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Ride API",
+                    "label": "Ride service",
                     "role": "api",
                     "color": "sky",
                     "group": "API ingress",
@@ -566,7 +417,7 @@
                   },
                   {
                     "id": "broker",
-                    "label": "Kafka event log",
+                    "label": "Event history",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
@@ -577,7 +428,7 @@
                   },
                   {
                     "id": "matching",
-                    "label": "Matching consumer",
+                    "label": "Find a driver",
                     "role": "worker",
                     "color": "sky",
                     "group": "Ride assignment",
@@ -586,7 +437,7 @@
                   },
                   {
                     "id": "store",
-                    "label": "Ride state",
+                    "label": "Saved rides",
                     "role": "database",
                     "color": "sand",
                     "group": "Ride assignment",
@@ -595,7 +446,7 @@
                   },
                   {
                     "id": "push",
-                    "label": "Notification service",
+                    "label": "Notify the phones",
                     "role": "service",
                     "color": "sky",
                     "group": "Ride assignment",
@@ -604,7 +455,7 @@
                   },
                   {
                     "id": "driver",
-                    "label": "Driver · Mobile",
+                    "label": "Driver’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": 21,
@@ -669,53 +520,16 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
                     "id": "flow-2",
                     "route": [
-                      "edge-2"
+                      "edge-2",
+                      "edge-3",
+                      "edge-4",
+                      "edge-6"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
@@ -724,38 +538,8 @@
                       "edge-5"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -763,14 +547,14 @@
             },
             {
               "id": "ride-events-step-5",
-              "title": "Recover a delayed consumer",
-              "description": "A durable log lets a recovering consumer resume from its committed offset. Partition ordering is local to a partition; it is not a global ordering guarantee for all ride events.",
+              "title": "Catch up after a delay",
+              "description": "Suppose the map worker pauses. It can resume from its saved place in the log and read what it missed. Keeping old updates costs storage, but lets the worker catch up without asking every driver to retrace the trip.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Rider · Mobile",
+                    "label": "Rider’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -778,7 +562,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Ride API",
+                    "label": "Ride service",
                     "role": "api",
                     "color": "sky",
                     "group": "API ingress",
@@ -787,7 +571,7 @@
                   },
                   {
                     "id": "store",
-                    "label": "Ride state",
+                    "label": "Saved rides",
                     "role": "database",
                     "color": "sand",
                     "group": "Ride assignment",
@@ -796,7 +580,7 @@
                   },
                   {
                     "id": "driver",
-                    "label": "Driver · Mobile",
+                    "label": "Driver’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -804,7 +588,7 @@
                   },
                   {
                     "id": "ingest",
-                    "label": "Location ingestion",
+                    "label": "Receive locations",
                     "role": "api",
                     "color": "sky",
                     "group": "API ingress",
@@ -813,7 +597,7 @@
                   },
                   {
                     "id": "broker",
-                    "label": "Kafka event log",
+                    "label": "Event history",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
@@ -824,7 +608,7 @@
                   },
                   {
                     "id": "location",
-                    "label": "Location consumer",
+                    "label": "Update the map",
                     "role": "worker",
                     "color": "sky",
                     "group": "Location and demand consumers",
@@ -833,7 +617,7 @@
                   },
                   {
                     "id": "pricing",
-                    "label": "Pricing consumer",
+                    "label": "Update prices",
                     "role": "worker",
                     "color": "sky",
                     "group": "Location and demand consumers",
@@ -870,7 +654,7 @@
                     "id": "edge-4",
                     "from": "broker",
                     "to": "location",
-                    "label": "Resume from offset"
+                    "label": "Return missed updates"
                   },
                   {
                     "id": "edge-5",
@@ -894,98 +678,30 @@
                     "id": "edge-4-return",
                     "from": "location",
                     "to": "broker",
-                    "label": "Resumed event stream"
+                    "label": "Resume from saved position"
                   }
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
+                    "id": "flow-edge-4-return",
                     "route": [
-                      "edge-0"
+                      "edge-4-return",
+                      "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-2",
                     "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
+                      "edge-2",
                       "edge-3"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

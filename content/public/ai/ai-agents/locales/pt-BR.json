@@ -5,28 +5,178 @@
   "summary": "Veja uma chamada de modelo ganhar contexto documental, ferramentas, memória, um ciclo de decisão e trabalhadores especializados.",
   "steps": {
     "ai-agents-step-1": {
-      "title": "Consulte o modelo",
-      "description": "Um prompt de texto vai para o modelo, que gera uma resposta com base no contexto recebido. Uma solicitação pode resolver uma tarefa bem definida, como reescrever um parágrafo."
+      "title": "Faça uma pergunta",
+      "description": "Jo quer entender as regras de reembolso de uma passagem. Ela cola um parágrafo e pede ao modelo que o reescreva em linguagem simples. A resposta pode usar o trecho enviado. O restante da passagem continua fora da conversa.",
+      "nodes": {
+        "client": {
+          "label": "Sua pergunta"
+        },
+        "model": {
+          "label": "Modelo de linguagem"
+        },
+        "response": {
+          "label": "Resposta"
+        }
+      }
     },
     "ai-agents-step-2": {
-      "title": "Inclua documentos e resultados estruturados",
-      "description": "O aplicativo extrai e limita o texto do documento antes de montar o prompt. Depois, valida a estrutura da resposta e a transforma em algo útil, como um resumo com campos definidos."
+      "title": "Leia um documento",
+      "description": "Desta vez, Jo anexa a passagem. O aplicativo extrai o texto e confere se a resposta tem os campos pedidos. O formulário detecta se o campo de prazo ficou vazio. Mesmo preenchido, ele ainda precisa corresponder ao que diz a passagem.",
+      "nodes": {
+        "client": {
+          "label": "Sua pergunta"
+        },
+        "prepare": {
+          "label": "Leitura do material"
+        },
+        "model": {
+          "label": "Modelo de linguagem"
+        },
+        "format": {
+          "label": "Conferência do formato"
+        },
+        "response": {
+          "label": "Resposta"
+        }
+      }
     },
     "ai-agents-step-3": {
-      "title": "Use ferramentas para buscar evidências",
-      "description": "O modelo pode pedir uma busca quando faltam evidências. O aplicativo valida a chamada e devolve trechos relevantes com suas fontes. O modelo usa essas informações para responder."
+      "title": "Busque uma regra que falta",
+      "description": "A passagem remete Jo à política de reembolso da empresa. Siga a busca até o índice e de volta. O modelo pode citar um trecho que Jo consegue conferir. A consulta leva tempo e um trecho irrelevante ainda pode induzir a uma resposta errada.",
+      "nodes": {
+        "client": {
+          "label": "Sua pergunta"
+        },
+        "prepare": {
+          "label": "Leitura do material"
+        },
+        "model": {
+          "label": "Modelo de linguagem"
+        },
+        "tools": {
+          "label": "Uso da ferramenta"
+        },
+        "knowledge": {
+          "label": "Busca de fontes"
+        },
+        "format": {
+          "label": "Conferência do formato"
+        },
+        "response": {
+          "label": "Resposta"
+        }
+      }
     },
     "ai-agents-step-4": {
-      "title": "Adicione entradas multimodais e memória",
-      "description": "O aplicativo prepara imagens ou documentos compatíveis junto com o texto. A memória de trabalho mantém o contexto entre turnos. Informações selecionadas podem ser guardadas por mais tempo, com regras de consentimento e retenção."
+      "title": "Acompanhe a próxima pergunta",
+      "description": "Jo acrescenta uma foto e pergunta “Esse prazo vale para esta tarifa?”. O aplicativo prepara a imagem e usa a conversa para entender “esse prazo”. Lembrar detalhes em outra visita exige decidir o que guardar e por quanto tempo.",
+      "nodes": {
+        "client": {
+          "label": "Sua pergunta"
+        },
+        "prepare": {
+          "label": "Leitura do material"
+        },
+        "model": {
+          "label": "Modelo de linguagem"
+        },
+        "tools": {
+          "label": "Uso da ferramenta"
+        },
+        "knowledge": {
+          "label": "Busca de fontes"
+        },
+        "session": {
+          "label": "Conversa atual"
+        },
+        "memory": {
+          "label": "Fatos guardados"
+        },
+        "format": {
+          "label": "Conferência do formato"
+        },
+        "response": {
+          "label": "Resposta"
+        }
+      }
     },
     "ai-agents-step-5": {
-      "title": "Execute um ciclo de decisão com limites",
-      "description": "Após cada observação, o modelo pode rever o plano, usar uma ferramenta, pedir aprovação ou encerrar. O ciclo para quando o objetivo é alcançado, uma política bloqueia a ação ou o orçamento acaba."
+      "title": "Decida quando parar a busca",
+      "description": "Jo pede o prazo exato. Siga uma busca e seu resultado de volta ao ponto de decisão. Outra consulta pode trazer uma fonte melhor, mas custa tempo e dinheiro. Quando o limite é atingido, o aplicativo precisa parar mesmo que a resposta esteja incompleta.",
+      "nodes": {
+        "client": {
+          "label": "Sua pergunta"
+        },
+        "prepare": {
+          "label": "Leitura do material"
+        },
+        "model": {
+          "label": "Modelo de linguagem"
+        },
+        "session": {
+          "label": "Conversa atual"
+        },
+        "memory": {
+          "label": "Fatos guardados"
+        },
+        "episodes": {
+          "label": "Consultas anteriores"
+        },
+        "decision": {
+          "label": "Próxima etapa?"
+        },
+        "tools": {
+          "label": "Uso da ferramenta"
+        },
+        "knowledge": {
+          "label": "Busca de fontes"
+        },
+        "approval": {
+          "label": "Revisão humana"
+        },
+        "format": {
+          "label": "Conferência do formato"
+        },
+        "response": {
+          "label": "Resposta"
+        }
+      }
     },
     "ai-agents-step-6": {
-      "title": "Coordene agentes especializados",
-      "description": "Um orquestrador delega tarefas delimitadas e reúne os resultados antes da entrega. O exemplo separa pesquisa, síntese e verificação. Registros ajudam na avaliação e ações sensíveis podem exigir revisão humana."
+      "title": "Divida o trabalho e confira a resposta",
+      "description": "Para uma política longa, um coordenador pede a um pesquisador que encontre as regras. Outro participante redige e um revisor confere o texto antes que Jo o receba. Dividir o trabalho permite uma segunda leitura e exige transmitir a pergunta original a cada participante.",
+      "nodes": {
+        "client": {
+          "label": "Sua pergunta"
+        },
+        "orchestrator": {
+          "label": "Coordenação"
+        },
+        "session": {
+          "label": "Conversa atual"
+        },
+        "research": {
+          "label": "Pesquisa"
+        },
+        "knowledge": {
+          "label": "Busca de fontes"
+        },
+        "model": {
+          "label": "Modelo de linguagem"
+        },
+        "trace": {
+          "label": "Registro de atividade"
+        },
+        "review": {
+          "label": "Revisão do rascunho"
+        },
+        "approval": {
+          "label": "Revisão humana"
+        },
+        "response": {
+          "label": "Resposta"
+        }
+      }
     }
   }
 }

@@ -2,5 +2,166 @@
   "schemaVersion": 1,
   "title": "ClassGame · Da atividade às evidências de aprendizagem",
   "pattern": "Monólito modular e fluxos de IA",
-  "summary": "Prepare uma missão, publique materiais privados, jogue com a Mia e analise evidências de aprendizagem."
+  "summary": "Prepare uma missão, publique materiais privados, jogue com a Mia e analise evidências de aprendizagem.",
+  "steps": {
+    "classgame-step-1": {
+      "title": "Prepare o rascunho da missão",
+      "description": "Uma professora quer um quiz sobre o ciclo da água. Ela pode anexar as anotações da aula. Siga o pedido até a geração das perguntas e o salvamento do rascunho. Ela pode revisar as questões antes que algum aluno as veja.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "upload": {
+          "label": "Arquivos temporários"
+        },
+        "api": {
+          "label": "Serviço do ClassGame"
+        },
+        "mission": {
+          "label": "Criação de missões"
+        },
+        "policy": {
+          "label": "Regras de IA"
+        },
+        "vertex": {
+          "label": "Serviço de modelos"
+        },
+        "model": {
+          "label": "Gemini"
+        },
+        "db": {
+          "label": "Atividades"
+        }
+      }
+    },
+    "classgame-step-2": {
+      "title": "Publique as perguntas revisadas",
+      "description": "A professora aprova um rascunho específico. O ClassGame confere se ainda é a versão revisada. Com as tarefas em segundo plano ativas, ele agenda a cópia dos arquivos antes de publicar. O serviço de cópia confere a versão publicada antes de mover o material para o armazenamento privado.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "api": {
+          "label": "Serviço do ClassGame"
+        },
+        "mission": {
+          "label": "Criação de missões"
+        },
+        "db": {
+          "label": "Atividades"
+        },
+        "broker": {
+          "label": "Fila"
+        },
+        "worker": {
+          "label": "Executor"
+        },
+        "upload": {
+          "label": "Arquivos temporários"
+        },
+        "storage": {
+          "label": "Arquivos privados"
+        }
+      }
+    },
+    "classgame-step-3": {
+      "title": "Peça ajuda à Mia",
+      "description": "Um aluno responde à questão sobre evaporação. O navegador guarda a resposta antes de pedir ajuda à Mia. Acompanhe a ida do pedido e a volta da dica. O aluno espera pela dica, mas a demora não precisa apagar a resposta que já ficou no aparelho.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "outbox": {
+          "label": "Respostas pendentes"
+        },
+        "api": {
+          "label": "Serviço do ClassGame"
+        },
+        "tutor": {
+          "label": "Tutora Mia"
+        },
+        "db": {
+          "label": "Atividades"
+        },
+        "policy": {
+          "label": "Regras de IA"
+        },
+        "vertex": {
+          "label": "Serviço de modelos"
+        },
+        "model": {
+          "label": "Gemini"
+        },
+        "limits": {
+          "label": "Limite de uso"
+        }
+      }
+    },
+    "classgame-step-4": {
+      "title": "Conclua o quiz",
+      "description": "O aluno entrega o quiz. O ClassGame registra as respostas aceitas e a conclusão antes de terminar a análise. Uma tarefa pode analisar depois, então o aluno termina mais cedo enquanto o relatório ainda está sendo preparado. Sem a fila, a mesma análise roda no próprio pedido.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "api": {
+          "label": "Serviço do ClassGame"
+        },
+        "db": {
+          "label": "Atividades"
+        },
+        "broker": {
+          "label": "Fila"
+        },
+        "worker": {
+          "label": "Executor"
+        },
+        "learning": {
+          "label": "Análise"
+        },
+        "policy": {
+          "label": "Regras de IA"
+        },
+        "vertex": {
+          "label": "Serviço de modelos"
+        },
+        "model": {
+          "label": "Gemini"
+        }
+      }
+    },
+    "classgame-step-5": {
+      "title": "Leia o resumo da turma",
+      "description": "A professora abre o resumo da turma para decidir o que retomar na próxima aula. Siga a consulta até o relatório salvo e de volta ao painel. A atualização usa análises concluídas e salva uma nova versão, assim abrir a tela de novo dispensa reanalisar cada resposta.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "api": {
+          "label": "Serviço do ClassGame"
+        },
+        "db": {
+          "label": "Atividades"
+        },
+        "broker": {
+          "label": "Fila"
+        },
+        "worker": {
+          "label": "Executor"
+        },
+        "learning": {
+          "label": "Análise"
+        },
+        "policy": {
+          "label": "Regras de IA"
+        },
+        "vertex": {
+          "label": "Serviço de modelos"
+        },
+        "model": {
+          "label": "Gemini"
+        }
+      }
+    }
+  }
 }

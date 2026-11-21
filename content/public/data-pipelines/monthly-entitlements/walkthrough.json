@@ -1,0 +1,27 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "monthly-entitlements",
+  "title": "Monthly Entitlements to the Data Lake",
+  "entries": [
+    {
+      "kind": "lesson",
+      "id": "monthly-entitlements",
+      "title": "Monthly Entitlements to the Data Lake",
+      "complete": false,
+      "steps": [
+        {
+          "id": "overview",
+          "title": "Which books could a member read?",
+          "description": "Which books could a library member read last month? Compare three ways to keep that history on the board. A list for each member is easy to look up. Saving plans and catalogs separately uses less space. Sealed files preserve an audit trail, but reports must wait for each batch.",
+          "metrics": [],
+          "scene": {
+            "nodes": [],
+            "edges": [],
+            "flows": []
+          }
+        }
+      ]
+    }
+  ]
+}

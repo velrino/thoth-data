@@ -18,13 +18,13 @@
             {
               "id": "streaming-step-1",
               "title": "Browse on a TV",
-              "description": "A TV requests a browsing screen. The client API composes catalog and recommendation results from separate services.",
+              "description": "Leo turns on his TV to choose a film. The TV asks for the home screen. The catalog supplies titles and a second service suggests which ones Leo might like. The results come back together on one screen.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Viewer · TV",
+                    "label": "Viewer’s TV",
                     "role": "client",
                     "color": "sky",
                     "x": -14,
@@ -32,7 +32,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "Client API",
+                    "label": "TV requests",
                     "role": "gateway",
                     "color": "sky",
                     "x": -7,
@@ -40,10 +40,9 @@
                   },
                   {
                     "id": "catalog",
-                    "label": "Catalog service",
+                    "label": "Title catalog",
                     "role": "service",
                     "color": "sky",
-                    "group": "Browse services",
                     "x": 0,
                     "z": -7
                   },
@@ -52,7 +51,6 @@
                     "label": "Recommendations",
                     "role": "service",
                     "color": "sky",
-                    "group": "Browse services",
                     "x": 0,
                     "z": 7
                   }
@@ -99,61 +97,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -162,13 +113,13 @@
             {
               "id": "streaming-step-2",
               "title": "Authorize playback",
-              "description": "Selecting a title starts a distinct playback path. The playback service checks entitlement before returning session information; browsing success alone is not permission to stream.",
+              "description": "Leo presses Play. The playback service checks whether his account can watch the title and returns the information his TV needs to start. Seeing a film on the home screen is only the first step.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Viewer · TV",
+                    "label": "Viewer’s TV",
                     "role": "client",
                     "color": "sky",
                     "x": -14,
@@ -176,7 +127,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "Client API",
+                    "label": "TV requests",
                     "role": "gateway",
                     "color": "sky",
                     "x": -7,
@@ -184,19 +135,17 @@
                   },
                   {
                     "id": "play",
-                    "label": "Playback service",
+                    "label": "Start playback",
                     "role": "service",
                     "color": "sky",
-                    "group": "Playback authorization",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "account",
-                    "label": "Account entitlement",
+                    "label": "Viewing rights",
                     "role": "service",
                     "color": "sky",
-                    "group": "Playback authorization",
                     "x": 7,
                     "z": 0
                   }
@@ -243,61 +192,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -306,13 +210,13 @@
             {
               "id": "streaming-step-3",
               "title": "Deliver the video",
-              "description": "The TV fetches video segments from Open Connect. Separating the media delivery path from browsing services limits how much optional homepage work is needed during playback.",
+              "description": "Once playback is authorized, Leo’s TV asks Open Connect for small pieces of video. Follow a piece back to the TV. The service that assembled the home screen can go on answering other viewers while Leo watches.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Viewer · TV",
+                    "label": "Viewer’s TV",
                     "role": "client",
                     "color": "sky",
                     "x": -14,
@@ -320,7 +224,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "Client API",
+                    "label": "TV requests",
                     "role": "gateway",
                     "color": "sky",
                     "x": -7,
@@ -328,19 +232,17 @@
                   },
                   {
                     "id": "play",
-                    "label": "Playback service",
+                    "label": "Start playback",
                     "role": "service",
                     "color": "sky",
-                    "group": "Playback authorization",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "account",
-                    "label": "Account entitlement",
+                    "label": "Viewing rights",
                     "role": "service",
                     "color": "sky",
-                    "group": "Playback authorization",
                     "x": 7,
                     "z": 0
                   },
@@ -349,7 +251,6 @@
                     "label": "Open Connect",
                     "role": "cdn",
                     "color": "sky",
-                    "group": "Video delivery",
                     "x": -14,
                     "z": 7
                   }
@@ -408,81 +309,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
+                      "edge-0-return",
+                      "edge-3",
                       "edge-3-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -490,14 +328,14 @@
             },
             {
               "id": "streaming-step-4",
-              "title": "Degrade optional features",
-              "description": "When recommendations time out, the browsing path can use fallback results. Isolation and bounded waits reduce cascading failures; entitlement and other critical checks still cannot simply be skipped.",
+              "title": "When recommendations are slow",
+              "description": "Tonight the recommendation service takes too long. The home screen can show a backup list sooner, although it may be less personal. Leo still needs the usual account check when he picks a film.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Viewer · TV",
+                    "label": "Viewer’s TV",
                     "role": "client",
                     "color": "sky",
                     "x": -14,
@@ -505,7 +343,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "Client API",
+                    "label": "TV requests",
                     "role": "gateway",
                     "color": "sky",
                     "x": -7,
@@ -516,25 +354,22 @@
                     "label": "Recommendations",
                     "role": "service",
                     "color": "sky",
-                    "group": "Browse services",
                     "x": 0,
                     "z": 7
                   },
                   {
                     "id": "cache",
-                    "label": "Fallback results",
+                    "label": "Backup list",
                     "role": "cache",
                     "color": "sky",
-                    "group": "Browse services",
                     "x": 7,
                     "z": 7
                   },
                   {
                     "id": "play",
-                    "label": "Playback service",
+                    "label": "Start playback",
                     "role": "service",
                     "color": "sky",
-                    "group": "Playback authorization",
                     "x": 0,
                     "z": 0
                   }
@@ -593,81 +428,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "failure",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return",
+                      "edge-2",
+                      "edge-2-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -675,14 +445,14 @@
             },
             {
               "id": "streaming-step-5",
-              "title": "Observe asynchronously",
-              "description": "Viewing events feed an asynchronous consumer. Under pressure, systems can prioritize essential playback requests over optional work; this is an isolation strategy, not a guarantee against every outage.",
+              "title": "Count views after playback starts",
+              "description": "As Leo watches, the system sends a viewing event for later analysis. Follow it to the worker that counts views. Letting that count wait protects time for playback, so a report may briefly trail what viewers have actually seen.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Viewer · TV",
+                    "label": "Viewer’s TV",
                     "role": "client",
                     "color": "sky",
                     "x": -14,
@@ -690,7 +460,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "Client API",
+                    "label": "TV requests",
                     "role": "gateway",
                     "color": "sky",
                     "x": -7,
@@ -698,10 +468,9 @@
                   },
                   {
                     "id": "play",
-                    "label": "Playback service",
+                    "label": "Start playback",
                     "role": "service",
                     "color": "sky",
-                    "group": "Playback authorization",
                     "x": 0,
                     "z": 0
                   },
@@ -710,7 +479,6 @@
                     "label": "Open Connect",
                     "role": "cdn",
                     "color": "sky",
-                    "group": "Video delivery",
                     "x": -14,
                     "z": 7
                   },
@@ -719,16 +487,14 @@
                     "label": "Viewing events",
                     "role": "queue",
                     "color": "lavender",
-                    "group": "Viewing telemetry",
                     "x": 7,
                     "z": -7
                   },
                   {
                     "id": "analytics",
-                    "label": "Async analytics",
+                    "label": "Count views",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Viewing telemetry",
                     "x": 14,
                     "z": -7
                   }
@@ -785,83 +551,25 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
                     "id": "flow-2",
                     "route": [
-                      "edge-2"
+                      "edge-2",
+                      "edge-2-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-3",
                     "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-3",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

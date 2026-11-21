@@ -2,5 +2,112 @@
   "schemaVersion": 1,
   "title": "Uma compra dentro de um monólito modular",
   "pattern": "Monólito modular",
-  "summary": "Acompanhe uma solicitação da loja em uma aplicação Rails com limites claros entre módulos."
+  "summary": "Acompanhe uma solicitação da loja em uma aplicação Rails com limites claros entre módulos.",
+  "steps": {
+    "commerce-step-1": {
+      "title": "Abra a loja",
+      "description": "Sam abre a loja no celular para comprar uma caneca. Um ponto de entrada encaminha o pedido ao aplicativo da loja. A página vem desse aplicativo, que reúne tarefas de várias equipes.",
+      "nodes": {
+        "client": {
+          "label": "Celular do cliente"
+        },
+        "edge": {
+          "label": "Entrada da loja"
+        },
+        "app": {
+          "label": "Aplicativo da loja"
+        }
+      }
+    },
+    "commerce-step-2": {
+      "title": "Consulte a caneca",
+      "description": "A loja pede ao catálogo os dados da caneca. O catálogo faz a consulta e devolve o resultado à página. As duas partes rodam no mesmo aplicativo, então uma simples chamada de função pode resolver a consulta.",
+      "nodes": {
+        "client": {
+          "label": "Celular do cliente"
+        },
+        "edge": {
+          "label": "Entrada da loja"
+        },
+        "app": {
+          "label": "Aplicativo da loja"
+        },
+        "catalog": {
+          "label": "Catálogo de produtos"
+        },
+        "db": {
+          "label": "Registros da loja"
+        }
+      }
+    },
+    "commerce-step-3": {
+      "title": "Reserve a última caneca",
+      "description": "Sam finaliza a compra. Antes de registrar o pedido, o caixa pede ao estoque que reserve a caneca. Deixar o estoque a cargo dessa regra permite mudar a tela de compra sem ter de reimplementar o controle de unidades.",
+      "nodes": {
+        "client": {
+          "label": "Celular do cliente"
+        },
+        "app": {
+          "label": "Aplicativo da loja"
+        },
+        "checkout": {
+          "label": "Caixa"
+        },
+        "inventory": {
+          "label": "Estoque"
+        },
+        "db": {
+          "label": "Registros da loja"
+        }
+      }
+    },
+    "commerce-step-4": {
+      "title": "Envie o recibo depois",
+      "description": "O pedido de Sam é salvo e o recibo entra em uma fila. A loja pode confirmar a compra enquanto outro serviço cuida do e-mail. A confirmação chega mais cedo, mas o recibo pode demorar se a fila crescer.",
+      "nodes": {
+        "client": {
+          "label": "Celular do cliente"
+        },
+        "app": {
+          "label": "Aplicativo da loja"
+        },
+        "checkout": {
+          "label": "Caixa"
+        },
+        "db": {
+          "label": "Registros da loja"
+        },
+        "jobs": {
+          "label": "Fila de tarefas"
+        },
+        "worker": {
+          "label": "Envio de recibos"
+        }
+      }
+    },
+    "commerce-step-5": {
+      "title": "Atenda mais clientes ao mesmo tempo",
+      "description": "Durante uma promoção, mais cópias do aplicativo podem atender os clientes. Catálogo e caixa são publicados juntos, o que simplifica a comunicação entre eles. Em contrapartida, uma mudança no catálogo exige publicar o aplicativo compartilhado.",
+      "nodes": {
+        "client": {
+          "label": "Celular do cliente"
+        },
+        "edge": {
+          "label": "Entrada da loja"
+        },
+        "app": {
+          "label": "Aplicativo da loja"
+        },
+        "catalog": {
+          "label": "Catálogo de produtos"
+        },
+        "checkout": {
+          "label": "Caixa"
+        },
+        "db": {
+          "label": "Registros da loja"
+        }
+      }
+    }
+  }
 }

@@ -17,28 +17,28 @@
           "steps": [
             {
               "id": "git-workflow-step-1",
-              "title": "Stage, commit and publish",
-              "description": "Use git add to stage the selected file changes. Git commit records the staged snapshot and advances your local branch. Git push sends needed objects and requests an update to main on origin.",
+              "title": "Share and update a recipe",
+              "description": "Read each row from left to right. At the top, stage your recipe fix, commit it on your computer and push it so your teammate can fetch it. In the middle, git diff shows unstaged edits and git diff --staged shows what the next commit will contain. At the bottom, git fetch downloads your teammate’s change. Run git merge origin/main when you are ready to update your branch and files.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Working tree",
+                    "label": "Working files",
                     "role": "client",
                     "color": "sky",
-                    "group": "Local checkout",
-                    "x": -21,
-                    "z": 0
+                    "group": "1. add · commit · push",
+                    "x": -9,
+                    "z": -8.5
                   },
                   {
                     "id": "index",
-                    "label": "Staging area",
+                    "label": "Staged changes",
                     "role": "storage",
                     "color": "sand",
-                    "group": "Local checkout",
-                    "x": -7,
-                    "z": 0
+                    "group": "1. add · commit · push",
+                    "x": -3,
+                    "z": -8.5
                   },
                   {
                     "id": "local",
@@ -47,244 +47,160 @@
                     "color": "sand",
                     "technology": "git",
                     "appearance": "icon",
-                    "group": "Local checkout",
-                    "x": 7,
-                    "z": 0
+                    "group": "1. add · commit · push",
+                    "x": 3,
+                    "z": -8.5
                   },
                   {
                     "id": "remote",
-                    "label": "Remote main",
+                    "label": "Shared main",
                     "role": "external",
                     "color": "sky",
-                    "group": "Remote repository",
-                    "x": 22.400000000000002,
-                    "z": 0
-                  }
-                ],
-                "edges": [
-                  {
-                    "id": "edge-0",
-                    "from": "client",
-                    "to": "index",
-                    "label": "git add"
+                    "group": "1. add · commit · push",
+                    "x": 9,
+                    "z": -8.5
                   },
                   {
-                    "id": "edge-1",
-                    "from": "index",
-                    "to": "local",
-                    "label": "git commit"
-                  },
-                  {
-                    "id": "edge-2",
-                    "from": "local",
-                    "to": "remote",
-                    "label": "git push"
-                  }
-                ],
-                "flows": [
-                  {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  }
-                ]
-              }
-            },
-            {
-              "id": "git-workflow-step-2",
-              "title": "Inspect staged and unstaged changes",
-              "description": "Git diff compares the working tree with the index to show unstaged changes. Git diff --staged compares the index with HEAD to show what the next commit would record. Both commands are read-only.",
-              "metrics": [],
-              "scene": {
-                "nodes": [
-                  {
-                    "id": "client",
-                    "label": "Working tree",
+                    "id": "compare-client",
+                    "label": "Working files",
                     "role": "client",
                     "color": "sky",
-                    "group": "Local checkout",
-                    "x": -21,
+                    "group": "2. diff",
+                    "x": -9,
                     "z": 0
                   },
                   {
-                    "id": "index",
-                    "label": "Staging area",
+                    "id": "compare-index",
+                    "label": "Staged changes",
                     "role": "storage",
                     "color": "sand",
-                    "group": "Local checkout",
-                    "x": -7,
+                    "group": "2. diff",
+                    "x": -3,
                     "z": 0
                   },
                   {
-                    "id": "local",
+                    "id": "compare-local",
                     "label": "Local main",
                     "role": "database",
                     "color": "sand",
                     "technology": "git",
                     "appearance": "icon",
-                    "group": "Local checkout",
-                    "x": 7,
-                    "z": 0
-                  }
-                ],
-                "edges": [
-                  {
-                    "id": "edge-0",
-                    "from": "client",
-                    "to": "index",
-                    "label": "git diff"
-                  },
-                  {
-                    "id": "edge-1",
-                    "from": "index",
-                    "to": "local",
-                    "label": "git diff --staged"
-                  }
-                ],
-                "flows": [
-                  {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  }
-                ]
-              }
-            },
-            {
-              "id": "git-workflow-step-3",
-              "title": "Fetch and integrate remote changes",
-              "description": "Git fetch downloads remote history and updates origin/main locally. Git merge origin/main integrates that history into the current branch and updates the checkout when successful. Git pull combines fetch with integration, which can merge or rebase depending on configuration.",
-              "metrics": [],
-              "scene": {
-                "nodes": [
-                  {
-                    "id": "client",
-                    "label": "Working tree",
-                    "role": "client",
-                    "color": "sky",
-                    "group": "Local checkout",
-                    "x": -21,
+                    "group": "2. diff",
+                    "x": 3,
                     "z": 0
                   },
                   {
-                    "id": "remote",
-                    "label": "Remote main",
+                    "id": "update-remote",
+                    "label": "Shared main",
                     "role": "external",
                     "color": "sky",
-                    "group": "Remote repository",
-                    "x": 22.400000000000002,
-                    "z": 0
+                    "group": "3. fetch · merge",
+                    "x": -9,
+                    "z": 8.5
                   },
                   {
                     "id": "tracking",
                     "label": "origin/main",
                     "role": "storage",
                     "color": "sand",
-                    "group": "Local checkout",
-                    "x": 7,
-                    "z": -13.299999999999999
+                    "group": "3. fetch · merge",
+                    "x": -3,
+                    "z": 8.5
                   },
                   {
-                    "id": "local",
+                    "id": "update-local",
                     "label": "Local main",
                     "role": "database",
                     "color": "sand",
                     "technology": "git",
                     "appearance": "icon",
-                    "group": "Local checkout",
-                    "x": 7,
-                    "z": 0
+                    "group": "3. fetch · merge",
+                    "x": 3,
+                    "z": 8.5
+                  },
+                  {
+                    "id": "update-client",
+                    "label": "Working files",
+                    "role": "client",
+                    "color": "sky",
+                    "group": "3. fetch · merge",
+                    "x": 9,
+                    "z": 8.5
                   }
                 ],
                 "edges": [
                   {
-                    "id": "edge-0",
-                    "from": "remote",
+                    "id": "publish-client-index",
+                    "from": "client",
+                    "to": "index",
+                    "label": "git add"
+                  },
+                  {
+                    "id": "publish-index-local",
+                    "from": "index",
+                    "to": "local",
+                    "label": "git commit"
+                  },
+                  {
+                    "id": "publish-local-remote",
+                    "from": "local",
+                    "to": "remote",
+                    "label": "git push"
+                  },
+                  {
+                    "id": "compare-client-index",
+                    "from": "compare-client",
+                    "to": "compare-index",
+                    "label": "git diff"
+                  },
+                  {
+                    "id": "compare-index-local",
+                    "from": "compare-index",
+                    "to": "compare-local",
+                    "label": "git diff --staged"
+                  },
+                  {
+                    "id": "update-remote-tracking",
+                    "from": "update-remote",
                     "to": "tracking",
                     "label": "git fetch"
                   },
                   {
-                    "id": "edge-1",
+                    "id": "update-tracking-local",
                     "from": "tracking",
-                    "to": "local",
+                    "to": "update-local",
                     "label": "git merge"
                   },
                   {
-                    "id": "edge-2",
-                    "from": "local",
-                    "to": "client",
+                    "id": "update-local-client",
+                    "from": "update-local",
+                    "to": "update-client",
                     "label": "Update checkout"
                   }
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
+                    "id": "publish-path",
                     "route": [
-                      "edge-0"
+                      "publish-client-index",
+                      "publish-index-local",
+                      "publish-local-remote"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
-                    "id": "flow-1",
+                    "id": "update-path",
                     "route": [
-                      "edge-1"
+                      "update-remote-tracking",
+                      "update-tracking-local",
+                      "update-local-client"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

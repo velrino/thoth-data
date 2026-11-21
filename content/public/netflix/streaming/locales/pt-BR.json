@@ -2,5 +2,109 @@
   "schemaVersion": 1,
   "title": "Como manter a reprodução independente",
   "pattern": "Microsserviços",
-  "summary": "Separe a navegação, a autorização e a entrega de vídeo para entender como a reprodução continua quando outras funções falham."
+  "summary": "Separe a navegação, a autorização e a entrega de vídeo para entender como a reprodução continua quando outras funções falham.",
+  "steps": {
+    "streaming-step-1": {
+      "title": "Abra a tela inicial na TV",
+      "description": "Leo liga a TV para escolher um filme. A TV pede a tela inicial. O catálogo fornece os títulos e outro serviço sugere quais podem interessar a Leo. Os resultados chegam juntos em uma tela.",
+      "nodes": {
+        "client": {
+          "label": "TV do espectador"
+        },
+        "gateway": {
+          "label": "Pedidos da TV"
+        },
+        "catalog": {
+          "label": "Catálogo"
+        },
+        "recommend": {
+          "label": "Recomendações"
+        }
+      }
+    },
+    "streaming-step-2": {
+      "title": "Confira se o filme pode começar",
+      "description": "Leo aperta Play. O serviço de reprodução verifica se a conta pode assistir ao título e devolve as informações necessárias para a TV começar. Encontrar o filme na tela inicial é só a primeira etapa.",
+      "nodes": {
+        "client": {
+          "label": "TV do espectador"
+        },
+        "gateway": {
+          "label": "Pedidos da TV"
+        },
+        "play": {
+          "label": "Início da reprodução"
+        },
+        "account": {
+          "label": "Direito de assistir"
+        }
+      }
+    },
+    "streaming-step-3": {
+      "title": "Entregue o vídeo",
+      "description": "Depois da autorização, a TV pede pequenos trechos do vídeo ao Open Connect. Siga um trecho de volta à TV. O serviço que montou a tela inicial pode atender outras pessoas enquanto Leo assiste.",
+      "nodes": {
+        "client": {
+          "label": "TV do espectador"
+        },
+        "gateway": {
+          "label": "Pedidos da TV"
+        },
+        "play": {
+          "label": "Início da reprodução"
+        },
+        "account": {
+          "label": "Direito de assistir"
+        },
+        "cdn": {
+          "label": "Open Connect"
+        }
+      }
+    },
+    "streaming-step-4": {
+      "title": "Quando as recomendações demoram",
+      "description": "Hoje as recomendações demoram. A tela inicial pode mostrar uma lista de reserva mais cedo, mas ela talvez combine menos com o gosto de Leo. A verificação da conta continua necessária quando ele escolhe o filme.",
+      "nodes": {
+        "client": {
+          "label": "TV do espectador"
+        },
+        "gateway": {
+          "label": "Pedidos da TV"
+        },
+        "recommend": {
+          "label": "Recomendações"
+        },
+        "cache": {
+          "label": "Lista de reserva"
+        },
+        "play": {
+          "label": "Início da reprodução"
+        }
+      }
+    },
+    "streaming-step-5": {
+      "title": "Contabilize as visualizações depois",
+      "description": "Enquanto Leo assiste, o sistema encaminha um registro da visualização para análise posterior. Siga esse registro até a contagem. Deixar a contagem para depois preserva tempo para reproduzir o vídeo, então o relatório pode demorar a refletir o que as pessoas já viram.",
+      "nodes": {
+        "client": {
+          "label": "TV do espectador"
+        },
+        "gateway": {
+          "label": "Pedidos da TV"
+        },
+        "play": {
+          "label": "Início da reprodução"
+        },
+        "cdn": {
+          "label": "Open Connect"
+        },
+        "events": {
+          "label": "Registros de exibição"
+        },
+        "analytics": {
+          "label": "Contagem de exibições"
+        }
+      }
+    }
+  }
 }

@@ -13,7 +13,7 @@
         {
           "id": "open-a-file",
           "title": "Open a file",
-          "description": "Ana opens a photo on her phone. The same request can start on a desktop or in a browser. Follow the moving dot from the phone to the file service and back to the phone.",
+          "description": "Ana taps a photo on her phone. Follow the dot to the file service and back to her screen. Opening the photo on a computer or in a browser starts the same way.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -78,7 +78,7 @@
                 "id": "mobile-lb",
                 "from": "mobile",
                 "to": "lb",
-                "label": "1. Send file"
+                "label": "1. Open photo"
               },
               {
                 "id": "route",
@@ -119,7 +119,7 @@
         {
           "id": "find-and-authorize",
           "title": "Find it and check access",
-          "description": "Ana opens the same photo in a browser. The file service checks her identity, asks whether she can open the photo, finds its record and retrieves the actual file data. Follow one request through those checks and back to the browser.",
+          "description": "Ana opens the photo in her browser. The service checks who she is and whether she can see it. The file record tells it which pieces to fetch. The browser receives those pieces and displays her photo.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -308,7 +308,7 @@
         {
           "id": "upload-and-resume",
           "title": "Resume an interrupted upload",
-          "description": "Ana edits the photo on her phone and loses signal in the metro. The upload session remembers what arrived, so her phone sends only the pieces that are missing. The photo can show as Saved once all pieces are durable and the file record points to them.",
+          "description": "Ana edits the photo and loses signal on the train halfway through uploading it. Her phone can send just the missing pieces when the signal returns. That saves data, but the service has to keep a record of which pieces arrived. Ana can see “Saved” once the pieces are stored and the file record points to them.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -433,7 +433,7 @@
         {
           "id": "versions-and-sharing",
           "title": "Restore or share a version",
-          "description": "Ana wants yesterday’s photo and gives a friend permission to view it. The file record points to its version history. Restoring a version updates that record. Changing sharing rules updates who can open it.",
+          "description": "Ana preferred yesterday’s edit. The version history lets her find it and make it current again. To show the photo to a friend, she also changes the sharing rules. Restoring the picture and granting access are two separate decisions.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -511,7 +511,7 @@
                 "id": "metadata-versions",
                 "from": "metadata",
                 "to": "versions",
-                "label": "Keep a version"
+                "label": "Look up versions"
               },
               {
                 "id": "restore-record",
@@ -540,14 +540,11 @@
                   "route",
                   "lookup",
                   "metadata-versions",
-                  "restore-record",
-                  "metadata-versions",
-                  "version-access",
-                  "save-sharing"
+                  "restore-record"
                 ],
                 "kind": "request",
-                "rate": 0.34,
-                "speed": 1.55,
+                "rate": 0.4,
+                "speed": 0.95,
                 "bounce": false
               }
             ]
@@ -556,7 +553,7 @@
         {
           "id": "sync-across-devices",
           "title": "Catch up across devices",
-          "description": "Ana saves the photo on her phone. The file service records the change and sends a notice through a queue. Her notebook checks for updates and downloads the photo when it is online. It can catch up after reconnecting.",
+          "description": "Ana saves the edit on her phone while her notebook is offline. The service records the change and queues a notice. When the notebook reconnects, it can look up what changed and fetch the photo.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -720,7 +717,7 @@
         {
           "id": "complete-architecture",
           "title": "Complete file storage architecture",
-          "description": "Before Saved, the service stores all file pieces and records where to find them.\n\nAfter the save, it tells Ana’s other devices and queues tasks such as search and thumbnails.\n\nFor discussion: If thumbnails are slow, should Ana still see Saved? What if the file record could not be written?",
+          "description": "Follow Ana’s photo to the file record. By that point, all its pieces are stored and the service knows how to find them. Her other devices can catch up and the thumbnail can arrive later. What would “Saved” promise Ana if the last piece arrived but the file record was lost?",
           "metrics": [],
           "cameraTour": [
             {

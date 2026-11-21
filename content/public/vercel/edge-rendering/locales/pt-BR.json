@@ -2,5 +2,103 @@
   "schemaVersion": 1,
   "title": "Da entrega global à renderização regional",
   "pattern": "SSR e entrega na borda",
-  "summary": "Acompanhe acertos de cache, roteamento, renderização no servidor e revalidação."
+  "summary": "Acompanhe acertos de cache, roteamento, renderização no servidor e revalidação.",
+  "steps": {
+    "edge-rendering-step-1": {
+      "title": "Abra o site do evento",
+      "description": "Ravi abre a página de um show. A rede de distribuição pode enviar uma cópia do cartaz de um ponto próximo ao navegador. O aplicativo economiza o trabalho de gerar a mesma imagem para cada visitante.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "edge": {
+          "label": "Rede de distribuição"
+        },
+        "assets": {
+          "label": "Arquivos do site"
+        }
+      }
+    },
+    "edge-rendering-step-2": {
+      "title": "Reaproveite uma página pública",
+      "description": "Outra pessoa abriu a mesma página pública do show há pouco. Se ainda houver uma cópia válida, a rede pode entregá-la a Ravi. Uma página com os dados pessoais do ingresso precisa de regras de acesso próprias.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "edge": {
+          "label": "Rede de distribuição"
+        },
+        "cache": {
+          "label": "Página em cache"
+        }
+      }
+    },
+    "edge-rendering-step-3": {
+      "title": "Monte a página que falta",
+      "description": "Ravi abre a página de outro show e nenhuma cópia está pronta. Um servidor regional consulta os dados do evento e monta a página. Se o servidor estiver longe do banco, cada consulta aumenta o tempo de espera.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "edge": {
+          "label": "Rede de distribuição"
+        },
+        "routing": {
+          "label": "Roteamento"
+        },
+        "render": {
+          "label": "Montagem da página"
+        },
+        "db": {
+          "label": "Dados do evento"
+        }
+      }
+    },
+    "edge-rendering-step-4": {
+      "title": "Altere uma reserva",
+      "description": "Ravi altera a reserva. Uma função regional confere a permissão, grava a mudança e responde. Uma cópia próxima da página pública não tem como confirmar que a reserva dele foi atualizada.",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "edge": {
+          "label": "Rede de distribuição"
+        },
+        "routing": {
+          "label": "Roteamento"
+        },
+        "api": {
+          "label": "Serviço de reservas"
+        },
+        "db": {
+          "label": "Dados do evento"
+        }
+      }
+    },
+    "edge-rendering-step-5": {
+      "title": "Atualize a página pública",
+      "description": "A organização muda o horário. Dependendo da regra, a rede pode entregar a página salva enquanto prepara uma cópia atualizada. Por algum tempo, o público pode ver o horário antigo. Quanto atraso seria aceitável no dia do show?",
+      "nodes": {
+        "client": {
+          "label": "Navegador"
+        },
+        "edge": {
+          "label": "Rede de distribuição"
+        },
+        "cache": {
+          "label": "Página em cache"
+        },
+        "revalidate": {
+          "label": "Atualização da cópia"
+        },
+        "render": {
+          "label": "Montagem da página"
+        },
+        "db": {
+          "label": "Dados do evento"
+        }
+      }
+    }
+  }
 }

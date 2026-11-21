@@ -2,5 +2,144 @@
   "schemaVersion": 1,
   "title": "Da localização à corrida",
   "pattern": "Arquitetura orientada a eventos",
-  "summary": "Acompanhe eventos de localização, consumidores independentes e a atribuição de uma corrida."
+  "summary": "Acompanhe eventos de localização, consumidores independentes e a atribuição de uma corrida.",
+  "steps": {
+    "ride-events-step-1": {
+      "title": "Coloque um motorista no mapa",
+      "description": "Quando Lia abre o aplicativo de passageiro, o celular de um motorista próximo informa sua posição. Siga a atualização até o histórico compartilhado que outros serviços podem ler. Ela indica onde o motorista estava no momento do envio.",
+      "nodes": {
+        "client": {
+          "label": "Celular da passageira"
+        },
+        "api": {
+          "label": "Serviço de corridas"
+        },
+        "driver": {
+          "label": "Celular do motorista"
+        },
+        "ingest": {
+          "label": "Entrada de posições"
+        },
+        "broker": {
+          "label": "Histórico de eventos"
+        }
+      }
+    },
+    "ride-events-step-2": {
+      "title": "Use a mesma posição em dois serviços",
+      "description": "O mapa e o serviço de preços leem as mesmas posições no próprio ritmo. O cálculo de preço pode atrasar enquanto o mapa continua atualizando. Por alguns instantes, os dois serviços podem conhecer posições diferentes do mesmo motorista.",
+      "nodes": {
+        "client": {
+          "label": "Celular da passageira"
+        },
+        "api": {
+          "label": "Serviço de corridas"
+        },
+        "location": {
+          "label": "Atualização do mapa"
+        },
+        "driver": {
+          "label": "Celular do motorista"
+        },
+        "ingest": {
+          "label": "Entrada de posições"
+        },
+        "broker": {
+          "label": "Histórico de eventos"
+        },
+        "pricing": {
+          "label": "Cálculo de preços"
+        }
+      }
+    },
+    "ride-events-step-3": {
+      "title": "Peça uma corrida",
+      "description": "Lia pede uma corrida. Siga o pedido até o serviço que consulta os motoristas disponíveis e registra a atribuição. Receber o pedido e encontrar um motorista são dois momentos que ela pode distinguir no aplicativo.",
+      "nodes": {
+        "client": {
+          "label": "Celular da passageira"
+        },
+        "api": {
+          "label": "Serviço de corridas"
+        },
+        "broker": {
+          "label": "Histórico de eventos"
+        },
+        "matching": {
+          "label": "Busca de motorista"
+        },
+        "location": {
+          "label": "Atualização do mapa"
+        },
+        "store": {
+          "label": "Corridas salvas"
+        }
+      }
+    },
+    "ride-events-step-4": {
+      "title": "Avise as duas pessoas",
+      "description": "Depois de registrar a corrida, o sistema pode avisar Lia e o motorista. Os celulares podem receber a notícia em momentos diferentes. Se um aviso precisar ser reenviado, deve continuar apontando para a mesma corrida.",
+      "nodes": {
+        "client": {
+          "label": "Celular da passageira"
+        },
+        "api": {
+          "label": "Serviço de corridas"
+        },
+        "broker": {
+          "label": "Histórico de eventos"
+        },
+        "matching": {
+          "label": "Busca de motorista"
+        },
+        "store": {
+          "label": "Corridas salvas"
+        },
+        "push": {
+          "label": "Envio de avisos"
+        },
+        "driver": {
+          "label": "Celular do motorista"
+        }
+      }
+    },
+    "ride-events-step-5": {
+      "title": "Recupere atualizações atrasadas",
+      "description": "Imagine que o serviço do mapa parou por um tempo. Ele pode continuar do ponto salvo no histórico e ler o que perdeu. Guardar as atualizações ocupa espaço, mas permite recuperar o mapa sem pedir aos motoristas que refaçam o trajeto.",
+      "edges": {
+        "edge-4-return": {
+          "label": "Retomar do ponto salvo"
+        },
+        "edge-4": {
+          "label": "Enviar posições pendentes"
+        }
+      },
+      "nodes": {
+        "client": {
+          "label": "Celular da passageira"
+        },
+        "api": {
+          "label": "Serviço de corridas"
+        },
+        "store": {
+          "label": "Corridas salvas"
+        },
+        "driver": {
+          "label": "Celular do motorista"
+        },
+        "ingest": {
+          "label": "Entrada de posições"
+        },
+        "broker": {
+          "label": "Histórico de eventos"
+        },
+        "location": {
+          "label": "Atualização do mapa"
+        },
+        "pricing": {
+          "label": "Cálculo de preços"
+        }
+      }
+    }
+  }
 }

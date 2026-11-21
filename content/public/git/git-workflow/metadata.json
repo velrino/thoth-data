@@ -25,7 +25,13 @@
     "index": "The snapshot prepared for the next commit. Git also calls it the index.",
     "local": "The checked-out main branch. HEAD points to this branch in the example.",
     "remote": "The main branch stored in the remote repository.",
-    "tracking": "A local remote-tracking reference. It records the last known position of main on origin."
+    "tracking": "A local remote-tracking reference. It records the last known position of main on origin.",
+    "compare-client": "Files you can edit in the checkout, including unstaged changes.",
+    "compare-index": "The snapshot prepared for the next commit. Git also calls it the index.",
+    "compare-local": "The checked-out main branch. HEAD points to this branch in the example.",
+    "update-remote": "The main branch stored in the remote repository.",
+    "update-local": "The checked-out main branch. HEAD points to this branch in the example.",
+    "update-client": "Files you can edit in the checkout, including unstaged changes."
   },
   "showConnectionLabels": true
 }

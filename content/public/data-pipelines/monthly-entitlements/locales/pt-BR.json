@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "title": "Quais livros cada pessoa podia ler?",
+  "pattern": "Três formas de guardar o histórico mensal",
+  "summary": "Compare três maneiras de uma biblioteca reconstruir quais livros cada pessoa podia ler em determinado mês.",
+  "scope": "Estudo de uma biblioteca fictícia. Volumes e custos no quadro são estimativas baseadas nas hipóteses do estudo.",
+  "steps": {
+    "overview": {
+      "title": "Quais livros a pessoa podia ler?",
+      "description": "Quais livros uma pessoa podia ler no mês passado? O quadro compara três maneiras de guardar esse histórico. Uma lista por pessoa facilita a consulta. Guardar os planos e catálogos separadamente economiza espaço. Arquivos protegidos preservam o histórico para auditoria, mas cada relatório precisa esperar pelo lote."
+    }
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "title": "Google Drive: como funciona o armazenamento de arquivos",
+  "pattern": "Armazenamento e sincronização de arquivos",
+  "summary": "Acompanhe uma foto do celular até a nuvem e veja como retomar envios, restaurar versões e atualizar outros aparelhos.",
+  "scope": "Exemplo educativo de um serviço parecido com o Drive. A API pública documenta envios, versões, compartilhamento e mudanças. O desenho dos serviços internos é ilustrativo.",
+  "steps": {
+    "open-a-file": {
+      "title": "Abra um arquivo",
+      "description": "Ana toca em uma foto no celular. Acompanhe o ponto até o serviço de arquivos e de volta à tela. Abrir a foto no computador ou no navegador começa do mesmo jeito.",
+      "edges": {
+        "mobile-lb": {
+          "label": "1. Abrir foto"
+        }
+      },
+      "nodes": {
+        "desktop": {
+          "label": "Computador"
+        },
+        "web": {
+          "label": "Navegador"
+        },
+        "mobile": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "Serviço de arquivos"
+        }
+      }
+    },
+    "find-and-authorize": {
+      "title": "Encontre a foto e confira o acesso",
+      "description": "Ana abre a foto no navegador. O serviço confere quem ela é e se tem acesso. A ficha da foto indica quais pedaços buscar. O navegador os recebe e exibe a imagem.",
+      "nodes": {
+        "web": {
+          "label": "Navegador"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "Serviço de arquivos"
+        },
+        "auth": {
+          "label": "Verificar identidade"
+        },
+        "users": {
+          "label": "Contas"
+        },
+        "storage": {
+          "label": "Dados do arquivo"
+        },
+        "metadata": {
+          "label": "Ficha do arquivo"
+        },
+        "permissions": {
+          "label": "Regras de acesso"
+        }
+      }
+    },
+    "upload-and-resume": {
+      "title": "Retome um envio interrompido",
+      "description": "Ana edita a foto e perde o sinal no metrô no meio do envio. Quando o sinal volta, o celular envia só os pedaços que faltam. Isso economiza dados, mas o serviço precisa guardar quais pedaços já chegaram. Ana pode ver “Salvo” quando os pedaços estão guardados e a ficha da foto aponta para eles.",
+      "nodes": {
+        "mobile": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "Serviço de arquivos"
+        },
+        "upload": {
+          "label": "Retomar envio"
+        },
+        "chunks": {
+          "label": "Dividir arquivo"
+        },
+        "storage": {
+          "label": "Dados do arquivo"
+        },
+        "metadata": {
+          "label": "Ficha do arquivo"
+        }
+      }
+    },
+    "versions-and-sharing": {
+      "title": "Recupere ou compartilhe uma versão",
+      "description": "Ana gostou mais da edição de ontem. Pelo histórico, ela a encontra e pode torná-la a versão atual. Para mostrar a foto a uma amiga, ela também muda a regra de compartilhamento. Recuperar a imagem e dar acesso são duas decisões separadas.",
+      "edges": {
+        "metadata-versions": {
+          "label": "Consultar versões"
+        }
+      },
+      "nodes": {
+        "web": {
+          "label": "Navegador"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "Serviço de arquivos"
+        },
+        "metadata": {
+          "label": "Ficha do arquivo"
+        },
+        "versions": {
+          "label": "Versões da foto"
+        },
+        "permissions": {
+          "label": "Regras de acesso"
+        }
+      }
+    },
+    "sync-across-devices": {
+      "title": "Atualize os outros aparelhos",
+      "description": "Ana salva a edição no celular enquanto o notebook está sem internet. O serviço registra a mudança e coloca um aviso na fila. Quando se reconecta, o notebook pode consultar o que mudou e buscar a foto.",
+      "nodes": {
+        "mobile": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "Serviço de arquivos"
+        },
+        "sync": {
+          "label": "Mudanças salvas"
+        },
+        "queue": {
+          "label": "Fila de avisos"
+        },
+        "notify": {
+          "label": "Enviar aviso"
+        },
+        "other-desktop": {
+          "label": "Notebook"
+        },
+        "other-web": {
+          "label": "Navegador"
+        },
+        "other-mobile": {
+          "label": "Celular"
+        }
+      }
+    },
+    "complete-architecture": {
+      "title": "Veja onde termina o salvamento",
+      "description": "Siga a foto da Ana até a ficha do arquivo. Nesse ponto, todos os pedaços estão guardados e o serviço sabe como encontrá-los. Os outros aparelhos podem se atualizar e a miniatura pode ficar pronta depois. O que “Salvo” prometeria à Ana se o último pedaço chegasse, mas a ficha se perdesse?",
+      "nodes": {
+        "desktop": {
+          "label": "Computador"
+        },
+        "web": {
+          "label": "Navegador"
+        },
+        "mobile": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "Serviço de arquivos"
+        },
+        "auth": {
+          "label": "Verificar identidade"
+        },
+        "users": {
+          "label": "Contas"
+        },
+        "upload": {
+          "label": "Retomar envio"
+        },
+        "chunks": {
+          "label": "Dividir arquivo"
+        },
+        "storage": {
+          "label": "Dados do arquivo"
+        },
+        "metadata": {
+          "label": "Ficha do arquivo"
+        },
+        "versions": {
+          "label": "Versões da foto"
+        },
+        "permissions": {
+          "label": "Regras de acesso"
+        },
+        "sync": {
+          "label": "Mudanças salvas"
+        },
+        "queue": {
+          "label": "Fila de avisos"
+        },
+        "notify": {
+          "label": "Enviar aviso"
+        },
+        "other-desktop": {
+          "label": "Notebook"
+        },
+        "other-web": {
+          "label": "Navegador"
+        },
+        "other-mobile": {
+          "label": "Celular"
+        },
+        "jobs": {
+          "label": "Tarefas posteriores"
+        },
+        "search": {
+          "label": "Busca"
+        },
+        "previews": {
+          "label": "Miniaturas"
+        },
+        "scan": {
+          "label": "Verificação"
+        },
+        "trash": {
+          "label": "Lixeira"
+        },
+        "quota": {
+          "label": "Espaço usado"
+        }
+      }
+    }
+  }
+}

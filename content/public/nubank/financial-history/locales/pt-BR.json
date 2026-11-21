@@ -2,5 +2,118 @@
   "schemaVersion": 1,
   "title": "Comandos, projeções e histórico financeiro",
   "pattern": "CQRS e armazenamento de eventos",
-  "summary": "Separe um comando financeiro dos dados usados para consulta e do histórico de auditoria."
+  "summary": "Separe um comando financeiro dos dados usados para consulta e do histórico de auditoria.",
+  "steps": {
+    "financial-history-step-1": {
+      "title": "Consulte a conta",
+      "description": "Bia abre o aplicativo do banco para consultar o saldo. O aplicativo busca um saldo já preparado para a tela. Assim, consegue mostrar um número sem somar todas as movimentações a cada consulta.",
+      "nodes": {
+        "client": {
+          "label": "Aplicativo do banco"
+        },
+        "api": {
+          "label": "Serviço da conta"
+        },
+        "query": {
+          "label": "Consulta de saldo"
+        },
+        "read": {
+          "label": "Saldo da tela"
+        }
+      }
+    },
+    "financial-history-step-2": {
+      "title": "Faça uma transferência",
+      "description": "Bia pede uma transferência. O serviço confere o pedido e, se ele for aceito, registra o que aconteceu no histórico da conta. Esse registro permite que o restante do sistema atualize o saldo dela.",
+      "nodes": {
+        "client": {
+          "label": "Aplicativo do banco"
+        },
+        "api": {
+          "label": "Serviço da conta"
+        },
+        "command": {
+          "label": "Validação da transferência"
+        },
+        "ledger": {
+          "label": "Histórico da conta"
+        }
+      }
+    },
+    "financial-history-step-3": {
+      "title": "Avise que a transferência foi registrada",
+      "description": "Depois que a transferência é registrada, um aviso pode informar os outros serviços. Gravar a transferência e entregar esse aviso são tarefas distintas. Se a entrega atrasar, o histórico continua sendo o lugar para conferir o que aconteceu.",
+      "nodes": {
+        "client": {
+          "label": "Aplicativo do banco"
+        },
+        "api": {
+          "label": "Serviço da conta"
+        },
+        "command": {
+          "label": "Validação da transferência"
+        },
+        "ledger": {
+          "label": "Histórico da conta"
+        },
+        "events": {
+          "label": "Avisos de transferências"
+        }
+      }
+    },
+    "financial-history-step-4": {
+      "title": "Atualize o saldo que aparece na tela",
+      "description": "Siga o aviso até o serviço que atualiza o saldo exibido para Bia. Deixar o saldo pronto torna a consulta rápida, mas por alguns instantes a transferência pode já estar registrada e a tela ainda mostrar o valor anterior.",
+      "nodes": {
+        "client": {
+          "label": "Aplicativo do banco"
+        },
+        "api": {
+          "label": "Serviço da conta"
+        },
+        "query": {
+          "label": "Consulta de saldo"
+        },
+        "read": {
+          "label": "Saldo da tela"
+        },
+        "events": {
+          "label": "Avisos de transferências"
+        },
+        "projector": {
+          "label": "Atualização de saldos"
+        }
+      }
+    },
+    "financial-history-step-5": {
+      "title": "Explique o saldo de ontem",
+      "description": "Bia quer saber por que o saldo de ontem era diferente. É possível consultar os registros originais e reconstruir o saldo daquela data. Reprocessar esses registros para gerar um relatório jamais deve fazer a transferência de novo.",
+      "nodes": {
+        "client": {
+          "label": "Aplicativo do banco"
+        },
+        "api": {
+          "label": "Serviço da conta"
+        },
+        "query": {
+          "label": "Consulta de saldo"
+        },
+        "ledger": {
+          "label": "Histórico da conta"
+        },
+        "audit": {
+          "label": "Saldos anteriores"
+        },
+        "events": {
+          "label": "Avisos de transferências"
+        },
+        "projector": {
+          "label": "Atualização de saldos"
+        },
+        "read": {
+          "label": "Saldo da tela"
+        }
+      }
+    }
+  }
 }

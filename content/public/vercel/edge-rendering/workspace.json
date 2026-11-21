@@ -17,14 +17,14 @@
           "steps": [
             {
               "id": "edge-rendering-step-1",
-              "title": "Reach the global network",
-              "description": "The browser reaches the CDN. Static assets and eligible cached responses can be served without running the application’s dynamic rendering path for every request.",
+              "title": "Open the event website",
+              "description": "Ravi opens a concert page. The delivery network can send him a stored copy of the poster from near his browser. The application has no reason to redraw that same image for every visitor.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Visitor · Browser",
+                    "label": "Browser",
                     "role": "browser",
                     "color": "sky",
                     "x": -14,
@@ -32,21 +32,19 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Global CDN",
+                    "label": "Delivery network",
                     "role": "cdn",
                     "color": "sky",
                     "technology": "vercel",
                     "appearance": "icon",
-                    "group": "Global delivery",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "assets",
-                    "label": "Static assets",
+                    "label": "Site files",
                     "role": "storage",
                     "color": "sand",
-                    "group": "Global delivery",
                     "x": 0,
                     "z": 7
                   }
@@ -81,41 +79,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -123,14 +94,14 @@
             },
             {
               "id": "edge-rendering-step-2",
-              "title": "Serve a cache hit",
-              "description": "An eligible cached page is delivered from the cache. Authentication rules and cache keys matter: a personalized response must not accidentally become a public cached page.",
+              "title": "Reuse a public page",
+              "description": "Another fan recently opened the same public concert page. If a suitable copy is still available, the network can return it to Ravi. A page containing his personal ticket details needs separate access rules.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Visitor · Browser",
+                    "label": "Browser",
                     "role": "browser",
                     "color": "sky",
                     "x": -14,
@@ -138,21 +109,19 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Global CDN",
+                    "label": "Delivery network",
                     "role": "cdn",
                     "color": "sky",
                     "technology": "vercel",
                     "appearance": "icon",
-                    "group": "Global delivery",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "cache",
-                    "label": "Cached response",
+                    "label": "Saved page",
                     "role": "cache",
                     "color": "sky",
-                    "group": "Global delivery",
                     "x": 0,
                     "z": -7
                   }
@@ -187,41 +156,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -229,14 +171,14 @@
             },
             {
               "id": "edge-rendering-step-3",
-              "title": "Render on a miss",
-              "description": "A cache miss reaches request routing and a regional renderer. The renderer queries application data and produces the response; choose compute regions with data locality in mind.",
+              "title": "Build a missing page",
+              "description": "Ravi opens a concert page with no ready copy. The request reaches a regional server, which reads the event data and builds a page. If that server is far from the database, each lookup adds travel time.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Visitor · Browser",
+                    "label": "Browser",
                     "role": "browser",
                     "color": "sky",
                     "x": -14,
@@ -244,38 +186,35 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Global CDN",
+                    "label": "Delivery network",
                     "role": "cdn",
                     "color": "sky",
                     "technology": "vercel",
                     "appearance": "icon",
-                    "group": "Global delivery",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "routing",
-                    "label": "Request routing",
+                    "label": "Route the request",
                     "role": "proxy",
                     "color": "sky",
-                    "group": "Global delivery",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "render",
-                    "label": "Regional renderer",
+                    "label": "Build the page",
                     "role": "function",
                     "color": "sky",
                     "technology": "nextjs",
                     "appearance": "icon",
-                    "group": "Regional compute",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "db",
-                    "label": "Application data",
+                    "label": "Event records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -336,81 +275,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -418,14 +294,14 @@
             },
             {
               "id": "edge-rendering-step-4",
-              "title": "Handle dynamic actions",
-              "description": "A dynamic action reaches an API function rather than a static file. The API checks authorization and commits data; global edge delivery does not remove database round-trip costs.",
+              "title": "Change a booking",
+              "description": "Ravi submits a booking change. A regional function checks that he can make it, writes the change and sends a reply. A nearby copy of the concert page cannot confirm that his booking was updated.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Visitor · Browser",
+                    "label": "Browser",
                     "role": "browser",
                     "color": "sky",
                     "x": -14,
@@ -433,36 +309,33 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Global CDN",
+                    "label": "Delivery network",
                     "role": "cdn",
                     "color": "sky",
                     "technology": "vercel",
                     "appearance": "icon",
-                    "group": "Global delivery",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "routing",
-                    "label": "Request routing",
+                    "label": "Route the request",
                     "role": "proxy",
                     "color": "sky",
-                    "group": "Global delivery",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "api",
-                    "label": "Regional API function",
+                    "label": "Booking service",
                     "role": "function",
                     "color": "sky",
-                    "group": "Regional compute",
                     "x": 7,
                     "z": -7
                   },
                   {
                     "id": "db",
-                    "label": "Application data",
+                    "label": "Event records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -523,81 +396,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -605,14 +415,14 @@
             },
             {
               "id": "edge-rendering-step-5",
-              "title": "Refresh cached content",
-              "description": "A revalidation path refreshes eligible cached content after a data change or freshness policy. Cache behavior depends on framework and configuration, not a universal instant update guarantee.",
+              "title": "Refresh the public listing",
+              "description": "The organizer changes the start time. The network can serve a saved page quickly while preparing a fresh copy, depending on the cache policy. Visitors may briefly see yesterday’s time. How long would that be acceptable on the day of the show?",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Visitor · Browser",
+                    "label": "Browser",
                     "role": "browser",
                     "color": "sky",
                     "x": -14,
@@ -620,47 +430,43 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Global CDN",
+                    "label": "Delivery network",
                     "role": "cdn",
                     "color": "sky",
                     "technology": "vercel",
                     "appearance": "icon",
-                    "group": "Global delivery",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "cache",
-                    "label": "Cached response",
+                    "label": "Saved page",
                     "role": "cache",
                     "color": "sky",
-                    "group": "Global delivery",
                     "x": 0,
                     "z": -7
                   },
                   {
                     "id": "revalidate",
-                    "label": "Revalidation work",
+                    "label": "Refresh the copy",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Regional compute",
                     "x": 7,
                     "z": 7
                   },
                   {
                     "id": "render",
-                    "label": "Regional renderer",
+                    "label": "Build the page",
                     "role": "function",
                     "color": "sky",
                     "technology": "nextjs",
                     "appearance": "icon",
-                    "group": "Regional compute",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "db",
-                    "label": "Application data",
+                    "label": "Event records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -733,101 +539,29 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return",
+                      "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-2",
                     "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
+                      "edge-2",
+                      "edge-3",
+                      "edge-4",
+                      "edge-4-return",
+                      "edge-3-return",
                       "edge-5"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

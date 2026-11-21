@@ -5,8 +5,8 @@
   "summary": "Compare como Kafka, RabbitMQ e Redis Streams publicam pedidos, registram o progresso e recuperam tarefas pendentes.",
   "steps": {
     "kafka-rabbitmq-step-1": {
-      "title": "Publique, entregue e confirme",
-      "description": "Imagine um pedido feito numa loja. A loja, que é o produtor, envia uma mensagem. Um consumidor ou worker recebe a mensagem e age sobre ela. Uma seta mostra para onde a mensagem vai. Duas setas mostram a entrega e a confirmação. Kafka guarda a posição de leitura de cada grupo. RabbitMQ remove uma tarefa após a confirmação. Redis registra a confirmação sem apagar a mensagem do stream.",
+      "title": "Envie, entregue e confirme",
+      "description": "Uma loja recebe um pedido. Cada faixa mostra uma alternativa. No Kafka, expedição e relatórios podem reler os pedidos guardados a partir da posição de cada grupo. Em uma fila de trabalho do RabbitMQ, a entrega sai da fila após a confirmação. No Redis Streams, confirmar tira o pedido das pendências do grupo e o registro fica até ser removido. Guardar pedidos ocupa espaço, mas outra equipe pode consultá-los depois. A loja precisa desse histórico ou só da próxima encomenda para embalar?",
       "nodes": {
         "client": {
           "label": "Produtor"

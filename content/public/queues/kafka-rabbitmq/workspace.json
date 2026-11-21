@@ -18,7 +18,7 @@
             {
               "id": "kafka-rabbitmq-step-1",
               "title": "Publish, deliver and confirm",
-              "description": "Imagine a customer placing an order. The store (the producer) sends a message, and another part of the system (the consumer or worker) acts on it. A single arrow shows where the message goes. Where you see two arrows, one shows delivery and the other shows the worker reporting back. Kafka saves where each group stopped reading. RabbitMQ removes a job after the worker confirms it is done. Redis marks the job as done for that group and keeps the original message in the stream.",
+              "description": "A shop receives one order. Read each lane as a different design for handling it. In Kafka, shipping and reporting can each replay retained orders from their own saved position. In a RabbitMQ work queue, the finished delivery leaves the queue once the worker confirms it. In Redis Streams, confirmation clears the group’s pending work and the entry stays until it is removed. Keeping past orders costs storage, but lets another team read them later. Does the shop need that history, or only the next parcel to pack?",
               "metrics": [],
               "scene": {
                 "nodes": [
@@ -28,8 +28,8 @@
                     "role": "client",
                     "color": "sky",
                     "group": "Kafka · Event log",
-                    "x": -18.900000000000002,
-                    "z": -10.85
+                    "x": -8.25,
+                    "z": -8
                   },
                   {
                     "id": "log",
@@ -39,8 +39,8 @@
                     "technology": "apachekafka",
                     "appearance": "icon",
                     "group": "Kafka · Event log",
-                    "x": -1.05,
-                    "z": -10.85
+                    "x": 0.0,
+                    "z": -8
                   },
                   {
                     "id": "consumers",
@@ -48,8 +48,8 @@
                     "role": "worker",
                     "color": "sky",
                     "group": "Kafka · Event log",
-                    "x": 16.8,
-                    "z": -10.85
+                    "x": 8.25,
+                    "z": -8
                   },
                   {
                     "id": "publisher",
@@ -57,7 +57,7 @@
                     "role": "client",
                     "color": "sky",
                     "group": "RabbitMQ · Work queue",
-                    "x": -18.900000000000002,
+                    "x": -8.25,
                     "z": 0
                   },
                   {
@@ -68,7 +68,7 @@
                     "technology": "rabbitmq",
                     "appearance": "icon",
                     "group": "RabbitMQ · Work queue",
-                    "x": -7,
+                    "x": -2.75,
                     "z": 0
                   },
                   {
@@ -77,7 +77,7 @@
                     "role": "queue",
                     "color": "lavender",
                     "group": "RabbitMQ · Work queue",
-                    "x": 4.8999999999999995,
+                    "x": 2.75,
                     "z": 0
                   },
                   {
@@ -86,7 +86,7 @@
                     "role": "worker",
                     "color": "sky",
                     "group": "RabbitMQ · Work queue",
-                    "x": 16.8,
+                    "x": 8.25,
                     "z": 0
                   },
                   {
@@ -95,8 +95,8 @@
                     "role": "client",
                     "color": "sky",
                     "group": "Redis · Streams",
-                    "x": -18.900000000000002,
-                    "z": 10.85
+                    "x": -8.25,
+                    "z": 8
                   },
                   {
                     "id": "stream",
@@ -106,8 +106,8 @@
                     "technology": "redis",
                     "appearance": "icon",
                     "group": "Redis · Streams",
-                    "x": -1.05,
-                    "z": 10.85
+                    "x": 0.0,
+                    "z": 8
                   },
                   {
                     "id": "redis-worker",
@@ -115,8 +115,8 @@
                     "role": "worker",
                     "color": "sky",
                     "group": "Redis · Streams",
-                    "x": 16.8,
-                    "z": 10.85
+                    "x": 8.25,
+                    "z": 8
                   }
                 ],
                 "edges": [
@@ -185,101 +185,38 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-2",
                     "route": [
-                      "edge-2"
+                      "edge-2",
+                      "edge-3",
+                      "edge-4",
+                      "edge-4-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-5",
                     "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-6-return",
-                    "route": [
+                      "edge-5",
+                      "edge-6",
                       "edge-6-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

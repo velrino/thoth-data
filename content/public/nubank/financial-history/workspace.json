@@ -18,13 +18,13 @@
             {
               "id": "financial-history-step-1",
               "title": "Read the account",
-              "description": "The mobile app requests an account view. In this CQRS example, a query handler serves a prepared read model instead of making the customer traverse raw history.",
+              "description": "Bia opens her bank app to check her balance. The app reads a balance already prepared for display. It can show one number without adding up every transaction each time she opens the screen.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Customer · Mobile",
+                    "label": "Bank app",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -32,7 +32,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Account API",
+                    "label": "Account service",
                     "role": "api",
                     "color": "sky",
                     "technology": "clojure",
@@ -42,21 +42,19 @@
                   },
                   {
                     "id": "query",
-                    "label": "Query handler",
+                    "label": "Read a balance",
                     "role": "service",
                     "color": "sky",
                     "technology": "clojure",
                     "appearance": "icon",
-                    "group": "Read model",
                     "x": 0,
                     "z": 7
                   },
                   {
                     "id": "read",
-                    "label": "Balance read model",
+                    "label": "Displayed balance",
                     "role": "database",
                     "color": "sand",
-                    "group": "Read model",
                     "x": 7,
                     "z": 7
                   }
@@ -103,61 +101,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -165,14 +118,14 @@
             },
             {
               "id": "financial-history-step-2",
-              "title": "Validate a command",
-              "description": "A transfer is a command, not a direct edit of the displayed balance. The command handler validates business rules and commits authoritative facts.",
+              "title": "Send a transfer",
+              "description": "Bia asks to transfer money. The service checks the request and, if it is accepted, records what happened in the account history. That record is what the rest of the system can use to update her balance.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Customer · Mobile",
+                    "label": "Bank app",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -180,7 +133,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Account API",
+                    "label": "Account service",
                     "role": "api",
                     "color": "sky",
                     "technology": "clojure",
@@ -190,21 +143,19 @@
                   },
                   {
                     "id": "command",
-                    "label": "Command handler",
+                    "label": "Check a transfer",
                     "role": "service",
                     "color": "sky",
                     "technology": "clojure",
                     "appearance": "icon",
-                    "group": "Commands and history",
                     "x": 0,
                     "z": -7
                   },
                   {
                     "id": "ledger",
-                    "label": "Immutable facts · Datomic",
+                    "label": "Account history",
                     "role": "database",
                     "color": "sand",
-                    "group": "Commands and history",
                     "x": 7,
                     "z": -7
                   }
@@ -251,61 +202,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -313,14 +219,14 @@
             },
             {
               "id": "financial-history-step-3",
-              "title": "Publish committed changes",
-              "description": "Committed business changes become events for downstream work. The teaching model distinguishes durable facts from delivery of a domain event so neither is mistaken for a free atomic guarantee.",
+              "title": "Announce a recorded change",
+              "description": "Once Bia’s transfer is recorded, a notice can tell other services about it. Saving the transfer and delivering that notice are separate jobs. If delivery is delayed, the record is still the place to check what happened.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Customer · Mobile",
+                    "label": "Bank app",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -328,7 +234,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Account API",
+                    "label": "Account service",
                     "role": "api",
                     "color": "sky",
                     "technology": "clojure",
@@ -338,32 +244,29 @@
                   },
                   {
                     "id": "command",
-                    "label": "Command handler",
+                    "label": "Check a transfer",
                     "role": "service",
                     "color": "sky",
                     "technology": "clojure",
                     "appearance": "icon",
-                    "group": "Commands and history",
                     "x": 0,
                     "z": -7
                   },
                   {
                     "id": "ledger",
-                    "label": "Immutable facts · Datomic",
+                    "label": "Account history",
                     "role": "database",
                     "color": "sand",
-                    "group": "Commands and history",
                     "x": 7,
                     "z": -7
                   },
                   {
                     "id": "events",
-                    "label": "Domain event stream",
+                    "label": "Transfer notices",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
                     "appearance": "icon",
-                    "group": "Event processing",
                     "x": 7,
                     "z": 0
                   }
@@ -416,71 +319,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
                       "edge-3"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -488,14 +334,14 @@
             },
             {
               "id": "financial-history-step-4",
-              "title": "Build the read side",
-              "description": "A projection worker consumes events and updates a view optimized for reads. That view can briefly lag the authoritative write side; the interface should account for pending changes.",
+              "title": "Update the balance people see",
+              "description": "Follow the transfer notice to the worker that updates the balance on Bia’s screen. A prepared balance makes the app quick to read, but for a moment the transfer may already be recorded while the screen still shows the old amount.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Customer · Mobile",
+                    "label": "Bank app",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -503,7 +349,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Account API",
+                    "label": "Account service",
                     "role": "api",
                     "color": "sky",
                     "technology": "clojure",
@@ -513,43 +359,39 @@
                   },
                   {
                     "id": "query",
-                    "label": "Query handler",
+                    "label": "Read a balance",
                     "role": "service",
                     "color": "sky",
                     "technology": "clojure",
                     "appearance": "icon",
-                    "group": "Read model",
                     "x": 0,
                     "z": 7
                   },
                   {
                     "id": "read",
-                    "label": "Balance read model",
+                    "label": "Displayed balance",
                     "role": "database",
                     "color": "sand",
-                    "group": "Read model",
                     "x": 7,
                     "z": 7
                   },
                   {
                     "id": "events",
-                    "label": "Domain event stream",
+                    "label": "Transfer notices",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
                     "appearance": "icon",
-                    "group": "Event processing",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "projector",
-                    "label": "Projection worker",
+                    "label": "Update balances",
                     "role": "worker",
                     "color": "sky",
                     "technology": "clojure",
                     "appearance": "icon",
-                    "group": "Event processing",
                     "x": 14,
                     "z": 0
                   }
@@ -606,83 +448,29 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
-                    "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
                     "id": "flow-3",
                     "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-3",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
-                    "id": "flow-edge-0-return",
+                    "id": "flow-0",
                     "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -690,14 +478,14 @@
             },
             {
               "id": "financial-history-step-5",
-              "title": "Inspect history and rebuild",
-              "description": "Immutable history supports temporal queries and audit. A rebuild derives a new projection from trusted history; it must preserve transaction meaning and avoid repeating external side effects.",
+              "title": "Explain yesterday’s balance",
+              "description": "Bia asks why yesterday’s balance was different. The bank can read the original entries and use them to rebuild the balance as it stood then. Replaying those entries for a report must never send her transfer a second time.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Customer · Mobile",
+                    "label": "Bank app",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -705,7 +493,7 @@
                   },
                   {
                     "id": "api",
-                    "label": "Account API",
+                    "label": "Account service",
                     "role": "api",
                     "color": "sky",
                     "technology": "clojure",
@@ -715,7 +503,7 @@
                   },
                   {
                     "id": "query",
-                    "label": "Query handler",
+                    "label": "Read a balance",
                     "role": "service",
                     "color": "sky",
                     "technology": "clojure",
@@ -726,7 +514,7 @@
                   },
                   {
                     "id": "ledger",
-                    "label": "Immutable facts · Datomic",
+                    "label": "Account history",
                     "role": "database",
                     "color": "sand",
                     "group": "Commands and history",
@@ -735,7 +523,7 @@
                   },
                   {
                     "id": "audit",
-                    "label": "Historical query",
+                    "label": "Past balances",
                     "role": "worker",
                     "color": "sky",
                     "group": "Commands and history",
@@ -744,7 +532,7 @@
                   },
                   {
                     "id": "events",
-                    "label": "Domain event stream",
+                    "label": "Transfer notices",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "apachekafka",
@@ -755,7 +543,7 @@
                   },
                   {
                     "id": "projector",
-                    "label": "Projection worker",
+                    "label": "Update balances",
                     "role": "worker",
                     "color": "sky",
                     "technology": "clojure",
@@ -766,7 +554,7 @@
                   },
                   {
                     "id": "read",
-                    "label": "Balance read model",
+                    "label": "Displayed balance",
                     "role": "database",
                     "color": "sand",
                     "group": "Read model",
@@ -846,111 +634,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

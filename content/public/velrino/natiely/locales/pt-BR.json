@@ -5,8 +5,8 @@
   "summary": "Jogue em grupo, compre Gold, entregue recompensas, baixe mundos e recupere uma partida.",
   "steps": {
     "match-recovery": {
-      "title": "Reconectar e creditar a recompensa uma vez",
-      "description": "O servidor registra o estado final da partida e a recompensa pendente. A outbox envia o resultado para a fila. O worker usa o ID da partida para creditar Gold e itens uma vez, mesmo que a tarefa seja repetida. Ao reconectar, o jogador recupera o último estado salvo e consulta o saldo atualizado. A classificação é consultada separadamente via Redis e MongoDB.",
+      "title": "Recupere o resultado da partida",
+      "description": "Uma jogadora perde o sinal no fim da partida. Siga o resultado salvo até o serviço que concede a recompensa uma vez por partida. Ao se reconectar, ela consulta a carteira. O ranking público usa uma cópia temporária e pode atualizar depois do saldo.",
       "nodes": {
         "client": {
           "label": "Natiely · Reconexão"
@@ -15,28 +15,28 @@
           "label": "Servidor da partida"
         },
         "checkpoints": {
-          "label": "Resultados e outbox"
+          "label": "Resultado e prêmio"
         },
         "dispatcher": {
-          "label": "Publicador da outbox"
+          "label": "Envio de tarefas"
         },
         "jobs": {
-          "label": "Fila de partidas · Redis"
+          "label": "Fila de prêmios"
         },
         "settlement": {
-          "label": "Worker de recompensas"
+          "label": "Entrega de prêmios"
         },
         "wallet": {
-          "label": "Carteira e inventário"
+          "label": "Gold e itens"
         },
         "redis": {
-          "label": "Redis · Classificação"
+          "label": "Ranking recente"
         },
         "ranking-api": {
-          "label": "API pública de classificação"
+          "label": "Consulta de ranking"
         },
         "ranking-db": {
-          "label": "MongoDB · Classificação por grupo"
+          "label": "Ranking salvo"
         }
       },
       "edges": {
@@ -87,6 +87,93 @@
         },
         "restore-wallet-return": {
           "label": "Saldo salvo"
+        }
+      }
+    },
+    "multiplayer": {
+      "title": "Jogue com outra pessoa",
+      "description": "Duas amigas entram na mesma sala. Uma toca para se mover. Siga o comando até o servidor que decide o próximo estado da sala e daí até o celular da outra jogadora. As duas veem o mesmo resultado, embora os celulares precisem esperar a atualização do servidor.",
+      "nodes": {
+        "gateway": {
+          "label": "Entrada do jogo"
+        },
+        "room": {
+          "label": "Servidor da partida"
+        },
+        "redis": {
+          "label": "Jogadores online"
+        },
+        "checkpoints": {
+          "label": "Partida salva"
+        }
+      }
+    },
+    "checkout": {
+      "title": "Compre um pacote de Gold",
+      "description": "Uma jogadora escolhe um pacote de Gold. O jogo guarda a compra pendente e abre a loja do celular. A loja informa o resultado ao jogo. O Gold aparece na carteira quando o servidor confirma o crédito.",
+      "nodes": {
+        "gateway": {
+          "label": "Entrada do jogo"
+        },
+        "commerce": {
+          "label": "Loja do jogo"
+        },
+        "wallet": {
+          "label": "Gold e itens"
+        }
+      }
+    },
+    "purchase-delivery": {
+      "title": "Entregue o Gold uma vez",
+      "description": "Siga o aviso da compra até o registro do pedido e o serviço que credita a carteira. Guardar o pedido primeiro permite tentar de novo depois de uma queda. O saldo pode demorar a aparecer, mas repetir a entrega do mesmo pedido só deve gerar um crédito.",
+      "nodes": {
+        "webhook": {
+          "label": "Avisos de compra"
+        },
+        "orders": {
+          "label": "Pedidos salvos"
+        },
+        "dispatcher": {
+          "label": "Envio de tarefas"
+        },
+        "jobs": {
+          "label": "Fila de compras"
+        },
+        "grant-worker": {
+          "label": "Crédito de Gold"
+        },
+        "wallet": {
+          "label": "Gold e itens"
+        },
+        "realtime": {
+          "label": "Avisos ao jogo"
+        }
+      }
+    },
+    "world-bundles": {
+      "title": "Baixe um mundo extra",
+      "description": "As amigas escolhem um mundo novo. Cada celular confere o acesso, baixa a versão correta e verifica o arquivo antes de liberá-lo. Guardar a cópia verificada ocupa espaço no celular e evita outro download na próxima visita.",
+      "nodes": {
+        "content-api": {
+          "label": "Catálogo de mundos"
+        },
+        "access": {
+          "label": "Acesso e versão"
+        },
+        "cdn": {
+          "label": "Downloads de mundos"
+        },
+        "bundles": {
+          "label": "Arquivos de mundos"
+        },
+        "build-worker": {
+          "label": "Montagem do mundo"
+        },
+        "validator": {
+          "label": "Verificação de arquivos"
+        },
+        "local-cache": {
+          "label": "Mundos baixados"
         }
       }
     }

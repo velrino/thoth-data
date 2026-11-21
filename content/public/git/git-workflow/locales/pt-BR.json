@@ -5,16 +5,61 @@
   "summary": "Acompanhe alterações na área de trabalho, na área de preparação e nos repositórios local e remoto.",
   "steps": {
     "git-workflow-step-1": {
-      "title": "Prepare, registre e publique",
-      "description": "Use git add para preparar as alterações selecionadas. Git commit registra o conteúdo preparado e avança a branch local. Git push envia os objetos necessários e solicita a atualização da branch main em origin."
-    },
-    "git-workflow-step-2": {
-      "title": "Inspecione alterações preparadas e pendentes",
-      "description": "Git diff compara a área de trabalho com a área de preparação. Git diff --staged compara a área de preparação com HEAD e mostra o que entraria no próximo commit. Os dois comandos apenas consultam o estado."
-    },
-    "git-workflow-step-3": {
-      "title": "Busque e integre alterações remotas",
-      "description": "Git fetch baixa o histórico remoto e atualiza origin/main localmente. Git merge origin/main integra esse histórico à branch atual. Git pull combina a busca com a integração, que pode usar merge ou rebase conforme a configuração."
+      "nodes": {
+        "client": {
+          "label": "Arquivos locais"
+        },
+        "index": {
+          "label": "Em preparo"
+        },
+        "local": {
+          "label": "main local"
+        },
+        "remote": {
+          "label": "main remota"
+        },
+        "compare-client": {
+          "label": "Arquivos locais"
+        },
+        "compare-index": {
+          "label": "Em preparo"
+        },
+        "compare-local": {
+          "label": "main local"
+        },
+        "update-remote": {
+          "label": "main remota"
+        },
+        "tracking": {
+          "label": "origin/main"
+        },
+        "update-local": {
+          "label": "main local"
+        },
+        "update-client": {
+          "label": "Arquivos locais"
+        }
+      },
+      "edges": {
+        "update-local-client": {
+          "label": "Atualizar arquivos"
+        }
+      },
+      "title": "Compartilhe e atualize uma receita",
+      "description": "Leia as linhas da esquerda para a direita. Na primeira, prepare a correção da receita, registre-a no computador e publique para sua colega poder buscá-la. Na segunda, git diff mostra mudanças ainda não preparadas e git diff --staged mostra o que entrará no commit. Na terceira, git fetch baixa a mudança da sua colega. Use git merge origin/main quando quiser aplicá-la à sua branch e aos seus arquivos."
     }
+  },
+  "componentNotes": {
+    "client": "Arquivos que você pode editar no computador. Podem conter mudanças que ainda não foram preparadas.",
+    "index": "Conjunto de alterações preparadas para o próximo commit. O Git o chama de index.",
+    "local": "A branch main no seu computador. Ela aponta para o commit atual.",
+    "remote": "A branch main do repositório compartilhado, no servidor.",
+    "compare-client": "Arquivos que você pode editar no computador. Podem conter mudanças que ainda não foram preparadas.",
+    "compare-index": "Conjunto de alterações preparadas para o próximo commit. O Git o chama de index.",
+    "compare-local": "A branch main no seu computador. Ela aponta para o commit atual.",
+    "update-remote": "A branch main do repositório compartilhado, no servidor.",
+    "tracking": "Referência local que registra a posição de main no servidor na última atualização.",
+    "update-local": "A branch main no seu computador. Ela aponta para o commit atual.",
+    "update-client": "Arquivos que você pode editar no computador. Podem conter mudanças que ainda não foram preparadas."
   }
 }

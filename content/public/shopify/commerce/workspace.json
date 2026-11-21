@@ -18,13 +18,13 @@
             {
               "id": "commerce-step-1",
               "title": "Open a storefront",
-              "description": "A mobile shopper reaches the storefront. The edge forwards a dynamic request to one Rails application; a modular monolith is still one deployable unit.",
+              "description": "Sam opens a shop on his phone to buy a mug. A nearby entry point forwards his request to the store application. The page he sees comes from that application, which contains several teams’ areas of work.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Shopper · Mobile",
+                    "label": "Shopper’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -32,7 +32,7 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Storefront edge",
+                    "label": "Store entrance",
                     "role": "cdn",
                     "color": "sky",
                     "x": -7,
@@ -40,12 +40,11 @@
                   },
                   {
                     "id": "app",
-                    "label": "Rails application",
+                    "label": "Store application",
                     "role": "service",
                     "color": "sky",
                     "technology": "rails",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 0,
                     "z": 0
                   }
@@ -80,41 +79,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -122,14 +94,14 @@
             },
             {
               "id": "commerce-step-2",
-              "title": "Read through a module boundary",
-              "description": "The application asks the catalog module for product information through its public interface. Internal calls stay in-process rather than adding a network hop for every module.",
+              "title": "Look up the mug",
+              "description": "The store asks its catalog for the mug’s details. The catalog owns the lookup and returns the result to the page. Both parts run inside the same application, so a product lookup can be an ordinary function call.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Shopper · Mobile",
+                    "label": "Shopper’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -137,7 +109,7 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Storefront edge",
+                    "label": "Store entrance",
                     "role": "cdn",
                     "color": "sky",
                     "x": -7,
@@ -145,29 +117,27 @@
                   },
                   {
                     "id": "app",
-                    "label": "Rails application",
+                    "label": "Store application",
                     "role": "service",
                     "color": "sky",
                     "technology": "rails",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "catalog",
-                    "label": "Catalog module",
+                    "label": "Product catalog",
                     "role": "service",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 7,
                     "z": -7
                   },
                   {
                     "id": "db",
-                    "label": "Commerce data",
+                    "label": "Store records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -228,81 +198,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -310,14 +217,14 @@
             },
             {
               "id": "commerce-step-3",
-              "title": "Coordinate checkout",
-              "description": "Checkout asks inventory to reserve an item. Explicit module interfaces constrain dependencies; Packwerk detects boundary violations during development, not while routing requests in production.",
+              "title": "Reserve the last mug",
+              "description": "Sam checks out. Checkout asks inventory to reserve the mug before it records the order. Giving inventory one clear job helps another team change the order screen without also having to implement stock rules.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Shopper · Mobile",
+                    "label": "Shopper’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -325,40 +232,37 @@
                   },
                   {
                     "id": "app",
-                    "label": "Rails application",
+                    "label": "Store application",
                     "role": "service",
                     "color": "sky",
                     "technology": "rails",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "checkout",
-                    "label": "Checkout module",
+                    "label": "Checkout",
                     "role": "service",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "inventory",
-                    "label": "Inventory module",
+                    "label": "Stock",
                     "role": "service",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 7,
                     "z": 7
                   },
                   {
                     "id": "db",
-                    "label": "Commerce data",
+                    "label": "Store records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -419,81 +323,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -501,14 +342,14 @@
             },
             {
               "id": "commerce-step-4",
-              "title": "Move slow work off the request",
-              "description": "The purchase path commits before a worker sends the receipt. A background job boundary lets email and other slow side effects run separately from the customer response.",
+              "title": "Send the receipt later",
+              "description": "Sam’s order is saved and the receipt goes on a work list. The store can confirm the purchase while a worker handles email. The confirmation arrives sooner, but the receipt can arrive late if that list grows.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Shopper · Mobile",
+                    "label": "Shopper’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -516,29 +357,27 @@
                   },
                   {
                     "id": "app",
-                    "label": "Rails application",
+                    "label": "Store application",
                     "role": "service",
                     "color": "sky",
                     "technology": "rails",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "checkout",
-                    "label": "Checkout module",
+                    "label": "Checkout",
                     "role": "service",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "db",
-                    "label": "Commerce data",
+                    "label": "Store records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -546,21 +385,19 @@
                   },
                   {
                     "id": "jobs",
-                    "label": "Background jobs",
+                    "label": "Tasks to finish",
                     "role": "queue",
                     "color": "lavender",
-                    "group": "Background delivery",
                     "x": 14,
                     "z": 7
                   },
                   {
                     "id": "worker",
-                    "label": "Receipt worker",
+                    "label": "Send receipts",
                     "role": "worker",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Background delivery",
                     "x": 21,
                     "z": 7
                   }
@@ -625,91 +462,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-3",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -717,14 +479,14 @@
             },
             {
               "id": "commerce-step-5",
-              "title": "Scale without erasing boundaries",
-              "description": "More replicas of the same application can serve traffic. This simplified path emphasizes shared deployment and internal contracts; it does not promise that a monolith alone solves peak load.",
+              "title": "Handle a rush of shoppers",
+              "description": "More copies of the same application can accept shoppers during a sale. Catalog and checkout still ship together, which keeps calls between them simple. It also means a team deploying a catalog change releases the shared application.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "Shopper · Mobile",
+                    "label": "Shopper’s phone",
                     "role": "mobile",
                     "color": "sky",
                     "x": -14,
@@ -732,7 +494,7 @@
                   },
                   {
                     "id": "edge",
-                    "label": "Storefront edge",
+                    "label": "Store entrance",
                     "role": "cdn",
                     "color": "sky",
                     "x": -7,
@@ -740,40 +502,37 @@
                   },
                   {
                     "id": "app",
-                    "label": "Rails application",
+                    "label": "Store application",
                     "role": "service",
                     "color": "sky",
                     "technology": "rails",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "catalog",
-                    "label": "Catalog module",
+                    "label": "Product catalog",
                     "role": "service",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 7,
                     "z": -7
                   },
                   {
                     "id": "checkout",
-                    "label": "Checkout module",
+                    "label": "Checkout",
                     "role": "service",
                     "color": "sky",
                     "technology": "ruby",
                     "appearance": "icon",
-                    "group": "Rails deployment",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "db",
-                    "label": "Commerce data",
+                    "label": "Store records",
                     "role": "database",
                     "color": "sand",
                     "x": 14,
@@ -846,101 +605,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-3",
+                      "edge-4",
+                      "edge-4-return",
+                      "edge-3-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

@@ -18,7 +18,7 @@
             {
               "id": "multiplayer",
               "title": "Play Natiely together",
-              "description": "You and a teammate join the same Natiely room over WebSocket. The API gateway checks identity and routes inputs to the room authority. The server validates movement and broadcasts snapshots to both players. Redis caches presence and room lookup; durable checkpoints live in the database. Clients send intent, not trusted positions or rewards.",
+              "description": "Two friends join the same room. One taps to move. Follow that input to the server that decides the room’s next state, then to the teammate’s phone. They share one outcome, although each phone has to wait for the server’s update.",
               "metrics": [],
               "scene": {
                 "nodes": [
@@ -46,7 +46,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "API gateway",
+                    "label": "Game entrance",
                     "role": "gateway",
                     "color": "lavender",
                     "technology": "nodejs",
@@ -57,7 +57,7 @@
                   },
                   {
                     "id": "room",
-                    "label": "Room authority",
+                    "label": "Match server",
                     "role": "service",
                     "color": "sage",
                     "technology": "go",
@@ -68,7 +68,7 @@
                   },
                   {
                     "id": "redis",
-                    "label": "Redis · Presence",
+                    "label": "Online players",
                     "role": "cache",
                     "color": "peach",
                     "technology": "redis",
@@ -79,7 +79,7 @@
                   },
                   {
                     "id": "checkpoints",
-                    "label": "Room checkpoints",
+                    "label": "Saved match",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -150,72 +150,13 @@
                     "id": "you-play",
                     "route": [
                       "you-socket",
-                      "room-input"
-                    ],
-                    "kind": "request",
-                    "rate": 0.3,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "peer-play",
-                    "route": [
-                      "peer-socket",
-                      "room-input"
-                    ],
-                    "kind": "request",
-                    "rate": 0.22,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "save-room",
-                    "route": [
-                      "checkpoint"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": true
-                  },
-                  {
-                    "id": "you-socket-return-flow",
-                    "route": [
-                      "you-socket-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "peer-socket-return-flow",
-                    "route": [
+                      "room-input",
+                      "room-input-return",
                       "peer-socket-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "room-input-return-flow",
-                    "route": [
-                      "room-input-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "presence-return-flow",
-                    "route": [
-                      "presence-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -224,7 +165,7 @@
             {
               "id": "checkout",
               "title": "Buy a Gold pack",
-              "description": "The Unity client checks its wallet through the Go API and records the pending product on-device. The RevenueCat SDK opens the native App Store or Google Play purchase. The purchase callback lets the app reconcile with the backend. Gold appears only after the server confirms the credit.",
+              "description": "One player chooses a Gold pack. The game remembers the pending purchase and opens her phone’s store. The store reports the purchase to the game. She sees the Gold in her wallet once the server confirms the credit.",
               "metrics": [],
               "scene": {
                 "nodes": [
@@ -241,7 +182,7 @@
                   },
                   {
                     "id": "gateway",
-                    "label": "API gateway",
+                    "label": "Game entrance",
                     "role": "gateway",
                     "color": "lavender",
                     "technology": "nodejs",
@@ -252,7 +193,7 @@
                   },
                   {
                     "id": "commerce",
-                    "label": "Commerce API",
+                    "label": "Game shop",
                     "role": "api",
                     "color": "sage",
                     "technology": "go",
@@ -263,7 +204,7 @@
                   },
                   {
                     "id": "wallet",
-                    "label": "Wallet + inventory",
+                    "label": "Gold and items",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -357,76 +298,16 @@
                 ],
                 "flows": [
                   {
-                    "id": "wallet-check",
-                    "route": [
-                      "buy",
-                      "authorize-order",
-                      "wallet-status"
-                    ],
-                    "kind": "request",
-                    "rate": 0.3,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
                     "id": "checkout",
                     "route": [
                       "native-purchase",
-                      "store-purchase"
-                    ],
-                    "kind": "request",
-                    "rate": 0.3,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "buy-return-flow",
-                    "route": [
-                      "buy-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "authorize-order-return-flow",
-                    "route": [
-                      "authorize-order-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "wallet-status-return-flow",
-                    "route": [
-                      "wallet-status-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "native-purchase-return-flow",
-                    "route": [
+                      "store-purchase",
+                      "store-purchase-return",
                       "native-purchase-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "store-purchase-return-flow",
-                    "route": [
-                      "store-purchase-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -435,7 +316,7 @@
             {
               "id": "purchase-delivery",
               "title": "Deliver Gold safely",
-              "description": "RevenueCat sends an authenticated purchase event to the Go API. This walkthrough illustrates an outbox dispatcher publishing a delivery job to Asynq on Redis. The Go worker credits the durable wallet once per order, and the realtime gateway tells Natiely to refresh the balance. Reconnecting players read the saved balance.",
+              "description": "Follow the purchase notice to the order record and then to the worker that credits the wallet. Saving the order first lets a worker retry after an outage. The credit may take longer to appear, but repeating a delivery for the same order must credit it only once.",
               "metrics": [],
               "scene": {
                 "nodes": [
@@ -452,7 +333,7 @@
                   },
                   {
                     "id": "webhook",
-                    "label": "Webhook API",
+                    "label": "Purchase notices",
                     "role": "api",
                     "color": "sage",
                     "technology": "go",
@@ -463,7 +344,7 @@
                   },
                   {
                     "id": "orders",
-                    "label": "Orders + outbox",
+                    "label": "Saved orders",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -474,7 +355,7 @@
                   },
                   {
                     "id": "dispatcher",
-                    "label": "Outbox dispatcher",
+                    "label": "Send pending jobs",
                     "role": "worker",
                     "color": "sand",
                     "technology": "go",
@@ -485,7 +366,7 @@
                   },
                   {
                     "id": "jobs",
-                    "label": "Purchase queue · Asynq",
+                    "label": "Purchase jobs",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "redis",
@@ -496,7 +377,7 @@
                   },
                   {
                     "id": "grant-worker",
-                    "label": "Grant worker",
+                    "label": "Credit Gold",
                     "role": "worker",
                     "color": "sage",
                     "technology": "go",
@@ -507,7 +388,7 @@
                   },
                   {
                     "id": "wallet",
-                    "label": "Wallet + inventory",
+                    "label": "Gold and items",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -518,7 +399,7 @@
                   },
                   {
                     "id": "realtime",
-                    "label": "Realtime gateway",
+                    "label": "Notify the game",
                     "role": "gateway",
                     "color": "lavender",
                     "technology": "nodejs",
@@ -606,64 +487,15 @@
                     "id": "verified-payment",
                     "route": [
                       "webhook",
-                      "paid"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "outbox-read",
-                    "route": [
-                      "poll"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "grant-gold",
-                    "route": [
+                      "paid",
+                      "poll-return",
                       "dispatch",
                       "consume",
                       "credit"
                     ],
                     "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "notify-player",
-                    "route": [
-                      "notify",
-                      "push"
-                    ],
-                    "kind": "request",
-                    "rate": 0.22,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "webhook-return-flow",
-                    "route": [
-                      "webhook-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "poll-return-flow",
-                    "route": [
-                      "poll-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -672,7 +504,7 @@
             {
               "id": "world-bundles",
               "title": "Download an extra world",
-              "description": "Natiely checks world access through Content API and reads a versioned manifest. A build worker prepares platform-specific asset bundles; a validation worker checks their hashes before publishing immutable files to object storage. The CDN serves those files through a private origin. Natiely downloads over HTTPS, validates the bundle and caches it locally. Interrupted downloads can resume or retry; an incomplete world is never marked ready. Bundles contain game assets, not executable updates.",
+              "description": "The friends choose a new world. Each phone checks access, downloads the right version and verifies the file before marking it ready. Keeping a verified copy uses space on the phone and saves another download on the next visit.",
               "metrics": [],
               "scene": {
                 "nodes": [
@@ -689,7 +521,7 @@
                   },
                   {
                     "id": "content-api",
-                    "label": "Content API",
+                    "label": "World catalog",
                     "role": "api",
                     "color": "sage",
                     "technology": "go",
@@ -700,7 +532,7 @@
                   },
                   {
                     "id": "access",
-                    "label": "World access + manifest",
+                    "label": "Access and version",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -711,7 +543,7 @@
                   },
                   {
                     "id": "cdn",
-                    "label": "World CDN",
+                    "label": "World downloads",
                     "role": "cdn",
                     "color": "lavender",
                     "technology": "amazonwebservices",
@@ -722,7 +554,7 @@
                   },
                   {
                     "id": "bundles",
-                    "label": "Bundle storage",
+                    "label": "World files",
                     "role": "storage",
                     "color": "sand",
                     "technology": "amazonwebservices",
@@ -733,7 +565,7 @@
                   },
                   {
                     "id": "build-worker",
-                    "label": "Bundle builder",
+                    "label": "Build a world",
                     "role": "worker",
                     "color": "sage",
                     "technology": "unity",
@@ -744,7 +576,7 @@
                   },
                   {
                     "id": "validator",
-                    "label": "Bundle validator",
+                    "label": "Verify the files",
                     "role": "worker",
                     "color": "peach",
                     "technology": "python",
@@ -755,7 +587,7 @@
                   },
                   {
                     "id": "local-cache",
-                    "label": "Device bundle cache",
+                    "label": "Downloaded worlds",
                     "role": "cache",
                     "color": "sky",
                     "group": "Unity clients",
@@ -836,83 +668,18 @@
                     "id": "world-access",
                     "route": [
                       "access",
-                      "manifest"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "world-download",
-                    "route": [
+                      "manifest",
+                      "manifest-return",
+                      "access-return",
                       "download",
-                      "origin"
-                    ],
-                    "kind": "request",
-                    "rate": 0.24,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "publish-bundle",
-                    "route": [
-                      "build",
-                      "publish"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "cache-bundle",
-                    "route": [
+                      "origin",
+                      "origin-return",
+                      "download-return",
                       "cache"
                     ],
                     "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "access-return-flow",
-                    "route": [
-                      "access-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "manifest-return-flow",
-                    "route": [
-                      "manifest-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "download-return-flow",
-                    "route": [
-                      "download-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "origin-return-flow",
-                    "route": [
-                      "origin-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -921,7 +688,7 @@
             {
               "id": "match-recovery",
               "title": "Finish a match, reconnect",
-              "description": "The room authority records the terminal checkpoint and a durable reward intent. An outbox dispatcher feeds the result queue, and the settlement worker grants Gold and inventory once per match. Rejoining restores the last committed room state and reads the durable wallet. The public ranking API serves a separate request: it reads a short-lived Redis snapshot and loads the group ranking from MongoDB on a cache miss.",
+              "description": "One player loses signal as the match ends. Follow the saved result to the worker that grants the reward once per match. On reconnecting, she can read her wallet. The public ranking has its own short-lived copy, so it can catch up after her balance does.",
               "metrics": [],
               "scene": {
                 "nodes": [
@@ -938,7 +705,7 @@
                   },
                   {
                     "id": "room",
-                    "label": "Room authority",
+                    "label": "Match server",
                     "role": "service",
                     "color": "sage",
                     "technology": "go",
@@ -949,7 +716,7 @@
                   },
                   {
                     "id": "checkpoints",
-                    "label": "Results + outbox",
+                    "label": "Result and reward",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -960,7 +727,7 @@
                   },
                   {
                     "id": "dispatcher",
-                    "label": "Outbox dispatcher",
+                    "label": "Send pending jobs",
                     "role": "worker",
                     "color": "sand",
                     "technology": "go",
@@ -971,7 +738,7 @@
                   },
                   {
                     "id": "jobs",
-                    "label": "Match queue · Redis",
+                    "label": "Match rewards",
                     "role": "queue",
                     "color": "lavender",
                     "technology": "redis",
@@ -982,7 +749,7 @@
                   },
                   {
                     "id": "settlement",
-                    "label": "Settlement worker",
+                    "label": "Award prizes",
                     "role": "worker",
                     "color": "sage",
                     "technology": "go",
@@ -993,7 +760,7 @@
                   },
                   {
                     "id": "wallet",
-                    "label": "Wallet + inventory",
+                    "label": "Gold and items",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -1004,7 +771,7 @@
                   },
                   {
                     "id": "redis",
-                    "label": "Redis · Leaderboard",
+                    "label": "Recent rankings",
                     "role": "cache",
                     "color": "peach",
                     "technology": "redis",
@@ -1015,7 +782,7 @@
                   },
                   {
                     "id": "ranking-api",
-                    "label": "Public ranking API",
+                    "label": "Read rankings",
                     "role": "api",
                     "color": "sky",
                     "technology": "go",
@@ -1026,7 +793,7 @@
                   },
                   {
                     "id": "ranking-db",
-                    "label": "MongoDB · Group ranking",
+                    "label": "Saved rankings",
                     "role": "database",
                     "color": "sand",
                     "technology": "mongodb",
@@ -1136,117 +903,30 @@
                 ],
                 "flows": [
                   {
-                    "id": "restore-session",
-                    "route": [
-                      "reconnect",
-                      "restore-wallet"
-                    ],
-                    "kind": "request",
-                    "rate": 0.22,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
                     "id": "checkpoint",
                     "route": [
-                      "result"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": true
-                  },
-                  {
-                    "id": "poll-results",
-                    "route": [
-                      "poll"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "match-reward",
-                    "route": [
+                      "result",
+                      "poll-return",
                       "dispatch",
                       "settle",
                       "grant"
                     ],
                     "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
-                    "id": "read-ranking",
+                    "id": "restore-session",
                     "route": [
-                      "ranking-query",
-                      "ranking-cache"
-                    ],
-                    "kind": "request",
-                    "rate": 0.2,
-                    "speed": 0.7,
-                    "bounce": false
-                  },
-                  {
-                    "id": "reconnect-return-flow",
-                    "route": [
+                      "reconnect",
+                      "restore-wallet",
+                      "restore-wallet-return",
                       "reconnect-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "poll-return-flow",
-                    "route": [
-                      "poll-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "ranking-query-return-flow",
-                    "route": [
-                      "ranking-query-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "ranking-cache-return-flow",
-                    "route": [
-                      "ranking-cache-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "ranking-source-return-flow",
-                    "route": [
-                      "ranking-source-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "restore-wallet-return-flow",
-                    "route": [
-                      "restore-wallet-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]

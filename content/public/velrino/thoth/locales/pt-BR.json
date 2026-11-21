@@ -3,5 +3,124 @@
   "title": "Thoth · Edição local, armazenamento em nuvem e cobrança",
   "pattern": "Editor com foco local e cobrança orientada a eventos",
   "summary": "Acompanhe um diagrama do navegador até a API em Go e veja como eventos da Stripe chegam a um worker via MongoDB e Amazon SQS.",
-  "scope": "Acompanhe o editor do Thoth no navegador, a API em Go e o fluxo de cobrança com Stripe. O armazenamento em nuvem e o compartilhamento por link exigem uma conta elegível. Consulte View plans no Thoth para ver a disponibilidade. As setas mostram o caminho das requisições e tarefas."
+  "scope": "Acompanhe o editor do Thoth no navegador, a API em Go e o fluxo de cobrança com Stripe. O armazenamento em nuvem e o compartilhamento por link exigem uma conta elegível. Consulte View plans no Thoth para ver a disponibilidade. As setas mostram o caminho das requisições e tarefas.",
+  "steps": {
+    "thoth-step-1": {
+      "title": "Salve um diagrama neste aparelho",
+      "description": "Você abre o Thoth e desenha a primeira caixa. Siga o editor até o armazenamento do navegador, onde o diagrama é salvo. Depois de carregar, o editor continua funcionando se a API cair. A cópia local é prática, mas não aparece automaticamente em outro computador.",
+      "nodes": {
+        "client": {
+          "label": "Editor de diagramas"
+        },
+        "hosting": {
+          "label": "Hospedagem do editor"
+        },
+        "local": {
+          "label": "Neste aparelho"
+        },
+        "proxy": {
+          "label": "Entrada da API"
+        },
+        "api": {
+          "label": "Serviço do Thoth"
+        },
+        "mongo": {
+          "label": "Registros dos espaços"
+        },
+        "queue": {
+          "label": "Fila"
+        }
+      }
+    },
+    "thoth-step-2": {
+      "title": "Entre em um espaço de trabalho",
+      "description": "Você entra na conta para salvar o diagrama na nuvem. O Firebase confirma sua identidade. Depois, o Thoth confere de quais espaços pessoais ou de equipe você faz parte. As duas verificações são necessárias para abrir seus arquivos na nuvem.",
+      "nodes": {
+        "client": {
+          "label": "Editor de diagramas"
+        },
+        "proxy": {
+          "label": "Entrada da API"
+        },
+        "api": {
+          "label": "Serviço do Thoth"
+        },
+        "mongo": {
+          "label": "Registros dos espaços"
+        }
+      }
+    },
+    "thoth-step-3": {
+      "title": "Compartilhe o diagrama salvo",
+      "description": "Você salva uma versão e envia o link a uma colega. Ao salvar, a API confere acesso, limites do plano e a versão alterada. Ao abrir o link, ela verifica o que a leitora pode ver. A checagem de versão pode exigir uma nova tentativa, mas protege a edição mais recente da colega.",
+      "nodes": {
+        "client": {
+          "label": "Editor de diagramas"
+        },
+        "api": {
+          "label": "Serviço do Thoth"
+        },
+        "reader": {
+          "label": "Leitor do link"
+        },
+        "mongo": {
+          "label": "Registros dos espaços"
+        }
+      }
+    },
+    "thoth-step-4": {
+      "title": "Escolha um plano pago",
+      "description": "Quem administra o espaço escolhe um plano. O Thoth registra o pedido, solicita uma página de pagamento à Stripe e encaminha a pessoa até lá. Abrir a página permite iniciar o pagamento. O plano é ativado após a verificação.",
+      "nodes": {
+        "client": {
+          "label": "Editor de diagramas"
+        },
+        "api": {
+          "label": "Serviço do Thoth"
+        },
+        "mongo": {
+          "label": "Registros dos espaços"
+        },
+        "stripe": {
+          "label": "Cobrança na Stripe"
+        },
+        "checkout": {
+          "label": "Página de pagamento"
+        }
+      }
+    },
+    "thoth-step-5": {
+      "title": "Libere os recursos da nuvem",
+      "description": "Após o pagamento, a Stripe envia um aviso assinado. Siga o registro desse aviso pela fila até o serviço que consulta a situação da cobrança na Stripe e grava o acesso do espaço. Assim, o Thoth pode retomar uma atualização interrompida, embora os recursos pagos possam demorar um pouco para aparecer.",
+      "nodes": {
+        "client": {
+          "label": "Editor de diagramas"
+        },
+        "api": {
+          "label": "Serviço do Thoth"
+        },
+        "stripe": {
+          "label": "Cobrança na Stripe"
+        },
+        "inbox": {
+          "label": "Eventos salvos"
+        },
+        "dispatcher": {
+          "label": "Envio de tarefas"
+        },
+        "queue": {
+          "label": "Fila"
+        },
+        "worker": {
+          "label": "Verificação da cobrança"
+        },
+        "entitlement": {
+          "label": "Acesso ao espaço"
+        },
+        "dlq": {
+          "label": "Tarefas para revisão"
+        }
+      }
+    }
+  }
 }

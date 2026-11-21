@@ -18,16 +18,16 @@
             {
               "id": "ai-agents-step-1",
               "title": "Ask the model",
-              "description": "A single text prompt goes to the model. The model generates a text result from the supplied context. One request can handle a bounded task such as rewriting a paragraph.",
+              "description": "Jo wants a short summary of a train ticket’s refund rules. She pastes one paragraph and asks the model to rewrite it in plain language. The answer can use what she pasted. The rest of the ticket is still outside its view.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User input",
+                    "label": "Your question",
                     "role": "browser",
                     "color": "sky",
-                    "x": -7,
+                    "x": -14,
                     "z": 0
                   },
                   {
@@ -35,16 +35,15 @@
                     "label": "Language model",
                     "role": "function",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 0,
+                    "x": -7,
                     "z": 0
                   },
                   {
                     "id": "response",
-                    "label": "Result",
+                    "label": "Answer",
                     "role": "client",
                     "color": "sky",
-                    "x": 7,
+                    "x": 1,
                     "z": 0
                   }
                 ],
@@ -66,21 +65,12 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
+                      "edge-0",
                       "edge-1"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -88,26 +78,25 @@
             },
             {
               "id": "ai-agents-step-2",
-              "title": "Add documents and structured results",
-              "description": "The application extracts and limits text from a supplied document before building the prompt. It validates the model’s structured response and turns it into a usable result, such as a summary with fields.",
+              "title": "Read a document",
+              "description": "This time Jo attaches the ticket. The app extracts the text the model can read, then checks that the answer contains the requested fields. A form can catch a missing deadline field. A filled field still needs to agree with the ticket.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User input",
+                    "label": "Your question",
                     "role": "browser",
                     "color": "sky",
-                    "x": -23.8,
+                    "x": -21,
                     "z": 0
                   },
                   {
                     "id": "prepare",
-                    "label": "Input preparation",
+                    "label": "Read the input",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": -12.6,
+                    "x": -14,
                     "z": 0
                   },
                   {
@@ -115,25 +104,23 @@
                     "label": "Language model",
                     "role": "function",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 0,
+                    "x": -7,
                     "z": 0
                   },
                   {
                     "id": "format",
-                    "label": "Output validation",
+                    "label": "Check the format",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 12.6,
+                    "x": 0,
                     "z": 0
                   },
                   {
                     "id": "response",
-                    "label": "Result",
+                    "label": "Answer",
                     "role": "client",
                     "color": "sky",
-                    "x": 23.8,
+                    "x": 8,
                     "z": 0
                   }
                 ],
@@ -167,41 +154,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
                       "edge-3"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -209,26 +169,25 @@
             },
             {
               "id": "ai-agents-step-3",
-              "title": "Call tools and retrieve evidence",
-              "description": "The model can request a search when the input lacks evidence. The application validates the call, retrieves relevant passages and returns them as a tool result. The model uses that evidence to answer with source references.",
+              "title": "Look up a missing rule",
+              "description": "The ticket refers Jo to the operator’s refund policy. Follow the search out to the index and back. The model can now cite a passage Jo can check for herself. Searching takes an extra round trip, and a poor match can still lead it astray.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User input",
+                    "label": "Your question",
                     "role": "browser",
                     "color": "sky",
-                    "x": -23.8,
+                    "x": -21,
                     "z": 0
                   },
                   {
                     "id": "prepare",
-                    "label": "Input preparation",
+                    "label": "Read the input",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": -12.6,
+                    "x": -14,
                     "z": 0
                   },
                   {
@@ -236,43 +195,39 @@
                     "label": "Language model",
                     "role": "function",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 0,
+                    "x": -7,
                     "z": 0
                   },
                   {
                     "id": "tools",
-                    "label": "Tool runtime",
+                    "label": "Run a tool",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Tools and retrieval",
-                    "x": 7.700000000000001,
-                    "z": 14.700000000000001
+                    "x": 0,
+                    "z": 10
                   },
                   {
                     "id": "knowledge",
-                    "label": "Search index",
+                    "label": "Search sources",
                     "role": "database",
                     "color": "sand",
-                    "group": "Tools and retrieval",
-                    "x": 18.55,
-                    "z": 14.700000000000001
+                    "x": 9,
+                    "z": 10
                   },
                   {
                     "id": "format",
-                    "label": "Output validation",
+                    "label": "Check the format",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 12.6,
+                    "x": 0,
                     "z": 0
                   },
                   {
                     "id": "response",
-                    "label": "Result",
+                    "label": "Answer",
                     "role": "client",
                     "color": "sky",
-                    "x": 23.8,
+                    "x": 8,
                     "z": 0
                   }
                 ],
@@ -330,81 +285,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-4",
                       "edge-5"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -412,26 +304,25 @@
             },
             {
               "id": "ai-agents-step-4",
-              "title": "Support multimodal input and memory",
-              "description": "The application prepares supported images or documents alongside text. Working memory carries context across turns. Selected facts can be read from or written to longer-lived storage, with consent and retention rules.",
+              "title": "Remember a follow-up",
+              "description": "Jo adds a photo and asks “Does that deadline apply to this fare?” The app prepares the image and uses the conversation so “that deadline” has meaning. Remembering details on a future visit is a separate choice about what to keep and for how long.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User input",
+                    "label": "Your question",
                     "role": "browser",
                     "color": "sky",
-                    "x": -23.8,
+                    "x": -21,
                     "z": 0
                   },
                   {
                     "id": "prepare",
-                    "label": "Input preparation",
+                    "label": "Read the input",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": -12.6,
+                    "x": -14,
                     "z": 0
                   },
                   {
@@ -439,61 +330,55 @@
                     "label": "Language model",
                     "role": "function",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 0,
+                    "x": -7,
                     "z": 0
                   },
                   {
                     "id": "tools",
-                    "label": "Tool runtime",
+                    "label": "Run a tool",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Tools and retrieval",
-                    "x": 7.700000000000001,
-                    "z": 14.700000000000001
+                    "x": 0,
+                    "z": 10
                   },
                   {
                     "id": "knowledge",
-                    "label": "Search index",
+                    "label": "Search sources",
                     "role": "database",
                     "color": "sand",
-                    "group": "Tools and retrieval",
-                    "x": 18.55,
-                    "z": 14.700000000000001
+                    "x": 9,
+                    "z": 10
                   },
                   {
                     "id": "session",
-                    "label": "Working memory",
+                    "label": "This conversation",
                     "role": "cache",
                     "color": "sky",
-                    "group": "Agent state",
-                    "x": 0,
-                    "z": -15.680000000000001
+                    "x": -7,
+                    "z": -10
                   },
                   {
                     "id": "memory",
-                    "label": "Long-term memory",
+                    "label": "Saved facts",
                     "role": "database",
                     "color": "sand",
-                    "group": "Agent state",
-                    "x": -11.200000000000001,
-                    "z": -15.680000000000001
+                    "x": -14,
+                    "z": -10
                   },
                   {
                     "id": "format",
-                    "label": "Output validation",
+                    "label": "Check the format",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 12.6,
+                    "x": 0,
                     "z": 0
                   },
                   {
                     "id": "response",
-                    "label": "Result",
+                    "label": "Answer",
                     "role": "client",
                     "color": "sky",
-                    "x": 23.8,
+                    "x": 8,
                     "z": 0
                   }
                 ],
@@ -575,121 +460,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-7",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-4",
+                      "edge-5",
+                      "edge-5-return",
+                      "edge-4-return",
+                      "edge-6",
                       "edge-7"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-5-return",
-                    "route": [
-                      "edge-5-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -697,26 +479,25 @@
             },
             {
               "id": "ai-agents-step-5",
-              "title": "Run a bounded decision loop",
-              "description": "After each observation, the runtime can ask the model to revise its plan, call a tool, request approval or finish. The loop stops when the goal is met, a policy blocks the action or a budget runs out. Working state, durable facts and summaries of past runs serve different needs.",
+              "title": "Decide whether to keep looking",
+              "description": "Jo asks for the exact deadline. Follow one search and its result back to the decision point. Another search might turn up better evidence, but it costs time and money. When the budget runs out, the app must stop, even if the answer is incomplete.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User input",
+                    "label": "Your question",
                     "role": "browser",
                     "color": "sky",
-                    "x": -23.8,
+                    "x": -21,
                     "z": 0
                   },
                   {
                     "id": "prepare",
-                    "label": "Input preparation",
+                    "label": "Read the input",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": -12.6,
+                    "x": -14,
                     "z": 0
                   },
                   {
@@ -724,88 +505,79 @@
                     "label": "Language model",
                     "role": "function",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 0,
+                    "x": -7,
                     "z": 0
                   },
                   {
                     "id": "session",
-                    "label": "Working memory",
+                    "label": "This conversation",
                     "role": "cache",
                     "color": "sky",
-                    "group": "Agent state",
-                    "x": 0,
-                    "z": -15.680000000000001
+                    "x": -7,
+                    "z": -10
                   },
                   {
                     "id": "memory",
-                    "label": "Long-term memory",
+                    "label": "Saved facts",
                     "role": "database",
                     "color": "sand",
-                    "group": "Agent state",
-                    "x": -11.200000000000001,
-                    "z": -15.680000000000001
+                    "x": -14,
+                    "z": -10
                   },
                   {
                     "id": "episodes",
-                    "label": "Past run summaries",
+                    "label": "Earlier runs",
                     "role": "storage",
                     "color": "sand",
-                    "group": "Agent state",
-                    "x": -21.7,
-                    "z": -15.680000000000001
+                    "x": -21,
+                    "z": -10
                   },
                   {
                     "id": "decision",
-                    "label": "Decision and budget",
+                    "label": "Next step?",
                     "role": "gateway",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 9.1,
+                    "x": 0,
                     "z": 0
                   },
                   {
                     "id": "tools",
-                    "label": "Tool runtime",
+                    "label": "Run a tool",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Tools and retrieval",
-                    "x": 9.1,
-                    "z": 14.700000000000001
+                    "x": 0,
+                    "z": 10
                   },
                   {
                     "id": "knowledge",
-                    "label": "Search index",
+                    "label": "Search sources",
                     "role": "database",
                     "color": "sand",
-                    "group": "Tools and retrieval",
-                    "x": 18.55,
-                    "z": 14.700000000000001
+                    "x": 9,
+                    "z": 10
                   },
                   {
                     "id": "approval",
                     "label": "Human review",
                     "role": "client",
                     "color": "sky",
-                    "group": "Oversight",
-                    "x": 19.25,
-                    "z": -15.680000000000001
+                    "x": 3,
+                    "z": -10
                   },
                   {
                     "id": "format",
-                    "label": "Output validation",
+                    "label": "Check the format",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 18.900000000000002,
+                    "x": 8,
                     "z": 0
                   },
                   {
                     "id": "response",
-                    "label": "Result",
+                    "label": "Answer",
                     "role": "client",
                     "color": "sky",
-                    "x": 29.050000000000004,
+                    "x": 16,
                     "z": 0
                   }
                 ],
@@ -923,181 +695,19 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-7",
-                    "route": [
-                      "edge-7"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-8",
-                    "route": [
-                      "edge-8"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-9",
-                    "route": [
-                      "edge-9"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-10",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-5",
+                      "edge-6",
+                      "edge-7",
+                      "edge-7-return",
+                      "edge-6-return",
+                      "edge-9",
                       "edge-10"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-5-return",
-                    "route": [
-                      "edge-5-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-6-return",
-                    "route": [
-                      "edge-6-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-7-return",
-                    "route": [
-                      "edge-7-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-8-return",
-                    "route": [
-                      "edge-8-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -1105,80 +715,73 @@
             },
             {
               "id": "ai-agents-step-6",
-              "title": "Coordinate specialized workers",
-              "description": "An orchestrator can delegate bounded tasks and collect results before delivery. This example separates research, synthesis and verification. Traces support debugging and evaluation, while sensitive actions can still reach a human checkpoint.",
+              "title": "Split the work and check the answer",
+              "description": "For a longer policy, a coordinator sends one worker to find the rules. A writer uses that evidence and a reviewer checks the draft before Jo sees it. Dividing the work makes a second check possible and adds handoffs where the original question can get lost.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User input",
+                    "label": "Your question",
                     "role": "browser",
                     "color": "sky",
-                    "x": -21.7,
+                    "x": -21,
                     "z": 0
                   },
                   {
                     "id": "orchestrator",
-                    "label": "Orchestrator",
+                    "label": "Coordinator",
                     "role": "gateway",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": -10.85,
+                    "x": -14,
                     "z": 0
                   },
                   {
                     "id": "session",
-                    "label": "Working memory",
+                    "label": "This conversation",
                     "role": "cache",
                     "color": "sky",
-                    "group": "Agent state",
-                    "x": -10.85,
-                    "z": -15.680000000000001
+                    "x": -14,
+                    "z": -10
                   },
                   {
                     "id": "research",
-                    "label": "Research worker",
+                    "label": "Researcher",
                     "role": "worker",
                     "color": "sky",
-                    "group": "Tools and retrieval",
-                    "x": 0,
-                    "z": -15.680000000000001
+                    "x": -6,
+                    "z": -10
                   },
                   {
                     "id": "knowledge",
-                    "label": "Search index",
+                    "label": "Search sources",
                     "role": "database",
                     "color": "sand",
-                    "group": "Tools and retrieval",
-                    "x": 11.549999999999999,
-                    "z": -15.680000000000001
+                    "x": 3,
+                    "z": -10
                   },
                   {
                     "id": "model",
                     "label": "Language model",
                     "role": "function",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 0,
+                    "x": -7,
                     "z": 0
                   },
                   {
                     "id": "trace",
-                    "label": "Traces and evaluations",
+                    "label": "Activity record",
                     "role": "database",
                     "color": "sand",
-                    "group": "Oversight",
-                    "x": -10.85,
-                    "z": 15.680000000000001
+                    "x": -14,
+                    "z": 10
                   },
                   {
                     "id": "review",
-                    "label": "Result verification",
+                    "label": "Check the draft",
                     "role": "service",
                     "color": "sky",
-                    "group": "Application runtime",
-                    "x": 11.549999999999999,
+                    "x": 8,
                     "z": 0
                   },
                   {
@@ -1186,16 +789,15 @@
                     "label": "Human review",
                     "role": "client",
                     "color": "sky",
-                    "group": "Oversight",
-                    "x": 11.549999999999999,
-                    "z": 15.680000000000001
+                    "x": 8,
+                    "z": 10
                   },
                   {
                     "id": "response",
-                    "label": "Result",
+                    "label": "Answer",
                     "role": "client",
                     "color": "sky",
-                    "x": 22.75,
+                    "x": 16,
                     "z": 0
                   }
                 ],
@@ -1295,151 +897,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-7",
-                    "route": [
-                      "edge-7"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-8",
-                    "route": [
+                      "edge-0",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-4",
+                      "edge-6",
                       "edge-8"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-6-return",
-                    "route": [
-                      "edge-6-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-7-return",
-                    "route": [
-                      "edge-7-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
