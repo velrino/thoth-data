@@ -129,6 +129,22 @@ def translation(path, step_list):
                 text(item, "notes", 1000)
 
 
+def read_workspace(folder, official):
+    workspace_file = folder / "workspace.json"
+    if not official or workspace_file.exists() or workspace_file.is_symlink():
+        return read_json(workspace_file)
+
+    drawing = read_json(folder / "workspace.excalidraw")
+    if not isinstance(drawing, dict) or drawing.get("type") != "excalidraw" or drawing.get("version") != 2:
+        raise ValueError("Expected an Excalidraw version 2 workspace")
+    elements = drawing.get("elements")
+    if not isinstance(elements, list) or not any(
+        isinstance(element, dict) and not element.get("isDeleted") for element in elements
+    ):
+        raise ValueError("An Excalidraw workspace needs visible elements")
+    return read_json(folder / "walkthrough.json")
+
+
 def validate():
     schema = read_json(ROOT / "schemas" / "workspace.schema.json")
     validator = Draft202012Validator(schema)
@@ -149,7 +165,7 @@ def validate():
     group_names = {}
     for folder in all_folders:
         try:
-            workspace = read_json(folder / "workspace.json")
+            workspace = read_workspace(folder, folder in official_folders)
             error = next(validator.iter_errors(workspace), None)
             if error:
                 raise ValueError(f"Workspace schema violation at {error.json_path}")
