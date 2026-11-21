@@ -2,5 +2,6 @@
   "schemaVersion": 1,
   "title": "Thoth · Edição local, armazenamento em nuvem e cobrança",
   "pattern": "Editor com foco local e cobrança orientada a eventos",
-  "summary": "Acompanhe um diagrama do navegador até a API em Go e veja como eventos da Stripe chegam a um worker via MongoDB e Amazon SQS."
+  "summary": "Acompanhe um diagrama do navegador até a API em Go e veja como eventos da Stripe chegam a um worker via MongoDB e Amazon SQS.",
+  "scope": "Acompanhe o editor do Thoth no navegador, a API em Go e o fluxo de cobrança com Stripe. O armazenamento em nuvem e o compartilhamento por link exigem uma conta elegível. Consulte View plans no Thoth para ver a disponibilidade. As setas mostram o caminho das requisições e tarefas."
 }

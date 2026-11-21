@@ -3,7 +3,7 @@
   "groupName": "Velrino",
   "pattern": "Local-first editor and event-driven billing",
   "summary": "Follow a diagram from the browser to the Go API, then see how Stripe events reach a worker through MongoDB and Amazon SQS.",
-  "scope": "First-party walkthrough of Thoth's architecture. The Next.js editor runs on Vercel and the Go API runs on AWS Lightsail. Cloud storage and sharing are API capabilities gated by a paid subscription. The last two steps show the implemented billing flow, currently disabled in production. Flow animations illustrate requests and jobs.",
+  "scope": "Follow Thoth’s browser editor, Go API and Stripe billing pipeline. Cloud storage and hosted sharing require an eligible account. Check View plans in Thoth for current availability. The arrows show how requests and jobs move through the system.",
   "author": "Thoth",
   "sources": [
     {

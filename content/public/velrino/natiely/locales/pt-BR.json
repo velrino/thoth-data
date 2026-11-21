@@ -2,5 +2,93 @@
   "schemaVersion": 1,
   "title": "Natiely · Por trás da aventura",
   "pattern": "Multijogador e comércio",
-  "summary": "Jogue em grupo, compre Gold, entregue recompensas, baixe mundos e recupere uma partida."
+  "summary": "Jogue em grupo, compre Gold, entregue recompensas, baixe mundos e recupere uma partida.",
+  "steps": {
+    "match-recovery": {
+      "title": "Reconectar e creditar a recompensa uma vez",
+      "description": "O servidor registra o estado final da partida e a recompensa pendente. A outbox envia o resultado para a fila. O worker usa o ID da partida para creditar Gold e itens uma vez, mesmo que a tarefa seja repetida. Ao reconectar, o jogador recupera o último estado salvo e consulta o saldo atualizado. A classificação é consultada separadamente via Redis e MongoDB.",
+      "nodes": {
+        "client": {
+          "label": "Natiely · Reconexão"
+        },
+        "room": {
+          "label": "Servidor da partida"
+        },
+        "checkpoints": {
+          "label": "Resultados e outbox"
+        },
+        "dispatcher": {
+          "label": "Publicador da outbox"
+        },
+        "jobs": {
+          "label": "Fila de partidas · Redis"
+        },
+        "settlement": {
+          "label": "Worker de recompensas"
+        },
+        "wallet": {
+          "label": "Carteira e inventário"
+        },
+        "redis": {
+          "label": "Redis · Classificação"
+        },
+        "ranking-api": {
+          "label": "API pública de classificação"
+        },
+        "ranking-db": {
+          "label": "MongoDB · Classificação por grupo"
+        }
+      },
+      "edges": {
+        "reconnect": {
+          "label": "WebSocket · reconexão autenticada"
+        },
+        "result": {
+          "label": "Estado final e registro da recompensa"
+        },
+        "poll": {
+          "label": "Consultar recompensas registradas"
+        },
+        "dispatch": {
+          "label": "Publicar recompensa da partida"
+        },
+        "settle": {
+          "label": "Processar resultado com novas tentativas"
+        },
+        "grant": {
+          "label": "Creditar uma vez por partida"
+        },
+        "ranking-query": {
+          "label": "GET /maze/groups/ranking"
+        },
+        "ranking-cache": {
+          "label": "Ler classificação no cache"
+        },
+        "ranking-source": {
+          "label": "Cache vazio · consultar classificação"
+        },
+        "restore-wallet": {
+          "label": "Ler saldo salvo ao reconectar"
+        },
+        "reconnect-return": {
+          "label": "Estado da partida recuperado"
+        },
+        "poll-return": {
+          "label": "Recompensas pendentes"
+        },
+        "ranking-query-return": {
+          "label": "Nove primeiros colocados"
+        },
+        "ranking-cache-return": {
+          "label": "Classificação em cache por função"
+        },
+        "ranking-source-return": {
+          "label": "Classificação por grupo"
+        },
+        "restore-wallet-return": {
+          "label": "Saldo salvo"
+        }
+      }
+    }
+  }
 }
