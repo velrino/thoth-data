@@ -248,8 +248,14 @@
                 "label": ""
               },
               {
-                "id": "return-web",
+                "id": "return-lb",
                 "from": "api",
+                "to": "lb",
+                "label": ""
+              },
+              {
+                "id": "return-web",
+                "from": "lb",
                 "to": "web",
                 "label": "Preview or file"
               }
@@ -291,6 +297,7 @@
               {
                 "id": "flow-4",
                 "route": [
+                  "return-lb",
                   "return-web"
                 ],
                 "kind": "request",
