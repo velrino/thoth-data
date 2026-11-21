@@ -1124,6 +1124,116 @@
                 "rate": 0.34,
                 "speed": 1.55,
                 "bounce": false
+              },
+              {
+                "id": "open-file-desktop-overview",
+                "route": [
+                  "desktop-lb",
+                  "route",
+                  "identity",
+                  "auth-users"
+                ],
+                "kind": "request",
+                "rate": 0.2,
+                "speed": 1.25,
+                "bounce": false
+              },
+              {
+                "id": "open-file-web-overview",
+                "route": [
+                  "web-lb",
+                  "route",
+                  "identity",
+                  "auth-users"
+                ],
+                "kind": "request",
+                "rate": 0.24,
+                "speed": 1.4,
+                "bounce": false
+              },
+              {
+                "id": "notify-notebook-overview",
+                "route": [
+                  "changes",
+                  "events",
+                  "push",
+                  "desktop-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.32,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "notify-browser-overview",
+                "route": [
+                  "web-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.27,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "notify-phone-overview",
+                "route": [
+                  "mobile-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.23,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "index-file-overview",
+                "route": [
+                  "queue-jobs",
+                  "jobs-search"
+                ],
+                "kind": "request",
+                "rate": 0.3,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "make-thumbnail-overview",
+                "route": [
+                  "jobs-previews"
+                ],
+                "kind": "request",
+                "rate": 0.21,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "check-file-safety-overview",
+                "route": [
+                  "jobs-scan"
+                ],
+                "kind": "request",
+                "rate": 0.25,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "apply-retention-overview",
+                "route": [
+                  "jobs-trash"
+                ],
+                "kind": "request",
+                "rate": 0.22,
+                "speed": 2.7,
+                "bounce": false
+              },
+              {
+                "id": "record-usage-overview",
+                "route": [
+                  "jobs-quota"
+                ],
+                "kind": "request",
+                "rate": 0.26,
+                "speed": 2.7,
+                "bounce": false
               }
             ]
           }
