@@ -24,8 +24,7 @@
                 "color": "sky",
                 "x": -47,
                 "z": -32,
-                "technology": "windows11",
-                "group": "1. Before Saved"
+                "technology": "windows11"
               },
               {
                 "id": "web",
@@ -34,8 +33,7 @@
                 "color": "sky",
                 "x": -47,
                 "z": -22,
-                "technology": "chrome",
-                "group": "1. Before Saved"
+                "technology": "chrome"
               },
               {
                 "id": "mobile",
@@ -44,8 +42,7 @@
                 "color": "sky",
                 "x": -47,
                 "z": -12,
-                "technology": "android",
-                "group": "1. Before Saved"
+                "technology": "android"
               },
               {
                 "id": "lb",
@@ -53,8 +50,7 @@
                 "role": "load-balancer",
                 "color": "sky",
                 "x": -33,
-                "z": -22,
-                "group": "1. Before Saved"
+                "z": -22
               },
               {
                 "id": "api",
@@ -62,8 +58,7 @@
                 "role": "gateway",
                 "color": "sky",
                 "x": -19,
-                "z": -22,
-                "group": "1. Before Saved"
+                "z": -22
               }
             ],
             "edges": [
@@ -135,8 +130,7 @@
                 "color": "sky",
                 "x": -47,
                 "z": -22,
-                "technology": "chrome",
-                "group": "1. Before Saved"
+                "technology": "chrome"
               },
               {
                 "id": "lb",
@@ -144,8 +138,7 @@
                 "role": "load-balancer",
                 "color": "sky",
                 "x": -33,
-                "z": -22,
-                "group": "1. Before Saved"
+                "z": -22
               },
               {
                 "id": "api",
@@ -153,8 +146,7 @@
                 "role": "gateway",
                 "color": "sky",
                 "x": -19,
-                "z": -22,
-                "group": "1. Before Saved"
+                "z": -22
               },
               {
                 "id": "auth",
@@ -163,8 +155,7 @@
                 "color": "sky",
                 "x": -19,
                 "z": -39,
-                "technology": "oauth",
-                "group": "1. Before Saved"
+                "technology": "oauth"
               },
               {
                 "id": "users",
@@ -172,37 +163,33 @@
                 "role": "database",
                 "color": "sky",
                 "x": -3,
-                "z": -39,
-                "group": "1. Before Saved"
+                "z": -39
               },
               {
                 "id": "storage",
                 "label": "Store file data",
                 "role": "storage",
                 "color": "sky",
-                "x": 27,
-                "z": -22,
-                "technology": "googlecloud",
-                "group": "1. Before Saved"
+                "x": -7,
+                "z": -14,
+                "technology": "googlecloud"
               },
               {
                 "id": "metadata",
                 "label": "File record",
                 "role": "database",
                 "color": "sky",
-                "x": 44,
-                "z": -14,
-                "technology": "postgresql",
-                "group": "1. Before Saved"
+                "x": -7,
+                "z": -22,
+                "technology": "postgresql"
               },
               {
                 "id": "permissions",
                 "label": "Sharing rules",
                 "role": "service",
                 "color": "sky",
-                "x": 44,
-                "z": -39,
-                "group": "1. Before Saved"
+                "x": -7,
+                "z": -30
               }
             ],
             "edges": [
@@ -330,8 +317,8 @@
                 "label": "Phone",
                 "role": "mobile",
                 "color": "sky",
-                "x": -47,
-                "z": -12,
+                "x": -42,
+                "z": -16,
                 "technology": "android",
                 "group": "1. Before Saved"
               },
@@ -340,8 +327,8 @@
                 "label": "Spread requests",
                 "role": "load-balancer",
                 "color": "sky",
-                "x": -33,
-                "z": -22,
+                "x": -28,
+                "z": -16,
                 "group": "1. Before Saved"
               },
               {
@@ -349,8 +336,8 @@
                 "label": "File service",
                 "role": "gateway",
                 "color": "sky",
-                "x": -19,
-                "z": -22,
+                "x": -14,
+                "z": -6,
                 "group": "1. Before Saved"
               },
               {
@@ -358,8 +345,8 @@
                 "label": "Resume upload",
                 "role": "service",
                 "color": "sky",
-                "x": -4,
-                "z": -22,
+                "x": 0,
+                "z": -6,
                 "group": "1. Before Saved"
               },
               {
@@ -367,8 +354,8 @@
                 "label": "Split into pieces",
                 "role": "worker",
                 "color": "sky",
-                "x": 11,
-                "z": -22,
+                "x": 14,
+                "z": 4,
                 "group": "1. Before Saved"
               },
               {
@@ -376,8 +363,8 @@
                 "label": "Store file data",
                 "role": "storage",
                 "color": "sky",
-                "x": 27,
-                "z": -22,
+                "x": 28,
+                "z": 4,
                 "technology": "googlecloud",
                 "group": "1. Before Saved"
               },
@@ -386,8 +373,8 @@
                 "label": "File record",
                 "role": "database",
                 "color": "sky",
-                "x": 44,
-                "z": -14,
+                "x": 42,
+                "z": 14,
                 "technology": "postgresql",
                 "group": "1. Before Saved"
               }
@@ -490,8 +477,8 @@
                 "label": "File record",
                 "role": "database",
                 "color": "sky",
-                "x": 44,
-                "z": -14,
+                "x": -2,
+                "z": -22,
                 "technology": "postgresql",
                 "group": "1. Before Saved"
               },
@@ -500,8 +487,8 @@
                 "label": "Version history",
                 "role": "service",
                 "color": "sky",
-                "x": 28,
-                "z": -39,
+                "x": 15,
+                "z": -32,
                 "group": "1. Before Saved"
               },
               {
@@ -509,8 +496,8 @@
                 "label": "Sharing rules",
                 "role": "service",
                 "color": "sky",
-                "x": 44,
-                "z": -39,
+                "x": 30,
+                "z": -22,
                 "group": "1. Before Saved"
               }
             ],
@@ -592,7 +579,7 @@
                 "role": "mobile",
                 "color": "sky",
                 "x": -47,
-                "z": -12,
+                "z": -22,
                 "technology": "android",
                 "group": "1. Before Saved"
               },
@@ -620,7 +607,7 @@
                 "role": "service",
                 "color": "lavender",
                 "x": -19,
-                "z": 7,
+                "z": -7,
                 "group": "2. Tell other devices"
               },
               {
