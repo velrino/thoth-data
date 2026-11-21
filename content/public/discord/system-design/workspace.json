@@ -1194,14 +1194,14 @@
                   "x": -14,
                   "z": 0,
                   "span": 14,
-                  "moveMs": 1200
+                  "moveMs": 500
                 },
                 {
                   "kind": "focus",
                   "x": 3.5,
                   "z": -3.5,
                   "span": 10,
-                  "moveMs": 1600
+                  "moveMs": 2300
                 },
                 {
                   "kind": "focus",
