@@ -1,0 +1,1115 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-google-drive-file-storage",
+  "title": "Google",
+  "entries": [
+    {
+      "kind": "lesson",
+      "id": "drive-file-storage",
+      "title": "Google Drive: How File Storage Works",
+      "complete": false,
+      "steps": [
+        {
+          "id": "open-a-file",
+          "title": "Open a file",
+          "description": "Click a file on your computer, in a browser or on your phone. The file service checks your access and returns a preview or download. We’ll follow this everyday action into an illustrative storage design.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "desktop",
+                "label": "Desktop sync",
+                "role": "client",
+                "color": "sky",
+                "x": -15,
+                "z": -9,
+                "technology": "windows11"
+              },
+              {
+                "id": "web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": -15,
+                "z": 0,
+                "technology": "chrome"
+              },
+              {
+                "id": "mobile",
+                "label": "Mobile app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -15,
+                "z": 9,
+                "technology": "android"
+              },
+              {
+                "id": "server",
+                "label": "File service",
+                "role": "gateway",
+                "color": "peach",
+                "x": 0,
+                "z": 0
+              },
+              {
+                "id": "result",
+                "label": "File opens",
+                "role": "storage",
+                "color": "sage",
+                "x": 15,
+                "z": 0
+              }
+            ],
+            "edges": [
+              {
+                "id": "open-desktop",
+                "from": "desktop",
+                "to": "server",
+                "label": ""
+              },
+              {
+                "id": "open-web",
+                "from": "web",
+                "to": "server",
+                "label": "Open file"
+              },
+              {
+                "id": "open-mobile",
+                "from": "mobile",
+                "to": "server",
+                "label": ""
+              },
+              {
+                "id": "result",
+                "from": "server",
+                "to": "result",
+                "label": "Return preview or download"
+              }
+            ],
+            "flows": [
+              {
+                "id": "flow-1",
+                "route": [
+                  "open-desktop"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-2",
+                "route": [
+                  "open-web",
+                  "result"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-3",
+                "route": [
+                  "open-mobile"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "find-and-authorize",
+          "title": "Find it and check access",
+          "description": "The gateway sends the request to a healthy server. Identity says who is asking. File permissions say what they can do. The server then looks up the file record and retrieves its contents as a separate operation.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": -23,
+                "z": -13,
+                "technology": "chrome"
+              },
+              {
+                "id": "lb",
+                "label": "Load balancer",
+                "role": "load-balancer",
+                "color": "lavender",
+                "x": -9,
+                "z": -13
+              },
+              {
+                "id": "api",
+                "label": "REST gateway",
+                "role": "gateway",
+                "color": "peach",
+                "x": 6,
+                "z": -13
+              },
+              {
+                "id": "auth",
+                "label": "Auth service",
+                "role": "service",
+                "color": "sage",
+                "x": -8,
+                "z": 0,
+                "technology": "oauth"
+              },
+              {
+                "id": "users",
+                "label": "Users DB",
+                "role": "database",
+                "color": "sky",
+                "x": -22,
+                "z": 0
+              },
+              {
+                "id": "permissions",
+                "label": "Sharing and permissions",
+                "role": "service",
+                "color": "sand",
+                "x": 7,
+                "z": 1
+              },
+              {
+                "id": "metadata",
+                "label": "Metadata DB",
+                "role": "database",
+                "color": "sky",
+                "x": -5,
+                "z": 13,
+                "technology": "postgresql"
+              },
+              {
+                "id": "storage",
+                "label": "Object storage",
+                "role": "storage",
+                "color": "sky",
+                "x": 22,
+                "z": 0,
+                "technology": "googlecloud"
+              }
+            ],
+            "edges": [
+              {
+                "id": "web-lb",
+                "from": "web",
+                "to": "lb",
+                "label": ""
+              },
+              {
+                "id": "route",
+                "from": "lb",
+                "to": "api",
+                "label": "Route"
+              },
+              {
+                "id": "identity",
+                "from": "api",
+                "to": "auth",
+                "label": "Verify identity"
+              },
+              {
+                "id": "users",
+                "from": "auth",
+                "to": "users",
+                "label": ""
+              },
+              {
+                "id": "access",
+                "from": "api",
+                "to": "permissions",
+                "label": "Check access"
+              },
+              {
+                "id": "lookup",
+                "from": "api",
+                "to": "metadata",
+                "label": "Find file"
+              },
+              {
+                "id": "bytes",
+                "from": "api",
+                "to": "storage",
+                "label": "Read bytes"
+              },
+              {
+                "id": "bytes-return",
+                "from": "storage",
+                "to": "api",
+                "label": ""
+              },
+              {
+                "id": "return-web",
+                "from": "api",
+                "to": "web",
+                "label": "Preview or file"
+              }
+            ],
+            "flows": [
+              {
+                "id": "flow-1",
+                "route": [
+                  "web-lb",
+                  "route",
+                  "identity",
+                  "users"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-2",
+                "route": [
+                  "access"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-3",
+                "route": [
+                  "bytes"
+                ],
+                "kind": "heavy",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-4",
+                "route": [
+                  "return-web"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "upload-and-resume",
+          "title": "Resume an interrupted upload",
+          "description": "A phone loses signal during a large upload. The session remembers which bytes arrived, so the phone only needs to send missing data. The app confirms the save once the chunks are durable and the file record points to them. This saves bandwidth at the cost of keeping upload state.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "mobile",
+                "label": "Mobile app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -30,
+                "z": -10,
+                "technology": "android"
+              },
+              {
+                "id": "api",
+                "label": "REST gateway",
+                "role": "gateway",
+                "color": "peach",
+                "x": -16,
+                "z": -10
+              },
+              {
+                "id": "upload",
+                "label": "Upload session",
+                "role": "service",
+                "color": "sage",
+                "x": -2,
+                "z": -10
+              },
+              {
+                "id": "chunks",
+                "label": "Chunk and deduplicate",
+                "role": "worker",
+                "color": "sage",
+                "x": 13,
+                "z": -10
+              },
+              {
+                "id": "storage",
+                "label": "Object storage",
+                "role": "storage",
+                "color": "sky",
+                "x": 13,
+                "z": 5,
+                "technology": "googlecloud"
+              },
+              {
+                "id": "metadata",
+                "label": "Metadata DB",
+                "role": "database",
+                "color": "sky",
+                "x": -4,
+                "z": 5,
+                "technology": "postgresql"
+              }
+            ],
+            "edges": [
+              {
+                "id": "phone-upload",
+                "from": "mobile",
+                "to": "api",
+                "label": "Start upload"
+              },
+              {
+                "id": "upload",
+                "from": "api",
+                "to": "upload",
+                "label": "Start or resume"
+              },
+              {
+                "id": "chunks",
+                "from": "upload",
+                "to": "chunks",
+                "label": ""
+              },
+              {
+                "id": "storage",
+                "from": "chunks",
+                "to": "storage",
+                "label": ""
+              },
+              {
+                "id": "commit",
+                "from": "storage",
+                "to": "metadata",
+                "label": "Commit pointer",
+                "notes": "The upload coordinator commits metadata after confirming the referenced chunks are durable."
+              }
+            ],
+            "flows": [
+              {
+                "id": "flow-1",
+                "route": [
+                  "phone-upload",
+                  "upload",
+                  "chunks",
+                  "storage",
+                  "commit"
+                ],
+                "kind": "heavy",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "versions-and-sharing",
+          "title": "Restore or share a version",
+          "description": "Each saved version points to its data. The owner can restore an older version or grant access to view, comment or edit. Version history improves recovery, and a retention policy controls how long old chunks take up space.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "api",
+                "label": "REST gateway",
+                "role": "gateway",
+                "color": "peach",
+                "x": -24,
+                "z": -8
+              },
+              {
+                "id": "storage",
+                "label": "Object storage",
+                "role": "storage",
+                "color": "sky",
+                "x": -10,
+                "z": -8,
+                "technology": "googlecloud"
+              },
+              {
+                "id": "metadata",
+                "label": "Metadata DB",
+                "role": "database",
+                "color": "sky",
+                "x": 4,
+                "z": -8,
+                "technology": "postgresql"
+              },
+              {
+                "id": "versions",
+                "label": "Version history",
+                "role": "service",
+                "color": "sage",
+                "x": 20,
+                "z": -8
+              },
+              {
+                "id": "permissions",
+                "label": "Sharing and permissions",
+                "role": "service",
+                "color": "sand",
+                "x": 20,
+                "z": 8
+              },
+              {
+                "id": "trash",
+                "label": "Trash and retention",
+                "role": "worker",
+                "color": "sage",
+                "x": 4,
+                "z": 8
+              }
+            ],
+            "edges": [
+              {
+                "id": "bytes",
+                "from": "api",
+                "to": "storage",
+                "label": "Read bytes"
+              },
+              {
+                "id": "commit",
+                "from": "storage",
+                "to": "metadata",
+                "label": "Commit pointer",
+                "notes": "The upload coordinator commits metadata after confirming the referenced chunks are durable."
+              },
+              {
+                "id": "versions",
+                "from": "metadata",
+                "to": "versions",
+                "label": "Save version"
+              },
+              {
+                "id": "version-access",
+                "from": "versions",
+                "to": "permissions",
+                "label": ""
+              },
+              {
+                "id": "trash",
+                "from": "metadata",
+                "to": "trash",
+                "label": ""
+              }
+            ],
+            "flows": [
+              {
+                "id": "flow-1",
+                "route": [
+                  "bytes",
+                  "commit",
+                  "versions"
+                ],
+                "kind": "heavy",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-2",
+                "route": [
+                  "version-access"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "sync-across-devices",
+          "title": "Catch up across devices",
+          "description": "You edit a file on your laptop and pick up your phone. A notification tells the phone to check for updates from its last checkpoint. If both devices made conflicting offline edits, the service can keep a separate copy for the user to resolve.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "api",
+                "label": "REST gateway",
+                "role": "gateway",
+                "color": "peach",
+                "x": -25,
+                "z": -9
+              },
+              {
+                "id": "sync",
+                "label": "Sync service",
+                "role": "service",
+                "color": "sage",
+                "x": -11,
+                "z": -9
+              },
+              {
+                "id": "queue",
+                "label": "Change events",
+                "role": "queue",
+                "color": "sand",
+                "x": 3,
+                "z": -9,
+                "technology": "apachekafka"
+              },
+              {
+                "id": "notify",
+                "label": "Push gateway",
+                "role": "gateway",
+                "color": "sage",
+                "x": 17,
+                "z": -9
+              },
+              {
+                "id": "other-desktop",
+                "label": "Desktop sync",
+                "role": "client",
+                "color": "sky",
+                "x": 5,
+                "z": 8,
+                "technology": "windows11"
+              },
+              {
+                "id": "other-web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": 17,
+                "z": 8,
+                "technology": "chrome"
+              },
+              {
+                "id": "other-mobile",
+                "label": "Mobile app",
+                "role": "mobile",
+                "color": "sky",
+                "x": 29,
+                "z": 8,
+                "technology": "android"
+              }
+            ],
+            "edges": [
+              {
+                "id": "changes",
+                "from": "api",
+                "to": "sync",
+                "label": "Read changes"
+              },
+              {
+                "id": "events",
+                "from": "sync",
+                "to": "queue",
+                "label": "File changes"
+              },
+              {
+                "id": "push",
+                "from": "queue",
+                "to": "notify",
+                "label": ""
+              },
+              {
+                "id": "desktop-refresh",
+                "from": "notify",
+                "to": "other-desktop",
+                "label": ""
+              },
+              {
+                "id": "web-refresh",
+                "from": "notify",
+                "to": "other-web",
+                "label": ""
+              },
+              {
+                "id": "mobile-refresh",
+                "from": "notify",
+                "to": "other-mobile",
+                "label": ""
+              }
+            ],
+            "flows": [
+              {
+                "id": "flow-1",
+                "route": [
+                  "changes",
+                  "events",
+                  "push",
+                  "mobile-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-2",
+                "route": [
+                  "desktop-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-3",
+                "route": [
+                  "web-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "complete-architecture",
+          "title": "Complete file storage architecture",
+          "description": "Start with the devices at the top and follow their requests into the gateway. The left side shows uploads, storage, file metadata and versions. The right side shows how devices hear about changes. The bottom shows search, previews, scanning, quota and retention. For discussion: What has to finish before the user sees Saved, and what can run in the background? Tech Fusionist’s educational illustration inspired this overview. The service topology and technologies illustrate one possible design.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "user",
+                "label": "User",
+                "role": "user",
+                "color": "sky",
+                "x": -46,
+                "z": -30
+              },
+              {
+                "id": "desktop",
+                "label": "Desktop sync",
+                "role": "client",
+                "color": "sky",
+                "x": -33,
+                "z": -30,
+                "technology": "windows11"
+              },
+              {
+                "id": "web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": -20,
+                "z": -30,
+                "technology": "chrome"
+              },
+              {
+                "id": "mobile",
+                "label": "Mobile app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -7,
+                "z": -30,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Load balancer",
+                "role": "load-balancer",
+                "color": "lavender",
+                "x": 9,
+                "z": -27
+              },
+              {
+                "id": "api",
+                "label": "REST gateway",
+                "role": "gateway",
+                "color": "peach",
+                "x": 9,
+                "z": -12
+              },
+              {
+                "id": "auth",
+                "label": "Auth service",
+                "role": "service",
+                "color": "sage",
+                "x": -18,
+                "z": -15,
+                "technology": "oauth"
+              },
+              {
+                "id": "users",
+                "label": "Users DB",
+                "role": "database",
+                "color": "sky",
+                "x": -36,
+                "z": -15
+              },
+              {
+                "id": "upload",
+                "label": "Upload session",
+                "role": "service",
+                "color": "sage",
+                "x": -39,
+                "z": -1
+              },
+              {
+                "id": "chunks",
+                "label": "Chunk and deduplicate",
+                "role": "worker",
+                "color": "sage",
+                "x": -22,
+                "z": -1
+              },
+              {
+                "id": "storage",
+                "label": "Object storage",
+                "role": "storage",
+                "color": "sky",
+                "x": 1,
+                "z": -1,
+                "technology": "googlecloud"
+              },
+              {
+                "id": "metadata",
+                "label": "Metadata DB",
+                "role": "database",
+                "color": "sky",
+                "x": -37,
+                "z": 13,
+                "technology": "postgresql"
+              },
+              {
+                "id": "versions",
+                "label": "Version history",
+                "role": "service",
+                "color": "sage",
+                "x": -19,
+                "z": 13
+              },
+              {
+                "id": "permissions",
+                "label": "Sharing and permissions",
+                "role": "service",
+                "color": "sand",
+                "x": 2,
+                "z": 13
+              },
+              {
+                "id": "search",
+                "label": "Search and OCR",
+                "role": "worker",
+                "color": "sage",
+                "x": -44,
+                "z": 30,
+                "technology": "elasticsearch"
+              },
+              {
+                "id": "previews",
+                "label": "Previews",
+                "role": "worker",
+                "color": "sage",
+                "x": -29,
+                "z": 30
+              },
+              {
+                "id": "scan",
+                "label": "Malware scan and DLP",
+                "role": "worker",
+                "color": "sage",
+                "x": -14,
+                "z": 30
+              },
+              {
+                "id": "quota",
+                "label": "Quota and billing",
+                "role": "service",
+                "color": "sage",
+                "x": 1,
+                "z": 30
+              },
+              {
+                "id": "trash",
+                "label": "Trash and retention",
+                "role": "worker",
+                "color": "sage",
+                "x": 16,
+                "z": 30
+              },
+              {
+                "id": "sync",
+                "label": "Sync service",
+                "role": "service",
+                "color": "sage",
+                "x": 34,
+                "z": -16
+              },
+              {
+                "id": "queue",
+                "label": "Change events",
+                "role": "queue",
+                "color": "sand",
+                "x": 34,
+                "z": -3,
+                "technology": "apachekafka"
+              },
+              {
+                "id": "notify",
+                "label": "Push gateway",
+                "role": "gateway",
+                "color": "sage",
+                "x": 34,
+                "z": 10
+              },
+              {
+                "id": "other-desktop",
+                "label": "Desktop sync",
+                "role": "client",
+                "color": "sky",
+                "x": 29,
+                "z": 27,
+                "technology": "windows11"
+              },
+              {
+                "id": "other-web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": 39,
+                "z": 27,
+                "technology": "chrome"
+              },
+              {
+                "id": "other-mobile",
+                "label": "Mobile app",
+                "role": "mobile",
+                "color": "sky",
+                "x": 49,
+                "z": 27,
+                "technology": "android"
+              }
+            ],
+            "edges": [
+              {
+                "id": "pick-desktop",
+                "from": "user",
+                "to": "desktop",
+                "label": ""
+              },
+              {
+                "id": "desktop-lb",
+                "from": "desktop",
+                "to": "lb",
+                "label": ""
+              },
+              {
+                "id": "web-lb",
+                "from": "web",
+                "to": "lb",
+                "label": ""
+              },
+              {
+                "id": "mobile-lb",
+                "from": "mobile",
+                "to": "lb",
+                "label": ""
+              },
+              {
+                "id": "route",
+                "from": "lb",
+                "to": "api",
+                "label": "Route"
+              },
+              {
+                "id": "identity",
+                "from": "api",
+                "to": "auth",
+                "label": "Verify identity"
+              },
+              {
+                "id": "identity-return",
+                "from": "auth",
+                "to": "api",
+                "label": ""
+              },
+              {
+                "id": "users",
+                "from": "auth",
+                "to": "users",
+                "label": ""
+              },
+              {
+                "id": "upload",
+                "from": "api",
+                "to": "upload",
+                "label": "Start or resume"
+              },
+              {
+                "id": "chunks",
+                "from": "upload",
+                "to": "chunks",
+                "label": ""
+              },
+              {
+                "id": "storage",
+                "from": "chunks",
+                "to": "storage",
+                "label": ""
+              },
+              {
+                "id": "commit",
+                "from": "storage",
+                "to": "metadata",
+                "label": "Commit pointer",
+                "notes": "The upload coordinator commits metadata after confirming the referenced chunks are durable."
+              },
+              {
+                "id": "versions",
+                "from": "metadata",
+                "to": "versions",
+                "label": "Save version"
+              },
+              {
+                "id": "version-access",
+                "from": "versions",
+                "to": "permissions",
+                "label": ""
+              },
+              {
+                "id": "access",
+                "from": "api",
+                "to": "permissions",
+                "label": "Check access"
+              },
+              {
+                "id": "changes",
+                "from": "api",
+                "to": "sync",
+                "label": "Read changes"
+              },
+              {
+                "id": "events",
+                "from": "sync",
+                "to": "queue",
+                "label": "File changes"
+              },
+              {
+                "id": "push",
+                "from": "queue",
+                "to": "notify",
+                "label": ""
+              },
+              {
+                "id": "share-change",
+                "from": "permissions",
+                "to": "notify",
+                "label": "Access changed"
+              },
+              {
+                "id": "desktop-refresh",
+                "from": "notify",
+                "to": "other-desktop",
+                "label": ""
+              },
+              {
+                "id": "web-refresh",
+                "from": "notify",
+                "to": "other-web",
+                "label": ""
+              },
+              {
+                "id": "mobile-refresh",
+                "from": "notify",
+                "to": "other-mobile",
+                "label": ""
+              },
+              {
+                "id": "search",
+                "from": "metadata",
+                "to": "search",
+                "label": ""
+              },
+              {
+                "id": "previews",
+                "from": "metadata",
+                "to": "previews",
+                "label": ""
+              },
+              {
+                "id": "scan",
+                "from": "metadata",
+                "to": "scan",
+                "label": ""
+              },
+              {
+                "id": "quota",
+                "from": "metadata",
+                "to": "quota",
+                "label": ""
+              },
+              {
+                "id": "trash",
+                "from": "metadata",
+                "to": "trash",
+                "label": ""
+              }
+            ],
+            "flows": [
+              {
+                "id": "flow-1",
+                "route": [
+                  "route",
+                  "upload",
+                  "chunks",
+                  "storage",
+                  "commit",
+                  "versions"
+                ],
+                "kind": "heavy",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-2",
+                "route": [
+                  "identity",
+                  "users"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-3",
+                "route": [
+                  "changes",
+                  "events",
+                  "push",
+                  "mobile-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              },
+              {
+                "id": "flow-4",
+                "route": [
+                  "share-change",
+                  "web-refresh"
+                ],
+                "kind": "request",
+                "rate": 0.4,
+                "speed": 0.95,
+                "bounce": false
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

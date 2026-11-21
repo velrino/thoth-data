@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "type": "company",
+  "groupName": "Google",
+  "pattern": "File storage and synchronization",
+  "summary": "Follow a file from your device to the cloud, then see how uploads resume, versions stay recoverable and devices catch up.",
+  "scope": "An original educational walkthrough of a Drive-like design. The public Drive API documents upload, revisions, sharing and changes. The internal service topology and technologies shown here are illustrative.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Google Drive API · Resumable uploads",
+      "url": "https://developers.google.com/workspace/drive/api/guides/manage-uploads"
+    },
+    {
+      "title": "Google Drive API · Change logs",
+      "url": "https://developers.google.com/workspace/drive/api/guides/about-changes"
+    },
+    {
+      "title": "Google Drive API · Revisions",
+      "url": "https://developers.google.com/workspace/drive/api/guides/manage-revisions"
+    },
+    {
+      "title": "Google Drive API · Sharing and permissions",
+      "url": "https://developers.google.com/workspace/drive/api/guides/manage-sharing"
+    },
+    {
+      "title": "Tech Fusionist · Architecture illustration reference",
+      "url": "https://medium.com/@thetechfusionist/what-happens-after-you-click-send-5761f11f6460"
+    }
+  ],
+  "componentNotes": {
+    "user": "Choose a file on any device.",
+    "desktop": "Watch a local folder for changes.",
+    "web": "List files and request uploads or downloads.",
+    "mobile": "Use the same files over a mobile connection.",
+    "lb": "Route requests across healthy servers.",
+    "api": "Route file, upload and share requests. Rate limits protect the system under load.",
+    "auth": "Verify identity and device credentials before handling a request.",
+    "users": "Keep account and identity records.",
+    "upload": "Remember which bytes arrived so interrupted uploads can resume.",
+    "chunks": "Split data into chunks, hash with SHA-256 and reuse matches within a security boundary. A 4 MB chunk is an example.",
+    "storage": "Store durable, encrypted and replicated chunks. Cloud Storage is an illustrative provider.",
+    "metadata": "Store file names, folders, owner, size, MIME type and references to committed chunks.",
+    "versions": "Keep a list of chunk references for each saved version so a prior version can be restored.",
+    "permissions": "Apply file and folder access rules for owners, editors, commenters and viewers.",
+    "search": "Index file names and supported text. Filter results by access.",
+    "previews": "Render thumbnails and previews in the background.",
+    "scan": "Detect suspicious files and apply data loss prevention rules.",
+    "quota": "Track usage and enforce storage limits before committing data.",
+    "trash": "Keep recoverable files for a retention window and remove chunks when no retained version uses them.",
+    "sync": "Keep a change journal. Pull updates since a cursor and preserve conflict copies when needed.",
+    "queue": "Queue file creation, update and sharing events for asynchronous delivery.",
+    "notify": "Signal changes over WebSockets or long polling. Clients use their cursor to retrieve updates.",
+    "other-desktop": "Update the local folder after a change.",
+    "other-web": "Refresh the file view after pulling changes.",
+    "other-mobile": "Catch up after reconnecting.",
+    "server": "Check access and locate the requested file.",
+    "result": "Show a preview or return the file."
+  }
+}
