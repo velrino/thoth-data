@@ -1188,6 +1188,33 @@
               "title": "The complete system",
               "description": "Maya taps Send on “Meet at six?” Follow the dot from her phone as the chat checks whether she can post in the channel. The message is saved in history, then it appears on her friend’s phone. Waiting for the save takes an extra moment, but an offline friend can still read the message later.",
               "metrics": [],
+              "cameraTour": [
+                {
+                  "kind": "focus",
+                  "x": -14,
+                  "z": 0,
+                  "span": 14,
+                  "moveMs": 1200
+                },
+                {
+                  "kind": "focus",
+                  "x": 3.5,
+                  "z": -3.5,
+                  "span": 10,
+                  "moveMs": 1600
+                },
+                {
+                  "kind": "focus",
+                  "x": 12.25,
+                  "z": 3.5,
+                  "span": 14,
+                  "moveMs": 1600
+                },
+                {
+                  "kind": "fit",
+                  "moveMs": 1600
+                }
+              ],
               "scene": {
                 "nodes": [
                   {
