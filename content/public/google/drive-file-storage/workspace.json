@@ -15,20 +15,6 @@
           "title": "Open a file",
           "description": "Ana opens a photo on her phone. The same request can start on a desktop or in a browser. Follow the moving dot from the phone to the file service and back to the phone.",
           "metrics": [],
-          "cameraTour": [
-            {
-              "kind": "focus",
-              "x": -39,
-              "z": -17,
-              "span": 18.867962264113206,
-              "moveMs": 1200,
-              "holdMs": 1550
-            },
-            {
-              "kind": "fit",
-              "moveMs": 2000
-            }
-          ],
           "scene": {
             "nodes": [
               {
@@ -135,28 +121,6 @@
           "title": "Find it and check access",
           "description": "Ana opens the same photo in a browser. The file service checks her identity, asks whether she can open the photo, finds its record and retrieves the actual file data. Follow one request through those checks and back to the browser.",
           "metrics": [],
-          "cameraTour": [
-            {
-              "kind": "focus",
-              "x": -39,
-              "z": -22,
-              "span": 16,
-              "moveMs": 1200,
-              "holdMs": 1550
-            },
-            {
-              "kind": "focus",
-              "x": -24,
-              "z": -22,
-              "span": 10,
-              "moveMs": 1750,
-              "holdMs": 900
-            },
-            {
-              "kind": "fit",
-              "moveMs": 2000
-            }
-          ],
           "scene": {
             "nodes": [
               {
@@ -346,28 +310,6 @@
           "title": "Resume an interrupted upload",
           "description": "Ana edits the photo on her phone and loses signal in the metro. The upload session remembers what arrived, so her phone sends only the pieces that are missing. The photo can show as Saved once all pieces are durable and the file record points to them.",
           "metrics": [],
-          "cameraTour": [
-            {
-              "kind": "focus",
-              "x": -14,
-              "z": -8,
-              "span": 16.1245154965971,
-              "moveMs": 1200,
-              "holdMs": 1550
-            },
-            {
-              "kind": "focus",
-              "x": 14,
-              "z": 8,
-              "span": 16.1245154965971,
-              "moveMs": 1750,
-              "holdMs": 900
-            },
-            {
-              "kind": "fit",
-              "moveMs": 2000
-            }
-          ],
           "scene": {
             "nodes": [
               {
@@ -493,28 +435,6 @@
           "title": "Restore or share a version",
           "description": "Ana wants yesterday’s photo and gives a friend permission to view it. The file record points to its version history. Restoring a version updates that record. Changing sharing rules updates who can open it.",
           "metrics": [],
-          "cameraTour": [
-            {
-              "kind": "focus",
-              "x": -14,
-              "z": -12,
-              "span": 18.867962264113206,
-              "moveMs": 1200,
-              "holdMs": 1550
-            },
-            {
-              "kind": "focus",
-              "x": 5.5,
-              "z": 3,
-              "span": 13.892443989449806,
-              "moveMs": 1750,
-              "holdMs": 900
-            },
-            {
-              "kind": "fit",
-              "moveMs": 2000
-            }
-          ],
           "scene": {
             "nodes": [
               {
@@ -638,28 +558,6 @@
           "title": "Catch up across devices",
           "description": "Ana saves the photo on her phone. The file service records the change and sends a notice through a queue. Her notebook checks for updates and downloads the photo when it is online. It can catch up after reconnecting.",
           "metrics": [],
-          "cameraTour": [
-            {
-              "kind": "focus",
-              "x": -12,
-              "z": -15,
-              "span": 12,
-              "moveMs": 1200,
-              "holdMs": 1550
-            },
-            {
-              "kind": "focus",
-              "x": 4.5,
-              "z": -2,
-              "span": 23.259406699226012,
-              "moveMs": 1750,
-              "holdMs": 900
-            },
-            {
-              "kind": "fit",
-              "moveMs": 2000
-            }
-          ],
           "scene": {
             "nodes": [
               {
