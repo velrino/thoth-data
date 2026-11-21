@@ -43,6 +43,7 @@
     "metadata": "Store file names, folders, owner, size, MIME type and references to committed chunks.",
     "versions": "Keep a list of chunk references for each saved version so a prior version can be restored.",
     "permissions": "Apply file and folder access rules for owners, editors, commenters and viewers.",
+    "jobs": "Schedules independent work after file metadata changes.",
     "search": "Index file names and supported text. Filter results by access.",
     "previews": "Render thumbnails and previews in the background.",
     "scan": "Detect suspicious files and apply data loss prevention rules.",

@@ -496,7 +496,7 @@
                 "label": ""
               },
               {
-                "id": "trash",
+                "id": "retain-version",
                 "from": "metadata",
                 "to": "trash",
                 "label": ""
@@ -684,7 +684,8 @@
                 "role": "user",
                 "color": "sky",
                 "x": -46,
-                "z": -30
+                "z": -30,
+                "group": "Client devices"
               },
               {
                 "id": "desktop",
@@ -693,7 +694,8 @@
                 "color": "sky",
                 "x": -33,
                 "z": -30,
-                "technology": "windows11"
+                "technology": "windows11",
+                "group": "Client devices"
               },
               {
                 "id": "web",
@@ -702,7 +704,8 @@
                 "color": "sky",
                 "x": -20,
                 "z": -30,
-                "technology": "chrome"
+                "technology": "chrome",
+                "group": "Client devices"
               },
               {
                 "id": "mobile",
@@ -711,7 +714,8 @@
                 "color": "sky",
                 "x": -7,
                 "z": -30,
-                "technology": "android"
+                "technology": "android",
+                "group": "Client devices"
               },
               {
                 "id": "lb",
@@ -719,7 +723,8 @@
                 "role": "load-balancer",
                 "color": "lavender",
                 "x": 9,
-                "z": -27
+                "z": -30,
+                "group": "API entry"
               },
               {
                 "id": "api",
@@ -727,99 +732,120 @@
                 "role": "gateway",
                 "color": "peach",
                 "x": 9,
-                "z": -12
+                "z": -17,
+                "group": "API entry"
               },
               {
                 "id": "auth",
                 "label": "Auth service",
                 "role": "service",
                 "color": "sage",
-                "x": -18,
-                "z": -15,
-                "technology": "oauth"
+                "x": -22,
+                "z": -17,
+                "technology": "oauth",
+                "group": "Identity"
               },
               {
                 "id": "users",
                 "label": "Users DB",
                 "role": "database",
                 "color": "sky",
-                "x": -36,
-                "z": -15
+                "x": -39,
+                "z": -17,
+                "group": "Identity"
               },
               {
                 "id": "upload",
                 "label": "Upload session",
                 "role": "service",
                 "color": "sage",
-                "x": -39,
-                "z": -1
+                "x": -43,
+                "z": -3,
+                "group": "Upload and storage"
               },
               {
                 "id": "chunks",
                 "label": "Chunk and deduplicate",
                 "role": "worker",
                 "color": "sage",
-                "x": -22,
-                "z": -1
+                "x": -25,
+                "z": -3,
+                "group": "Upload and storage"
               },
               {
                 "id": "storage",
                 "label": "Object storage",
                 "role": "storage",
                 "color": "sky",
-                "x": 1,
-                "z": -1,
-                "technology": "googlecloud"
+                "x": -7,
+                "z": -3,
+                "technology": "googlecloud",
+                "group": "Upload and storage"
               },
               {
                 "id": "metadata",
                 "label": "Metadata DB",
                 "role": "database",
                 "color": "sky",
-                "x": -37,
-                "z": 13,
-                "technology": "postgresql"
+                "x": -43,
+                "z": 10,
+                "technology": "postgresql",
+                "group": "File records and access"
               },
               {
                 "id": "versions",
                 "label": "Version history",
                 "role": "service",
                 "color": "sage",
-                "x": -19,
-                "z": 13
+                "x": -25,
+                "z": 10,
+                "group": "File records and access"
               },
               {
                 "id": "permissions",
                 "label": "Sharing and permissions",
                 "role": "service",
                 "color": "sand",
-                "x": 2,
-                "z": 13
+                "x": -7,
+                "z": 10,
+                "group": "File records and access"
+              },
+              {
+                "id": "jobs",
+                "label": "Background jobs",
+                "role": "queue",
+                "color": "lavender",
+                "x": -15,
+                "z": 22,
+                "group": "Background processing"
               },
               {
                 "id": "search",
                 "label": "Search and OCR",
                 "role": "worker",
                 "color": "sage",
-                "x": -44,
-                "z": 30,
-                "technology": "elasticsearch"
+                "x": -46,
+                "z": 35,
+                "technology": "elasticsearch",
+                "group": "Background processing"
               },
               {
                 "id": "previews",
                 "label": "Previews",
                 "role": "worker",
                 "color": "sage",
-                "x": -29,
-                "z": 30
+                "x": -31,
+                "z": 35,
+                "group": "Background processing"
               },
               {
                 "id": "scan",
                 "label": "Malware scan and DLP",
                 "role": "worker",
                 "color": "sage",
-                "x": -14,
-                "z": 30
+                "x": -15,
+                "z": 35,
+                "group": "Background processing"
               },
               {
                 "id": "quota",
@@ -827,58 +853,65 @@
                 "role": "service",
                 "color": "sage",
                 "x": 1,
-                "z": 30
+                "z": 35,
+                "group": "Background processing"
               },
               {
                 "id": "trash",
                 "label": "Trash and retention",
                 "role": "worker",
                 "color": "sage",
-                "x": 16,
-                "z": 30
+                "x": 17,
+                "z": 35,
+                "group": "Background processing"
               },
               {
                 "id": "sync",
                 "label": "Sync service",
                 "role": "service",
                 "color": "sage",
-                "x": 34,
-                "z": -16
+                "x": 39,
+                "z": -17,
+                "group": "Sync and notifications"
               },
               {
                 "id": "queue",
                 "label": "Change events",
                 "role": "queue",
                 "color": "sand",
-                "x": 34,
-                "z": -3,
-                "technology": "apachekafka"
+                "x": 39,
+                "z": -4,
+                "technology": "apachekafka",
+                "group": "Sync and notifications"
               },
               {
                 "id": "notify",
                 "label": "Push gateway",
                 "role": "gateway",
                 "color": "sage",
-                "x": 34,
-                "z": 10
+                "x": 39,
+                "z": 9,
+                "group": "Sync and notifications"
               },
               {
                 "id": "other-desktop",
                 "label": "Desktop sync",
                 "role": "client",
                 "color": "sky",
-                "x": 29,
-                "z": 27,
-                "technology": "windows11"
+                "x": 27,
+                "z": 32,
+                "technology": "windows11",
+                "group": "Receiving devices"
               },
               {
                 "id": "other-web",
                 "label": "Web browser",
                 "role": "browser",
                 "color": "sky",
-                "x": 39,
-                "z": 27,
-                "technology": "chrome"
+                "x": 38,
+                "z": 32,
+                "technology": "chrome",
+                "group": "Receiving devices"
               },
               {
                 "id": "other-mobile",
@@ -886,8 +919,9 @@
                 "role": "mobile",
                 "color": "sky",
                 "x": 49,
-                "z": 27,
-                "technology": "android"
+                "z": 32,
+                "technology": "android",
+                "group": "Receiving devices"
               }
             ],
             "edges": [
@@ -926,12 +960,6 @@
                 "from": "api",
                 "to": "auth",
                 "label": "Verify identity"
-              },
-              {
-                "id": "identity-return",
-                "from": "auth",
-                "to": "api",
-                "label": ""
               },
               {
                 "id": "users",
@@ -977,12 +1005,6 @@
                 "label": ""
               },
               {
-                "id": "access",
-                "from": "api",
-                "to": "permissions",
-                "label": "Check access"
-              },
-              {
                 "id": "changes",
                 "from": "api",
                 "to": "sync",
@@ -1025,32 +1047,38 @@
                 "label": ""
               },
               {
-                "id": "search",
+                "id": "queue-jobs",
                 "from": "metadata",
+                "to": "jobs",
+                "label": ""
+              },
+              {
+                "id": "search",
+                "from": "jobs",
                 "to": "search",
                 "label": ""
               },
               {
                 "id": "previews",
-                "from": "metadata",
+                "from": "jobs",
                 "to": "previews",
                 "label": ""
               },
               {
                 "id": "scan",
-                "from": "metadata",
+                "from": "jobs",
                 "to": "scan",
                 "label": ""
               },
               {
                 "id": "quota",
-                "from": "metadata",
+                "from": "jobs",
                 "to": "quota",
                 "label": ""
               },
               {
                 "id": "trash",
-                "from": "metadata",
+                "from": "jobs",
                 "to": "trash",
                 "label": ""
               }
