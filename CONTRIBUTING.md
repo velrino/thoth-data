@@ -12,6 +12,8 @@ Official entries also need `metadata.json` with `schemaVersion: 1`, `type` (`com
 
 Optional `locales/pt-BR.json` files use `schemaVersion: 1` and can override `title`, `groupName`, `pattern`, `summary`, `scope`, `componentNotes`, and `steps`. Within `steps`, use the exact step ID and include the translated `title`, `description`, or `nodes` and `edges` fields keyed by their IDs. Each translated node or edge can override its `label` and `notes`. Leave unavailable text untranslated so it can fall back to English.
 
+A diagram step can include a `cameraTour` beside `scene`. Add ordered `focus` shots with world coordinates `x` and `z` and a world-unit `span` for framing. Add a `fit` shot to show the complete diagram. Each shot uses `moveMs` for movement and optional `holdMs` for time at the destination. Keep the tour in the source workspace and inspect it in the intended view before publishing.
+
 ## Validate and propose a change
 
 ```sh
