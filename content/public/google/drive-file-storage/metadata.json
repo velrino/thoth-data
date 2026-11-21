@@ -29,7 +29,6 @@
     }
   ],
   "componentNotes": {
-    "user": "Choose a file on any device.",
     "desktop": "Watch a local folder for changes.",
     "web": "List files and request uploads or downloads.",
     "mobile": "Use the same files over a mobile connection.",
