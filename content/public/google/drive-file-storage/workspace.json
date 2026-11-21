@@ -684,7 +684,7 @@
                 "role": "user",
                 "color": "sky",
                 "x": -46,
-                "z": -30,
+                "z": -36,
                 "group": "Client devices"
               },
               {
@@ -703,7 +703,7 @@
                 "role": "browser",
                 "color": "sky",
                 "x": -20,
-                "z": -30,
+                "z": -33,
                 "technology": "chrome",
                 "group": "Client devices"
               },
@@ -713,7 +713,7 @@
                 "role": "mobile",
                 "color": "sky",
                 "x": -7,
-                "z": -30,
+                "z": -29,
                 "technology": "android",
                 "group": "Client devices"
               },
@@ -723,7 +723,7 @@
                 "role": "load-balancer",
                 "color": "lavender",
                 "x": 9,
-                "z": -30,
+                "z": -26,
                 "group": "API entry"
               },
               {
@@ -817,7 +817,7 @@
                 "color": "lavender",
                 "x": -15,
                 "z": 22,
-                "group": "Background processing"
+                "group": "Background work"
               },
               {
                 "id": "search",
@@ -827,7 +827,7 @@
                 "x": -46,
                 "z": 35,
                 "technology": "elasticsearch",
-                "group": "Background processing"
+                "group": "Background work"
               },
               {
                 "id": "previews",
@@ -836,7 +836,7 @@
                 "color": "sage",
                 "x": -31,
                 "z": 35,
-                "group": "Background processing"
+                "group": "Background work"
               },
               {
                 "id": "scan",
@@ -845,7 +845,7 @@
                 "color": "sage",
                 "x": -15,
                 "z": 35,
-                "group": "Background processing"
+                "group": "Background work"
               },
               {
                 "id": "quota",
@@ -854,7 +854,7 @@
                 "color": "sage",
                 "x": 1,
                 "z": 35,
-                "group": "Background processing"
+                "group": "Background work"
               },
               {
                 "id": "trash",
@@ -863,7 +863,7 @@
                 "color": "sage",
                 "x": 17,
                 "z": 35,
-                "group": "Background processing"
+                "group": "Background work"
               },
               {
                 "id": "sync",
@@ -872,7 +872,7 @@
                 "color": "sage",
                 "x": 39,
                 "z": -17,
-                "group": "Sync and notifications"
+                "group": "Change delivery"
               },
               {
                 "id": "queue",
@@ -882,7 +882,7 @@
                 "x": 39,
                 "z": -4,
                 "technology": "apachekafka",
-                "group": "Sync and notifications"
+                "group": "Change delivery"
               },
               {
                 "id": "notify",
@@ -891,7 +891,7 @@
                 "color": "sage",
                 "x": 39,
                 "z": 9,
-                "group": "Sync and notifications"
+                "group": "Change delivery"
               },
               {
                 "id": "other-desktop",
