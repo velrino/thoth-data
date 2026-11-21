@@ -7,7 +7,7 @@ The catalog includes **Public References**, which explain real systems and cite 
 ## Contribute to the official catalog
 
 1. [Fork this repository](https://github.com/velrino/thoth-data/fork) and create a branch in your fork.
-2. Create or update a diagram in Thoth and export the workspace as JSON. Save the exported `workspace` object as `workspace.json` in the appropriate folder under `content/public/` or `content/studies/`.
+2. Create or update a diagram in Thoth and export the workspace as JSON. Save the exported `workspace` object as `workspace.json` in the appropriate folder under `content/public/`.
 3. Keep the workspace folder ID stable when updating an existing diagram. Put card metadata, attribution, and source links in `metadata.json`. If you include a Brazilian Portuguese translation, put it in `locales/pt-BR.json`.
 4. Open a pull request against `velrino/thoth-data`. Explain what the diagram teaches or what your change corrects. Reviewed changes become eligible for inclusion in the official catalog.
 
@@ -23,14 +23,10 @@ The catalog includes **Public References**, which explain real systems and cite 
 ```text
 content/
 ├── public/
-│   └── <company-id>/<workspace-id>/
+│   └── <company-or-topic-id>/<workspace-id>/
 │       ├── workspace.json
 │       ├── metadata.json
 │       └── locales/pt-BR.json
-├── studies/
-│   └── <topic-id>/<workspace-id>/
-│       ├── workspace.json
-│       └── metadata.json
 └── workspaces/
     └── <workspace-id>/
         └── workspace.json

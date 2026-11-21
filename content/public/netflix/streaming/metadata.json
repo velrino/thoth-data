@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Netflix",
   "pattern": "Microservices",
   "summary": "Separate browsing, playback authorization and video delivery, then examine graceful degradation.",

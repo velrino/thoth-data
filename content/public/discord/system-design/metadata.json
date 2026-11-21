@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Discord",
   "pattern": "Realtime communication & durable messaging",
   "summary": "From a macro view to messaging, presence, media, voice and a complete system map.",

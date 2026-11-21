@@ -77,7 +77,7 @@ def notes(value, step_list):
 
 def metadata(path, step_list):
     value = read_json(path)
-    allowed = {"schemaVersion", "title", "groupName", "pattern", "summary", "scope", "author",
+    allowed = {"schemaVersion", "type", "title", "groupName", "pattern", "summary", "scope", "author",
                "sources", "componentNotes", "showConnectionLabels"}
     keys(value, allowed)
     if value.get("schemaVersion") != 1:
@@ -176,15 +176,16 @@ def validate():
     checked = 0
     routes = set()
     official = []
-    for section in ("public", "studies"):
-        for group in folders(CONTENT / section):
-            group_name = None
-            for folder in folders(group):
-                route = ("studies" if section == "studies" else group.name, folder.name)
-                if route in routes or (section == "public" and group.name == "studies"):
-                    raise ValueError(f"Conflicting official route: {route}")
-                routes.add(route)
-                official.append((group, folder))
+    for group in folders(CONTENT / "public"):
+        for folder in folders(group):
+            kind = read_json(folder / "metadata.json").get("type")
+            if kind not in ("company", "study"):
+                raise ValueError(f"Invalid catalog type in {folder}")
+            route = ("studies" if kind == "study" else group.name, folder.name)
+            if route in routes or (kind == "company" and group.name == "studies"):
+                raise ValueError(f"Conflicting official route: {route}")
+            routes.add(route)
+            official.append((group, folder))
     all_folders = [folder for _, folder in official] + folders(CONTENT / "workspaces")
     official_folders = dict((folder, group) for group, folder in official)
     group_names = {}

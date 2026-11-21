@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Velrino",
   "pattern": "Modular monolith & AI workflows",
   "summary": "Prepare a mission, publish private materials, play with Mia and build grounded learning insights.",

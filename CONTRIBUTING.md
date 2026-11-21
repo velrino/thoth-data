@@ -8,7 +8,7 @@ Start with a real Thoth export. If the file is a `diagram-export` envelope, save
 
 An official entry can use `workspace.excalidraw` as a standalone board with a `title` in its metadata. To add guided Thoth steps, also provide `walkthrough.json` with an empty first step’s `scene.drawing`. Catalog sync imports the board and generates the browser’s `workspace.json`. Use `workspace.json` directly for diagrams authored entirely in Thoth.
 
-Official entries also need `metadata.json` with `schemaVersion: 1`, `groupName`, `pattern`, `summary`, `scope`, and `sources`. Each source has a title and an HTTPS URL. Use the same group name across the workspaces in a company or study group. Credit the original author and cite material that supports specific claims. Keep personal files, credentials, and unreleased information out of public workspaces.
+Official entries also need `metadata.json` with `schemaVersion: 1`, `type` (`company` or `study`), `groupName`, `pattern`, `summary`, `scope`, and `sources`. Each source has a title and an HTTPS URL. Use the same group name across the workspaces in a company or study group. Credit the original author and cite material that supports specific claims. Keep personal files, credentials, and unreleased information out of public workspaces.
 
 Optional `locales/pt-BR.json` files use `schemaVersion: 1` and can override `title`, `groupName`, `pattern`, `summary`, `scope`, `componentNotes`, and `steps`. Within `steps`, use the exact step ID and include the translated `title`, `description`, or `nodes` and `edges` fields keyed by their IDs. Each translated node or edge can override its `label` and `notes`. Leave unavailable text untranslated so it can fall back to English.
 

@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Vercel",
   "pattern": "SSR & edge delivery",
   "summary": "Follow cache hits, request routing, server rendering and revalidation.",

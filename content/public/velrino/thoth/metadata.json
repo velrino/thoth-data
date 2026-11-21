@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Velrino",
   "pattern": "Local-first editor and event-driven billing",
   "summary": "Follow a diagram from the browser to the Go API, then see how Stripe events reach a worker through MongoDB and Amazon SQS.",

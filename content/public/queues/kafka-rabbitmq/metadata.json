@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "study",
   "groupName": "Queues",
   "pattern": "Event logs and work queues",
   "summary": "Compare how Kafka, RabbitMQ and Redis Streams publish orders, track progress and recover unfinished work.",

@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "study",
   "groupName": "Git",
   "pattern": "Local and remote changes",
   "summary": "Trace changes through the working tree, staging area, local branch and remote repository.",

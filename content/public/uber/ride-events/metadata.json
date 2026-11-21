@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Uber",
   "pattern": "Event-driven architecture",
   "summary": "Trace location events, independent consumers and a ride assignment.",

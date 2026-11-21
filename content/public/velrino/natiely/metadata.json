@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Velrino",
   "pattern": "Multiplayer & commerce",
   "summary": "Play together, buy Gold, deliver rewards, download worlds and recover a match.",

@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Shopify",
   "pattern": "Modular monolith",
   "summary": "Follow a storefront request through a single Rails deployment with explicit module boundaries.",

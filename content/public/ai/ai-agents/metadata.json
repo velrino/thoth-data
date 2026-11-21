@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "study",
   "groupName": "AI",
   "pattern": "From inference to orchestration",
   "summary": "Follow one model call as it gains document context, tools, memory, a decision loop and coordinated workers.",

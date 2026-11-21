@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "type": "company",
   "groupName": "Nubank",
   "pattern": "CQRS & event sourcing",
   "summary": "Separate a financial command from a read model and an auditable history.",
