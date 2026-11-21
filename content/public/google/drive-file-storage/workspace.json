@@ -2,7 +2,7 @@
   "format": "thoth-workspace",
   "schemaVersion": 1,
   "id": "reference-google-drive-file-storage",
-  "title": "Google",
+  "title": "Google Drive: How File Storage Works",
   "entries": [
     {
       "kind": "lesson",
@@ -13,7 +13,7 @@
         {
           "id": "open-a-file",
           "title": "Open a file",
-          "description": "Click a file on your computer, in a browser or on your phone. The file service checks your access and returns a preview or download. We’ll follow this everyday action into an illustrative storage design.",
+          "description": "Ana opens a photo on her phone. The same request can start on a desktop or in a browser. Follow the moving dot from the phone to the file service and back to the phone.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -22,101 +22,100 @@
                 "label": "Desktop sync",
                 "role": "client",
                 "color": "sky",
-                "x": -15,
-                "z": -9,
-                "technology": "windows11"
+                "x": -47,
+                "z": -32,
+                "technology": "windows11",
+                "group": "1. Before Saved"
               },
               {
                 "id": "web",
                 "label": "Web browser",
                 "role": "browser",
                 "color": "sky",
-                "x": -15,
-                "z": 0,
-                "technology": "chrome"
+                "x": -47,
+                "z": -22,
+                "technology": "chrome",
+                "group": "1. Before Saved"
               },
               {
                 "id": "mobile",
-                "label": "Mobile app",
+                "label": "Phone",
                 "role": "mobile",
                 "color": "sky",
-                "x": -15,
-                "z": 9,
-                "technology": "android"
+                "x": -47,
+                "z": -12,
+                "technology": "android",
+                "group": "1. Before Saved"
               },
               {
-                "id": "server",
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -33,
+                "z": -22,
+                "group": "1. Before Saved"
+              },
+              {
+                "id": "api",
                 "label": "File service",
                 "role": "gateway",
-                "color": "peach",
-                "x": 0,
-                "z": 0
-              },
-              {
-                "id": "result",
-                "label": "File opens",
-                "role": "storage",
-                "color": "sage",
-                "x": 15,
-                "z": 0
+                "color": "sky",
+                "x": -19,
+                "z": -22,
+                "group": "1. Before Saved"
               }
             ],
             "edges": [
               {
-                "id": "open-desktop",
+                "id": "desktop-lb",
                 "from": "desktop",
-                "to": "server",
-                "label": ""
-              },
-              {
-                "id": "open-web",
-                "from": "web",
-                "to": "server",
+                "to": "lb",
                 "label": "Open file"
               },
               {
-                "id": "open-mobile",
-                "from": "mobile",
-                "to": "server",
-                "label": ""
+                "id": "web-lb",
+                "from": "web",
+                "to": "lb",
+                "label": "Open file"
               },
               {
-                "id": "result",
-                "from": "server",
-                "to": "result",
-                "label": "Return preview or download"
+                "id": "mobile-lb",
+                "from": "mobile",
+                "to": "lb",
+                "label": "1. Send file"
+              },
+              {
+                "id": "route",
+                "from": "lb",
+                "to": "api",
+                "label": "2. Route request"
+              },
+              {
+                "id": "return-lb",
+                "from": "api",
+                "to": "lb",
+                "label": "Return result"
+              },
+              {
+                "id": "return-phone",
+                "from": "lb",
+                "to": "mobile",
+                "label": "Show photo"
               }
             ],
             "flows": [
               {
-                "id": "flow-1",
+                "id": "open-photo",
                 "route": [
-                  "open-desktop"
+                  "mobile-lb",
+                  "route",
+                  "return-lb",
+                  "return-phone"
                 ],
                 "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-2",
-                "route": [
-                  "open-web",
-                  "result"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-3",
-                "route": [
-                  "open-mobile"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
+                "rate": 0.34,
+                "speed": 1.55,
                 "bounce": false
               }
             ]
@@ -125,7 +124,7 @@
         {
           "id": "find-and-authorize",
           "title": "Find it and check access",
-          "description": "The gateway sends the request to a healthy server. Identity says who is asking. File permissions say what they can do. The server then looks up the file record and retrieves its contents as a separate operation.",
+          "description": "Ana opens the same photo in a browser. The file service checks her identity, asks whether she can open the photo, finds its record and retrieves the actual file data. Follow one request through those checks and back to the browser.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -134,68 +133,76 @@
                 "label": "Web browser",
                 "role": "browser",
                 "color": "sky",
-                "x": -23,
-                "z": -13,
-                "technology": "chrome"
+                "x": -47,
+                "z": -22,
+                "technology": "chrome",
+                "group": "1. Before Saved"
               },
               {
                 "id": "lb",
-                "label": "Load balancer",
+                "label": "Spread requests",
                 "role": "load-balancer",
-                "color": "lavender",
-                "x": -9,
-                "z": -13
+                "color": "sky",
+                "x": -33,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "api",
-                "label": "REST gateway",
+                "label": "File service",
                 "role": "gateway",
-                "color": "peach",
-                "x": 6,
-                "z": -13
+                "color": "sky",
+                "x": -19,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "auth",
-                "label": "Auth service",
+                "label": "Check identity",
                 "role": "service",
-                "color": "sage",
-                "x": -8,
-                "z": 0,
-                "technology": "oauth"
+                "color": "sky",
+                "x": -19,
+                "z": -39,
+                "technology": "oauth",
+                "group": "1. Before Saved"
               },
               {
                 "id": "users",
-                "label": "Users DB",
+                "label": "Accounts",
                 "role": "database",
                 "color": "sky",
-                "x": -22,
-                "z": 0
-              },
-              {
-                "id": "permissions",
-                "label": "Sharing and permissions",
-                "role": "service",
-                "color": "sand",
-                "x": 7,
-                "z": 1
-              },
-              {
-                "id": "metadata",
-                "label": "Metadata DB",
-                "role": "database",
-                "color": "sky",
-                "x": -5,
-                "z": 13,
-                "technology": "postgresql"
+                "x": -3,
+                "z": -39,
+                "group": "1. Before Saved"
               },
               {
                 "id": "storage",
-                "label": "Object storage",
+                "label": "Store file data",
                 "role": "storage",
                 "color": "sky",
-                "x": 22,
-                "z": 0,
-                "technology": "googlecloud"
+                "x": 27,
+                "z": -22,
+                "technology": "googlecloud",
+                "group": "1. Before Saved"
+              },
+              {
+                "id": "metadata",
+                "label": "File record",
+                "role": "database",
+                "color": "sky",
+                "x": 44,
+                "z": -14,
+                "technology": "postgresql",
+                "group": "1. Before Saved"
+              },
+              {
+                "id": "permissions",
+                "label": "Sharing rules",
+                "role": "service",
+                "color": "sky",
+                "x": 44,
+                "z": -39,
+                "group": "1. Before Saved"
               }
             ],
             "edges": [
@@ -203,25 +210,37 @@
                 "id": "web-lb",
                 "from": "web",
                 "to": "lb",
-                "label": ""
+                "label": "Open file"
               },
               {
                 "id": "route",
                 "from": "lb",
                 "to": "api",
-                "label": "Route"
+                "label": "2. Route request"
               },
               {
                 "id": "identity",
                 "from": "api",
                 "to": "auth",
-                "label": "Verify identity"
+                "label": "Check identity"
               },
               {
-                "id": "users",
+                "id": "auth-users",
                 "from": "auth",
                 "to": "users",
-                "label": ""
+                "label": "Find account"
+              },
+              {
+                "id": "users-auth",
+                "from": "users",
+                "to": "auth",
+                "label": "Return account"
+              },
+              {
+                "id": "identity-return",
+                "from": "auth",
+                "to": "api",
+                "label": "Confirm identity"
               },
               {
                 "id": "access",
@@ -230,79 +249,70 @@
                 "label": "Check access"
               },
               {
+                "id": "access-return",
+                "from": "permissions",
+                "to": "api",
+                "label": "Allow access"
+              },
+              {
                 "id": "lookup",
                 "from": "api",
                 "to": "metadata",
-                "label": "Find file"
+                "label": "Find record"
+              },
+              {
+                "id": "record-return",
+                "from": "metadata",
+                "to": "api",
+                "label": "Return record"
               },
               {
                 "id": "bytes",
                 "from": "api",
                 "to": "storage",
-                "label": "Read bytes"
+                "label": "Get file data"
               },
               {
                 "id": "bytes-return",
                 "from": "storage",
                 "to": "api",
-                "label": ""
+                "label": "Return file data"
               },
               {
                 "id": "return-lb",
                 "from": "api",
                 "to": "lb",
-                "label": ""
+                "label": "Return result"
               },
               {
                 "id": "return-web",
                 "from": "lb",
                 "to": "web",
-                "label": "Preview or file"
+                "label": "Show photo"
               }
             ],
             "flows": [
               {
-                "id": "flow-1",
+                "id": "read-photo",
                 "route": [
                   "web-lb",
                   "route",
                   "identity",
-                  "users"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-2",
-                "route": [
-                  "access"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-3",
-                "route": [
-                  "bytes"
-                ],
-                "kind": "heavy",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-4",
-                "route": [
+                  "auth-users",
+                  "users-auth",
+                  "identity-return",
+                  "access",
+                  "access-return",
+                  "lookup",
+                  "record-return",
+                  "bytes",
+                  "bytes-return",
                   "return-lb",
                   "return-web"
                 ],
                 "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
+                "rate": 0.34,
+                "speed": 1.55,
                 "bounce": false
               }
             ]
@@ -311,108 +321,130 @@
         {
           "id": "upload-and-resume",
           "title": "Resume an interrupted upload",
-          "description": "A phone loses signal during a large upload. The session remembers which bytes arrived, so the phone only needs to send missing data. The app confirms the save once the chunks are durable and the file record points to them. This saves bandwidth at the cost of keeping upload state.",
+          "description": "Ana edits the photo on her phone and loses signal in the metro. The upload session remembers what arrived, so her phone sends only the pieces that are missing. The photo can show as Saved once all pieces are durable and the file record points to them.",
           "metrics": [],
           "scene": {
             "nodes": [
               {
                 "id": "mobile",
-                "label": "Mobile app",
+                "label": "Phone",
                 "role": "mobile",
                 "color": "sky",
-                "x": -30,
-                "z": -10,
-                "technology": "android"
+                "x": -47,
+                "z": -12,
+                "technology": "android",
+                "group": "1. Before Saved"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -33,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "api",
-                "label": "REST gateway",
+                "label": "File service",
                 "role": "gateway",
-                "color": "peach",
-                "x": -16,
-                "z": -10
+                "color": "sky",
+                "x": -19,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "upload",
-                "label": "Upload session",
+                "label": "Resume upload",
                 "role": "service",
-                "color": "sage",
-                "x": -2,
-                "z": -10
+                "color": "sky",
+                "x": -4,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "chunks",
-                "label": "Chunk and deduplicate",
+                "label": "Split into pieces",
                 "role": "worker",
-                "color": "sage",
-                "x": 13,
-                "z": -10
+                "color": "sky",
+                "x": 11,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "storage",
-                "label": "Object storage",
+                "label": "Store file data",
                 "role": "storage",
                 "color": "sky",
-                "x": 13,
-                "z": 5,
-                "technology": "googlecloud"
+                "x": 27,
+                "z": -22,
+                "technology": "googlecloud",
+                "group": "1. Before Saved"
               },
               {
                 "id": "metadata",
-                "label": "Metadata DB",
+                "label": "File record",
                 "role": "database",
                 "color": "sky",
-                "x": -4,
-                "z": 5,
-                "technology": "postgresql"
+                "x": 44,
+                "z": -14,
+                "technology": "postgresql",
+                "group": "1. Before Saved"
               }
             ],
             "edges": [
               {
-                "id": "phone-upload",
+                "id": "mobile-lb",
                 "from": "mobile",
-                "to": "api",
-                "label": "Start upload"
+                "to": "lb",
+                "label": "1. Send file"
               },
               {
-                "id": "upload",
+                "id": "route",
+                "from": "lb",
+                "to": "api",
+                "label": "2. Route request"
+              },
+              {
+                "id": "api-upload",
                 "from": "api",
                 "to": "upload",
-                "label": "Start or resume"
+                "label": "3. Resume upload"
               },
               {
-                "id": "chunks",
+                "id": "upload-chunks",
                 "from": "upload",
                 "to": "chunks",
-                "label": ""
+                "label": "4. Send missing pieces"
               },
               {
-                "id": "storage",
+                "id": "chunks-storage",
                 "from": "chunks",
                 "to": "storage",
-                "label": ""
+                "label": "5. Store pieces"
               },
               {
                 "id": "commit",
                 "from": "storage",
                 "to": "metadata",
-                "label": "Commit pointer",
-                "notes": "The upload coordinator commits metadata after confirming the referenced chunks are durable."
+                "label": "6. Record saved file",
+                "notes": "The file service commits the record only after all referenced pieces are durable."
               }
             ],
             "flows": [
               {
-                "id": "flow-1",
+                "id": "save-photo",
                 "route": [
-                  "phone-upload",
-                  "upload",
-                  "chunks",
-                  "storage",
+                  "mobile-lb",
+                  "route",
+                  "api-upload",
+                  "upload-chunks",
+                  "chunks-storage",
                   "commit"
                 ],
                 "kind": "heavy",
-                "rate": 0.4,
-                "speed": 0.95,
+                "rate": 0.34,
+                "speed": 1.55,
                 "bounce": false
               }
             ]
@@ -421,115 +453,127 @@
         {
           "id": "versions-and-sharing",
           "title": "Restore or share a version",
-          "description": "Each saved version points to its data. The owner can restore an older version or grant access to view, comment or edit. Version history improves recovery, and a retention policy controls how long old chunks take up space.",
+          "description": "Ana wants yesterday’s photo and gives a friend permission to view it. The file record points to its version history. Restoring a version updates that record. Changing sharing rules updates who can open it.",
           "metrics": [],
           "scene": {
             "nodes": [
               {
-                "id": "api",
-                "label": "REST gateway",
-                "role": "gateway",
-                "color": "peach",
-                "x": -24,
-                "z": -8
+                "id": "web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": -47,
+                "z": -22,
+                "technology": "chrome",
+                "group": "1. Before Saved"
               },
               {
-                "id": "storage",
-                "label": "Object storage",
-                "role": "storage",
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
                 "color": "sky",
-                "x": -10,
-                "z": -8,
-                "technology": "googlecloud"
+                "x": -33,
+                "z": -22,
+                "group": "1. Before Saved"
+              },
+              {
+                "id": "api",
+                "label": "File service",
+                "role": "gateway",
+                "color": "sky",
+                "x": -19,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "metadata",
-                "label": "Metadata DB",
+                "label": "File record",
                 "role": "database",
                 "color": "sky",
-                "x": 4,
-                "z": -8,
-                "technology": "postgresql"
+                "x": 44,
+                "z": -14,
+                "technology": "postgresql",
+                "group": "1. Before Saved"
               },
               {
                 "id": "versions",
                 "label": "Version history",
                 "role": "service",
-                "color": "sage",
-                "x": 20,
-                "z": -8
+                "color": "sky",
+                "x": 28,
+                "z": -39,
+                "group": "1. Before Saved"
               },
               {
                 "id": "permissions",
-                "label": "Sharing and permissions",
+                "label": "Sharing rules",
                 "role": "service",
-                "color": "sand",
-                "x": 20,
-                "z": 8
-              },
-              {
-                "id": "trash",
-                "label": "Trash and retention",
-                "role": "worker",
-                "color": "sage",
-                "x": 4,
-                "z": 8
+                "color": "sky",
+                "x": 44,
+                "z": -39,
+                "group": "1. Before Saved"
               }
             ],
             "edges": [
               {
-                "id": "bytes",
+                "id": "web-lb",
+                "from": "web",
+                "to": "lb",
+                "label": "Open file"
+              },
+              {
+                "id": "route",
+                "from": "lb",
+                "to": "api",
+                "label": "2. Route request"
+              },
+              {
+                "id": "lookup",
                 "from": "api",
-                "to": "storage",
-                "label": "Read bytes"
-              },
-              {
-                "id": "commit",
-                "from": "storage",
                 "to": "metadata",
-                "label": "Commit pointer",
-                "notes": "The upload coordinator commits metadata after confirming the referenced chunks are durable."
+                "label": "Find record"
               },
               {
-                "id": "versions",
+                "id": "metadata-versions",
                 "from": "metadata",
                 "to": "versions",
-                "label": "Save version"
+                "label": "Keep a version"
+              },
+              {
+                "id": "restore-record",
+                "from": "versions",
+                "to": "metadata",
+                "label": "Restore version"
               },
               {
                 "id": "version-access",
                 "from": "versions",
                 "to": "permissions",
-                "label": ""
+                "label": "Open sharing rules"
               },
               {
-                "id": "retain-version",
-                "from": "metadata",
-                "to": "trash",
-                "label": ""
+                "id": "save-sharing",
+                "from": "permissions",
+                "to": "metadata",
+                "label": "Save access change"
               }
             ],
             "flows": [
               {
-                "id": "flow-1",
+                "id": "restore-and-share",
                 "route": [
-                  "bytes",
-                  "commit",
-                  "versions"
-                ],
-                "kind": "heavy",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-2",
-                "route": [
-                  "version-access"
+                  "web-lb",
+                  "route",
+                  "lookup",
+                  "metadata-versions",
+                  "restore-record",
+                  "metadata-versions",
+                  "version-access",
+                  "save-sharing"
                 ],
                 "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
+                "rate": 0.34,
+                "speed": 1.55,
                 "bounce": false
               }
             ]
@@ -538,141 +582,162 @@
         {
           "id": "sync-across-devices",
           "title": "Catch up across devices",
-          "description": "You edit a file on your laptop and pick up your phone. A notification tells the phone to check for updates from its last checkpoint. If both devices made conflicting offline edits, the service can keep a separate copy for the user to resolve.",
+          "description": "Ana saves the photo on her phone. The file service records the change and sends a notice through a queue. Her notebook checks for updates and downloads the photo when it is online. It can catch up after reconnecting.",
           "metrics": [],
           "scene": {
             "nodes": [
               {
+                "id": "mobile",
+                "label": "Phone",
+                "role": "mobile",
+                "color": "sky",
+                "x": -47,
+                "z": -12,
+                "technology": "android",
+                "group": "1. Before Saved"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -33,
+                "z": -22,
+                "group": "1. Before Saved"
+              },
+              {
                 "id": "api",
-                "label": "REST gateway",
+                "label": "File service",
                 "role": "gateway",
-                "color": "peach",
-                "x": -28,
-                "z": 0
+                "color": "sky",
+                "x": -19,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "sync",
-                "label": "Sync service",
+                "label": "Change log",
                 "role": "service",
-                "color": "sage",
-                "x": -14,
-                "z": 0
+                "color": "lavender",
+                "x": -19,
+                "z": 7,
+                "group": "2. Tell other devices"
               },
               {
                 "id": "queue",
-                "label": "Change events",
+                "label": "Notification queue",
                 "role": "queue",
-                "color": "sand",
-                "x": 0,
-                "z": 0,
-                "technology": "apachekafka"
+                "color": "lavender",
+                "x": -4,
+                "z": 7,
+                "technology": "apachekafka",
+                "group": "2. Tell other devices"
               },
               {
                 "id": "notify",
-                "label": "Push gateway",
+                "label": "Send a notice",
                 "role": "gateway",
-                "color": "sage",
-                "x": 14,
-                "z": 0
+                "color": "lavender",
+                "x": 12,
+                "z": 7,
+                "group": "2. Tell other devices"
               },
               {
                 "id": "other-desktop",
-                "label": "Desktop sync",
+                "label": "Notebook",
                 "role": "client",
-                "color": "sky",
-                "x": 29,
-                "z": -10,
-                "technology": "windows11"
+                "color": "lavender",
+                "x": 30,
+                "z": -1,
+                "technology": "windows11",
+                "group": "2. Tell other devices"
               },
               {
                 "id": "other-web",
                 "label": "Web browser",
                 "role": "browser",
-                "color": "sky",
-                "x": 29,
-                "z": 0,
-                "technology": "chrome"
+                "color": "lavender",
+                "x": 30,
+                "z": 7,
+                "technology": "chrome",
+                "group": "2. Tell other devices"
               },
               {
                 "id": "other-mobile",
-                "label": "Mobile app",
+                "label": "Phone",
                 "role": "mobile",
-                "color": "sky",
-                "x": 29,
-                "z": 10,
-                "technology": "android"
+                "color": "lavender",
+                "x": 30,
+                "z": 15,
+                "technology": "android",
+                "group": "2. Tell other devices"
               }
             ],
             "edges": [
               {
+                "id": "mobile-lb",
+                "from": "mobile",
+                "to": "lb",
+                "label": "1. Send file"
+              },
+              {
+                "id": "route",
+                "from": "lb",
+                "to": "api",
+                "label": "2. Route request"
+              },
+              {
                 "id": "changes",
                 "from": "api",
                 "to": "sync",
-                "label": "Read changes"
+                "label": "Log saved change",
+                "notes": "The file service records the change after successfully saving the file or sharing rules."
               },
               {
                 "id": "events",
                 "from": "sync",
                 "to": "queue",
-                "label": "File changes"
+                "label": "Queue update"
               },
               {
                 "id": "push",
                 "from": "queue",
                 "to": "notify",
-                "label": ""
+                "label": "Deliver notice"
               },
               {
                 "id": "desktop-refresh",
                 "from": "notify",
                 "to": "other-desktop",
-                "label": ""
+                "label": "Notebook checks for changes"
               },
               {
                 "id": "web-refresh",
                 "from": "notify",
                 "to": "other-web",
-                "label": ""
+                "label": "Browser checks for changes"
               },
               {
                 "id": "mobile-refresh",
                 "from": "notify",
                 "to": "other-mobile",
-                "label": ""
+                "label": "Phone checks for changes"
               }
             ],
             "flows": [
               {
-                "id": "flow-1",
+                "id": "notify-notebook",
                 "route": [
+                  "mobile-lb",
+                  "route",
                   "changes",
                   "events",
                   "push",
-                  "mobile-refresh"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-2",
-                "route": [
                   "desktop-refresh"
                 ],
                 "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-3",
-                "route": [
-                  "web-refresh"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
+                "rate": 0.34,
+                "speed": 1.55,
                 "bounce": false
               }
             ]
@@ -681,7 +746,7 @@
         {
           "id": "complete-architecture",
           "title": "Complete file storage architecture",
-          "description": "Start with the three clients on the left. Their requests meet at the load balancer before reaching the API. The upload path below the API leads to durable storage, file records and version history. The right-hand path shows how other devices hear about changes. At the bottom, background jobs handle search, previews, scanning, quota and retention. For discussion: What has to finish before the user sees Saved, and what can run in the background? The service topology and technologies illustrate one possible design inspired by Tech Fusionist’s educational diagram.",
+          "description": "Before Saved, the service stores all file pieces and records where to find them.\n\nAfter the save, it tells Ana’s other devices and queues tasks such as search and thumbnails.\n\nFor discussion: If thumbnails are slow, should Ana still see Saved? What if the file record could not be written?",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -691,9 +756,9 @@
                 "role": "client",
                 "color": "sky",
                 "x": -47,
-                "z": -43,
+                "z": -32,
                 "technology": "windows11",
-                "group": "Client devices"
+                "group": "1. Before Saved"
               },
               {
                 "id": "web",
@@ -701,225 +766,225 @@
                 "role": "browser",
                 "color": "sky",
                 "x": -47,
-                "z": -33,
+                "z": -22,
                 "technology": "chrome",
-                "group": "Client devices"
+                "group": "1. Before Saved"
               },
               {
                 "id": "mobile",
-                "label": "Mobile app",
+                "label": "Phone",
                 "role": "mobile",
                 "color": "sky",
                 "x": -47,
-                "z": -23,
+                "z": -12,
                 "technology": "android",
-                "group": "Client devices"
+                "group": "1. Before Saved"
               },
               {
                 "id": "lb",
-                "label": "Load balancer",
+                "label": "Spread requests",
                 "role": "load-balancer",
-                "color": "lavender",
-                "x": -30,
-                "z": -33,
-                "group": "API entry"
+                "color": "sky",
+                "x": -33,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "api",
-                "label": "REST gateway",
+                "label": "File service",
                 "role": "gateway",
-                "color": "peach",
-                "x": -12,
-                "z": -33,
-                "group": "API entry"
+                "color": "sky",
+                "x": -19,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "auth",
-                "label": "Auth service",
+                "label": "Check identity",
                 "role": "service",
-                "color": "sage",
-                "x": -12,
-                "z": -47,
+                "color": "sky",
+                "x": -19,
+                "z": -39,
                 "technology": "oauth",
-                "group": "Identity"
+                "group": "1. Before Saved"
               },
               {
                 "id": "users",
-                "label": "Users DB",
+                "label": "Accounts",
                 "role": "database",
                 "color": "sky",
-                "x": 5,
-                "z": -47,
-                "group": "Identity"
+                "x": -3,
+                "z": -39,
+                "group": "1. Before Saved"
               },
               {
                 "id": "upload",
-                "label": "Upload session",
+                "label": "Resume upload",
                 "role": "service",
-                "color": "sage",
-                "x": -42,
-                "z": -7,
-                "group": "File upload"
+                "color": "sky",
+                "x": -4,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "chunks",
-                "label": "Chunk and deduplicate",
+                "label": "Split into pieces",
                 "role": "worker",
-                "color": "sage",
-                "x": -26,
-                "z": -7,
-                "group": "File upload"
+                "color": "sky",
+                "x": 11,
+                "z": -22,
+                "group": "1. Before Saved"
               },
               {
                 "id": "storage",
-                "label": "Object storage",
+                "label": "Store file data",
                 "role": "storage",
                 "color": "sky",
-                "x": -10,
-                "z": -7,
+                "x": 27,
+                "z": -22,
                 "technology": "googlecloud",
-                "group": "File upload"
+                "group": "1. Before Saved"
               },
               {
                 "id": "metadata",
-                "label": "Metadata DB",
+                "label": "File record",
                 "role": "database",
                 "color": "sky",
-                "x": -10,
-                "z": 8,
+                "x": 44,
+                "z": -14,
                 "technology": "postgresql",
-                "group": "File records"
+                "group": "1. Before Saved"
               },
               {
                 "id": "versions",
                 "label": "Version history",
                 "role": "service",
-                "color": "sage",
-                "x": 5,
-                "z": 8,
-                "group": "File records"
+                "color": "sky",
+                "x": 28,
+                "z": -39,
+                "group": "1. Before Saved"
               },
               {
                 "id": "permissions",
-                "label": "Sharing and permissions",
+                "label": "Sharing rules",
                 "role": "service",
-                "color": "sand",
-                "x": 20,
-                "z": 8,
-                "group": "File records"
-              },
-              {
-                "id": "jobs",
-                "label": "Background jobs",
-                "role": "queue",
-                "color": "lavender",
-                "x": -10,
-                "z": 22,
-                "group": "Background"
-              },
-              {
-                "id": "search",
-                "label": "Search and OCR",
-                "role": "worker",
-                "color": "sage",
-                "x": -44,
-                "z": 36,
-                "technology": "elasticsearch",
-                "group": "Background"
-              },
-              {
-                "id": "previews",
-                "label": "Previews",
-                "role": "worker",
-                "color": "sage",
-                "x": -27,
-                "z": 36,
-                "group": "Background"
-              },
-              {
-                "id": "scan",
-                "label": "Malware scan and DLP",
-                "role": "worker",
-                "color": "sage",
-                "x": -10,
-                "z": 36,
-                "group": "Background"
-              },
-              {
-                "id": "quota",
-                "label": "Quota and billing",
-                "role": "service",
-                "color": "sage",
-                "x": 7,
-                "z": 36,
-                "group": "Background"
-              },
-              {
-                "id": "trash",
-                "label": "Trash and retention",
-                "role": "worker",
-                "color": "sage",
-                "x": 24,
-                "z": 36,
-                "group": "Background"
+                "color": "sky",
+                "x": 44,
+                "z": -39,
+                "group": "1. Before Saved"
               },
               {
                 "id": "sync",
-                "label": "Sync service",
+                "label": "Change log",
                 "role": "service",
-                "color": "sage",
-                "x": 6,
-                "z": -33,
-                "group": "Change delivery"
+                "color": "lavender",
+                "x": -19,
+                "z": 7,
+                "group": "2. Tell other devices"
               },
               {
                 "id": "queue",
-                "label": "Change events",
+                "label": "Notification queue",
                 "role": "queue",
-                "color": "sand",
-                "x": 20,
-                "z": -33,
+                "color": "lavender",
+                "x": -4,
+                "z": 7,
                 "technology": "apachekafka",
-                "group": "Change delivery"
+                "group": "2. Tell other devices"
               },
               {
                 "id": "notify",
-                "label": "Push gateway",
+                "label": "Send a notice",
                 "role": "gateway",
-                "color": "sage",
-                "x": 35,
-                "z": -33,
-                "group": "Change delivery"
+                "color": "lavender",
+                "x": 12,
+                "z": 7,
+                "group": "2. Tell other devices"
               },
               {
                 "id": "other-desktop",
-                "label": "Desktop sync",
+                "label": "Notebook",
                 "role": "client",
-                "color": "sky",
-                "x": 49,
-                "z": -21,
+                "color": "lavender",
+                "x": 30,
+                "z": -1,
                 "technology": "windows11",
-                "group": "Other devices"
+                "group": "2. Tell other devices"
               },
               {
                 "id": "other-web",
                 "label": "Web browser",
                 "role": "browser",
-                "color": "sky",
-                "x": 49,
-                "z": -8,
+                "color": "lavender",
+                "x": 30,
+                "z": 7,
                 "technology": "chrome",
-                "group": "Other devices"
+                "group": "2. Tell other devices"
               },
               {
                 "id": "other-mobile",
-                "label": "Mobile app",
+                "label": "Phone",
                 "role": "mobile",
-                "color": "sky",
-                "x": 49,
-                "z": 5,
+                "color": "lavender",
+                "x": 30,
+                "z": 15,
                 "technology": "android",
-                "group": "Other devices"
+                "group": "2. Tell other devices"
+              },
+              {
+                "id": "jobs",
+                "label": "Background jobs",
+                "role": "queue",
+                "color": "sage",
+                "x": -4,
+                "z": 23,
+                "group": "3. Work in the background"
+              },
+              {
+                "id": "search",
+                "label": "Search",
+                "role": "worker",
+                "color": "sage",
+                "x": -44,
+                "z": 36,
+                "technology": "elasticsearch",
+                "group": "3. Work in the background"
+              },
+              {
+                "id": "previews",
+                "label": "Thumbnails",
+                "role": "worker",
+                "color": "sage",
+                "x": -28,
+                "z": 36,
+                "group": "3. Work in the background"
+              },
+              {
+                "id": "scan",
+                "label": "Safety scan",
+                "role": "worker",
+                "color": "sage",
+                "x": -12,
+                "z": 36,
+                "group": "3. Work in the background"
+              },
+              {
+                "id": "trash",
+                "label": "Trash and recovery",
+                "role": "worker",
+                "color": "sage",
+                "x": 4,
+                "z": 36,
+                "group": "3. Work in the background"
+              },
+              {
+                "id": "quota",
+                "label": "Storage used",
+                "role": "service",
+                "color": "sage",
+                "x": 20,
+                "z": 36,
+                "group": "3. Work in the background"
               }
             ],
             "edges": [
@@ -927,203 +992,163 @@
                 "id": "desktop-lb",
                 "from": "desktop",
                 "to": "lb",
-                "label": ""
+                "label": "Open file"
               },
               {
                 "id": "web-lb",
                 "from": "web",
                 "to": "lb",
-                "label": ""
+                "label": "Open file"
               },
               {
                 "id": "mobile-lb",
                 "from": "mobile",
                 "to": "lb",
-                "label": ""
+                "label": "1. Send file"
               },
               {
                 "id": "route",
                 "from": "lb",
                 "to": "api",
-                "label": "Route"
+                "label": "2. Route request"
               },
               {
                 "id": "identity",
                 "from": "api",
                 "to": "auth",
-                "label": "Verify identity"
+                "label": "Check identity"
               },
               {
-                "id": "users",
+                "id": "auth-users",
                 "from": "auth",
                 "to": "users",
-                "label": ""
+                "label": "Find account"
               },
               {
-                "id": "upload",
+                "id": "api-upload",
                 "from": "api",
                 "to": "upload",
-                "label": "Start or resume"
+                "label": "3. Resume upload"
               },
               {
-                "id": "chunks",
+                "id": "upload-chunks",
                 "from": "upload",
                 "to": "chunks",
-                "label": ""
+                "label": "4. Send missing pieces"
               },
               {
-                "id": "storage",
+                "id": "chunks-storage",
                 "from": "chunks",
                 "to": "storage",
-                "label": ""
+                "label": "5. Store pieces"
               },
               {
                 "id": "commit",
                 "from": "storage",
                 "to": "metadata",
-                "label": "Commit pointer",
-                "notes": "The upload coordinator commits metadata after confirming the referenced chunks are durable."
+                "label": "6. Record saved file",
+                "notes": "The file service commits the record only after all referenced pieces are durable."
               },
               {
-                "id": "versions",
+                "id": "metadata-versions",
                 "from": "metadata",
                 "to": "versions",
-                "label": "Save version"
+                "label": "Keep a version"
               },
               {
                 "id": "version-access",
                 "from": "versions",
                 "to": "permissions",
-                "label": ""
+                "label": "Open sharing rules"
               },
               {
                 "id": "changes",
                 "from": "api",
                 "to": "sync",
-                "label": "Read changes"
+                "label": "Log saved change",
+                "notes": "The file service records the change after successfully saving the file or sharing rules."
               },
               {
                 "id": "events",
                 "from": "sync",
                 "to": "queue",
-                "label": "File changes"
+                "label": "Queue update"
               },
               {
                 "id": "push",
                 "from": "queue",
                 "to": "notify",
-                "label": ""
-              },
-              {
-                "id": "share-change",
-                "from": "permissions",
-                "to": "notify",
-                "label": "Access changed"
+                "label": "Deliver notice"
               },
               {
                 "id": "desktop-refresh",
                 "from": "notify",
                 "to": "other-desktop",
-                "label": ""
+                "label": "Notebook checks for changes"
               },
               {
                 "id": "web-refresh",
                 "from": "notify",
                 "to": "other-web",
-                "label": ""
+                "label": "Browser checks for changes"
               },
               {
                 "id": "mobile-refresh",
                 "from": "notify",
                 "to": "other-mobile",
-                "label": ""
+                "label": "Phone checks for changes"
               },
               {
                 "id": "queue-jobs",
-                "from": "metadata",
+                "from": "queue",
                 "to": "jobs",
-                "label": ""
+                "label": "Schedule follow-up"
               },
               {
-                "id": "search",
+                "id": "jobs-search",
                 "from": "jobs",
                 "to": "search",
-                "label": ""
+                "label": "Index file"
               },
               {
-                "id": "previews",
+                "id": "jobs-previews",
                 "from": "jobs",
                 "to": "previews",
-                "label": ""
+                "label": "Make thumbnail"
               },
               {
-                "id": "scan",
+                "id": "jobs-scan",
                 "from": "jobs",
                 "to": "scan",
-                "label": ""
+                "label": "Check safety"
               },
               {
-                "id": "quota",
-                "from": "jobs",
-                "to": "quota",
-                "label": ""
-              },
-              {
-                "id": "trash",
+                "id": "jobs-trash",
                 "from": "jobs",
                 "to": "trash",
-                "label": ""
+                "label": "Apply retention"
+              },
+              {
+                "id": "jobs-quota",
+                "from": "jobs",
+                "to": "quota",
+                "label": "Record usage"
               }
             ],
             "flows": [
               {
-                "id": "flow-1",
+                "id": "save-photo-overview",
                 "route": [
+                  "mobile-lb",
                   "route",
-                  "upload",
-                  "chunks",
-                  "storage",
-                  "commit",
-                  "versions"
+                  "api-upload",
+                  "upload-chunks",
+                  "chunks-storage",
+                  "commit"
                 ],
                 "kind": "heavy",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-2",
-                "route": [
-                  "identity",
-                  "users"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-3",
-                "route": [
-                  "changes",
-                  "events",
-                  "push",
-                  "mobile-refresh"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
-                "bounce": false
-              },
-              {
-                "id": "flow-4",
-                "route": [
-                  "share-change",
-                  "web-refresh"
-                ],
-                "kind": "request",
-                "rate": 0.4,
-                "speed": 0.95,
+                "rate": 0.34,
+                "speed": 1.55,
                 "bounce": false
               }
             ]
