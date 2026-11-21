@@ -77,14 +77,13 @@ def notes(value, step_list):
 
 def metadata(path, step_list):
     value = read_json(path)
-    allowed = {"schemaVersion", "groupName", "pattern", "summary", "scope", "author",
+    allowed = {"schemaVersion", "title", "groupName", "pattern", "summary", "scope", "author",
                "sources", "componentNotes", "showConnectionLabels"}
     keys(value, allowed)
     if value.get("schemaVersion") != 1:
         raise ValueError("Unsupported metadata schemaVersion")
     for field, limit in TEXT_LIMITS.items():
-        if field != "title":
-            text(value, field, limit, required=field != "author")
+        text(value, field, limit, required=field not in {"title", "author"})
     sources = value.get("sources")
     if not isinstance(sources, list) or len(sources) > 25:
         raise ValueError("Invalid source list")
@@ -142,7 +141,33 @@ def read_workspace(folder, official):
         isinstance(element, dict) and not element.get("isDeleted") for element in elements
     ):
         raise ValueError("An Excalidraw workspace needs visible elements")
-    return read_json(folder / "walkthrough.json")
+    walkthrough = folder / "walkthrough.json"
+    if walkthrough.exists() or walkthrough.is_symlink():
+        return read_json(walkthrough)
+
+    info = read_json(folder / "metadata.json")
+    text(info, "title", TEXT_LIMITS["title"], required=True)
+    text(info, "summary", TEXT_LIMITS["summary"], required=True)
+    title = info["title"]
+    return {
+        "format": "thoth-workspace",
+        "schemaVersion": 1,
+        "id": folder.name,
+        "title": title,
+        "entries": [{
+            "kind": "lesson",
+            "id": folder.name,
+            "title": title,
+            "complete": False,
+            "steps": [{
+                "id": "overview",
+                "title": title,
+                "description": info["summary"],
+                "metrics": [],
+                "scene": {"nodes": [], "edges": [], "flows": []},
+            }],
+        }],
+    }
 
 
 def validate():

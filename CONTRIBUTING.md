@@ -6,7 +6,7 @@ For the official catalog, fork [velrino/thoth-data](https://github.com/velrino/t
 
 Start with a real Thoth export. If the file is a `diagram-export` envelope, save its `workspace` object as `workspace.json`. Use lowercase hyphenated directory IDs. Official entries contain one diagram with its walkthrough steps. Personal workspaces can contain multiple diagrams and folders.
 
-An official entry can use `workspace.excalidraw` for its opening board and `walkthrough.json` for its Thoth steps. Leave the first step’s `scene.drawing` empty. Catalog sync imports the board into the first step and generates the browser’s `workspace.json`. Keep diagrams authored entirely in Thoth as `workspace.json`.
+An official entry can use `workspace.excalidraw` as a standalone board with a `title` in its metadata. To add guided Thoth steps, also provide `walkthrough.json` with an empty first step’s `scene.drawing`. Catalog sync imports the board and generates the browser’s `workspace.json`. Use `workspace.json` directly for diagrams authored entirely in Thoth.
 
 Official entries also need `metadata.json` with `schemaVersion: 1`, `groupName`, `pattern`, `summary`, `scope`, and `sources`. Each source has a title and an HTTPS URL. Use the same group name across the workspaces in a company or study group. Credit the original author and cite material that supports specific claims. Keep personal files, credentials, and unreleased information out of public workspaces.
 
