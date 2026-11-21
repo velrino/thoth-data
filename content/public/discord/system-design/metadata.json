@@ -46,6 +46,7 @@
     "search": "An illustrative consumer that builds a searchable view of messages. Indexing can lag behind durable writes, so a saved message and a searchable message are different states. Access checks must also protect search results.",
     "moderation": "An illustrative background boundary for policy checks and abuse signals. Real systems may also enforce synchronous checks before accepting content; this diagram does not imply that all moderation happens after delivery.",
     "analytics": "An illustrative consumer that aggregates usage events separately from interactive chat. Delays here should not stop users from sending messages. Aggregation and data minimization are preferable to copying unnecessary message content.",
-    "warehouse": "Illustrative storage for aggregated analytical results and reports. It is separate from the operational message database so reporting workloads do not compete directly with interactive history reads."
+    "warehouse": "Illustrative storage for aggregated analytical results and reports. It is separate from the operational message database so reporting workloads do not compete directly with interactive history reads.",
+    "friend": "The friend has the channel open. A live connection delivers the saved message to this phone. If the phone is offline, it can fetch the message from history when it reconnects."
   }
 }

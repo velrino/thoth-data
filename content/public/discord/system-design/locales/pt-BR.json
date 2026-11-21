@@ -2,5 +2,357 @@
   "schemaVersion": 1,
   "title": "Arquitetura do Discord",
   "pattern": "Comunicação em tempo real e mensagens duráveis",
-  "summary": "Explore a arquitetura do Discord, das mensagens e da presença até mídia, voz e o mapa completo do sistema."
+  "summary": "Explore a arquitetura do Discord, das mensagens e da presença até mídia, voz e o mapa completo do sistema.",
+  "steps": {
+    "system-design-step-1": {
+      "title": "Abra uma conversa",
+      "description": "Maya abre a conversa do grupo. Um pedido traz as mensagens salvas enquanto ela estava fora. Uma conexão separada fica aberta para mostrar a próxima mensagem assim que ela chegar.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "lb": {
+          "label": "Entrada"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "messages": {
+          "label": "Histórico"
+        },
+        "gateway": {
+          "label": "Conexão ao vivo"
+        },
+        "message-db": {
+          "label": "Mensagens"
+        }
+      }
+    },
+    "system-design-step-2": {
+      "title": "Quem pode abrir o canal?",
+      "description": "Maya toca em um canal privado. A primeira consulta identifica a conta dela. A seguinte confere se ela faz parte do servidor e qual é seu papel. Ela pode ler a conversa se o canal permitir o acesso.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "lb": {
+          "label": "Entrada"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "auth": {
+          "label": "Identidade"
+        },
+        "users": {
+          "label": "Contas"
+        },
+        "guilds": {
+          "label": "Acesso"
+        },
+        "guild-db": {
+          "label": "Papéis"
+        }
+      }
+    },
+    "system-design-step-3": {
+      "title": "Mostre quem está online",
+      "description": "O celular de Maya mantém uma conexão aberta. O status online fica guardado por pouco tempo, então o ponto verde pode sumir se ela perder o sinal. As mensagens salvas continuam lá quando ela volta.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "gateway": {
+          "label": "Conexão ao vivo"
+        },
+        "guilds": {
+          "label": "Acesso"
+        },
+        "guild-db": {
+          "label": "Papéis"
+        },
+        "presence": {
+          "label": "Online"
+        },
+        "redis": {
+          "label": "Atividade"
+        },
+        "fanout": {
+          "label": "Distribuir"
+        }
+      }
+    },
+    "system-design-step-4": {
+      "title": "Guarde a mensagem antes de entregá-la",
+      "description": "Maya escreve “Às seis?”. Siga a mensagem até o armazenamento e, depois, o aviso de que ela foi salva até a distribuição. Esperar a gravação acrescenta uma etapa, mas quem se reconectar pode ler a mesma mensagem no histórico.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "messages": {
+          "label": "Histórico"
+        },
+        "message-db": {
+          "label": "Mensagens"
+        },
+        "bus": {
+          "label": "Aviso"
+        },
+        "fanout": {
+          "label": "Distribuir"
+        }
+      }
+    },
+    "system-design-step-5": {
+      "title": "O que acontece depois do envio?",
+      "description": "Acompanhe o aviso da mensagem salva até as notificações. Neste exemplo, busca, moderação e relatórios podem processar o mesmo aviso por conta própria. Se a busca atrasar, a conversa continua, mas a mensagem pode demorar para aparecer nos resultados.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "messages": {
+          "label": "Histórico"
+        },
+        "bus": {
+          "label": "Aviso"
+        },
+        "notify": {
+          "label": "Notificações"
+        },
+        "search": {
+          "label": "Busca"
+        },
+        "moderation": {
+          "label": "Moderação"
+        },
+        "analytics": {
+          "label": "Uso"
+        },
+        "warehouse": {
+          "label": "Relatórios"
+        }
+      }
+    },
+    "system-design-step-6": {
+      "title": "Anexe uma foto",
+      "description": "Maya anexa uma foto do ponto de encontro. O aplicativo pede autorização e envia a foto para o armazenamento de arquivos. A mensagem pode guardar uma referência à foto, o que evita colocar a imagem inteira no histórico da conversa.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "media": {
+          "label": "Anexos"
+        },
+        "storage": {
+          "label": "Arquivos"
+        }
+      }
+    },
+    "system-design-step-7": {
+      "title": "Entre em uma chamada",
+      "description": "Maya entra no canal de voz. A conexão do chat ajuda a encontrar o servidor da chamada. A partir daí, o celular troca áudio ao vivo com esse servidor. Guardar mensagens e transmitir uma conversa de voz têm exigências de tempo diferentes.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "gateway": {
+          "label": "Conexão ao vivo"
+        },
+        "guilds": {
+          "label": "Acesso"
+        },
+        "voice": {
+          "label": "Chamadas"
+        }
+      }
+    },
+    "system-design-step-8": {
+      "title": "Recupere a conversa depois de perder o sinal",
+      "description": "Maya perde o sinal em um túnel. Quando o celular se reconecta, a linha de cima mostra como ele busca as mensagens que ela perdeu. A linha de baixo mostra como ele reabre a conexão ao vivo e atualiza o status online dela.",
+      "nodes": {
+        "client": {
+          "label": "Chat"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "messages": {
+          "label": "Histórico"
+        },
+        "message-db": {
+          "label": "Mensagens"
+        },
+        "gateway": {
+          "label": "Conexão ao vivo"
+        },
+        "presence": {
+          "label": "Online"
+        },
+        "redis": {
+          "label": "Atividade"
+        }
+      }
+    },
+    "system-design-step-9": {
+      "title": "Acompanhe uma mensagem no mapa completo",
+      "description": "Maya envia “Às seis?” pelo celular. Siga o ponto que sai da tela dela. O chat confere se Maya pode escrever no canal, guarda a mensagem no histórico e a entrega no celular da amiga. Esperar a gravação leva um instante a mais, mas mesmo quem está sem sinal pode ler a conversa depois.",
+      "edges": {
+        "edge-0": {
+          "label": "Enviar mensagem"
+        },
+        "edge-1": {
+          "label": "Encaminhar ao chat"
+        },
+        "edge-2": {
+          "label": "Conferir identidade"
+        },
+        "edge-3": {
+          "label": "Buscar conta"
+        },
+        "edge-4": {
+          "label": "Verificar acesso ao canal"
+        },
+        "edge-5": {
+          "label": "Conferir papéis no canal"
+        },
+        "edge-4-return": {
+          "label": "Autorizar envio"
+        },
+        "edge-10": {
+          "label": "Preparar chamada"
+        },
+        "api-send-message": {
+          "label": "Salvar mensagem"
+        },
+        "edge-12": {
+          "label": "Gravar mensagem"
+        },
+        "edge-12-return": {
+          "label": "Confirmar gravação"
+        },
+        "edge-13": {
+          "label": "Verificar anexo"
+        },
+        "edge-14": {
+          "label": "Guardar arquivo"
+        },
+        "edge-15": {
+          "label": "Avisar que foi salva"
+        },
+        "bus-fanout": {
+          "label": "Buscar destinatários"
+        },
+        "fanout-gateway": {
+          "label": "Alcançar quem está online"
+        },
+        "gateway-friend": {
+          "label": "Exibir mensagem"
+        },
+        "edge-7": {
+          "label": "Ver quem está online"
+        },
+        "edge-8": {
+          "label": "Consultar atividade"
+        },
+        "edge-16": {
+          "label": "Agendar notificação"
+        },
+        "edge-17": {
+          "label": "Atualizar busca"
+        },
+        "edge-18": {
+          "label": "Agendar revisão"
+        },
+        "edge-19": {
+          "label": "Contar atividade"
+        },
+        "edge-20": {
+          "label": "Guardar totais"
+        }
+      },
+      "nodes": {
+        "client": {
+          "label": "Celular da Maya"
+        },
+        "lb": {
+          "label": "Entrada"
+        },
+        "api": {
+          "label": "API do chat"
+        },
+        "auth": {
+          "label": "Identidade"
+        },
+        "users": {
+          "label": "Contas"
+        },
+        "guilds": {
+          "label": "Acesso"
+        },
+        "guild-db": {
+          "label": "Papéis"
+        },
+        "gateway": {
+          "label": "Conexão ao vivo"
+        },
+        "presence": {
+          "label": "Online"
+        },
+        "redis": {
+          "label": "Atividade"
+        },
+        "fanout": {
+          "label": "Distribuir"
+        },
+        "voice": {
+          "label": "Chamadas"
+        },
+        "messages": {
+          "label": "Histórico"
+        },
+        "message-db": {
+          "label": "Mensagens"
+        },
+        "media": {
+          "label": "Anexos"
+        },
+        "storage": {
+          "label": "Arquivos"
+        },
+        "bus": {
+          "label": "Mensagem salva"
+        },
+        "notify": {
+          "label": "Notificações"
+        },
+        "search": {
+          "label": "Busca"
+        },
+        "moderation": {
+          "label": "Moderação"
+        },
+        "analytics": {
+          "label": "Uso"
+        },
+        "warehouse": {
+          "label": "Relatórios"
+        },
+        "friend": {
+          "label": "Celular da amiga"
+        }
+      }
+    }
+  },
+  "componentNotes": {
+    "friend": "A amiga está com o canal aberto. A mensagem salva chega ao celular pela conexão ao vivo. Se o aparelho estiver sem sinal, ele pode buscar a mensagem no histórico quando se reconectar."
+  }
 }

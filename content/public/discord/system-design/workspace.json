@@ -18,13 +18,13 @@
             {
               "id": "system-design-step-1",
               "title": "The big picture",
-              "description": "A desktop or mobile client fetches channel history through the HTTP API and opens a separate WebSocket session for live events. Both paths depend on message state, with the gateway handling live delivery.",
+              "description": "Maya opens her group chat. One request brings back messages that were saved while she was away. A separate connection stays open so the next message can appear on her phone as it arrives.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
                     "x": -21,
@@ -32,50 +32,45 @@
                   },
                   {
                     "id": "lb",
-                    "label": "Load balancer",
+                    "label": "Route requests",
                     "role": "load-balancer",
                     "color": "sky",
-                    "group": "HTTP ingress",
                     "x": -14,
                     "z": 0
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "messages",
-                    "label": "Message data service",
+                    "label": "Chat history",
                     "role": "service",
                     "color": "sky",
                     "technology": "rust",
                     "appearance": "icon",
-                    "group": "Message history",
                     "x": 7,
                     "z": 0
                   },
                   {
                     "id": "gateway",
-                    "label": "WebSocket gateway",
+                    "label": "Live connection",
                     "role": "gateway",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Live gateway",
                     "x": 0,
                     "z": 7
                   },
                   {
                     "id": "message-db",
-                    "label": "Messages · ScyllaDB",
+                    "label": "Saved texts",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Message history",
+                    "color": "sky",
                     "x": 14,
                     "z": 0
                   }
@@ -158,121 +153,29 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-5",
+                      "edge-5-return",
+                      "edge-2-return",
+                      "edge-1-return",
+                      "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-3",
                     "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
+                      "edge-3",
                       "edge-3-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-5-return",
-                    "route": [
-                      "edge-5-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -280,14 +183,14 @@
             },
             {
               "id": "system-design-step-2",
-              "title": "Identity, guilds and permissions",
-              "description": "Authentication establishes identity. Guild membership and role checks authorize channel access; a valid token alone is not permission to read every message.",
+              "title": "Who can open the channel?",
+              "description": "Maya taps a private channel. The first check identifies her account. The next checks her membership and role in this server. She can read the conversation only if the channel allows her role.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
                     "x": -21,
@@ -295,57 +198,51 @@
                   },
                   {
                     "id": "lb",
-                    "label": "Load balancer",
+                    "label": "Route requests",
                     "role": "load-balancer",
                     "color": "sky",
-                    "group": "HTTP ingress",
                     "x": -14,
                     "z": 0
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
                     "x": -7,
                     "z": 0
                   },
                   {
                     "id": "auth",
-                    "label": "Authentication",
+                    "label": "Identity check",
                     "role": "service",
-                    "color": "sky",
-                    "group": "Identity and guilds",
+                    "color": "peach",
                     "x": -7,
                     "z": -7
                   },
                   {
                     "id": "users",
-                    "label": "Identity data",
+                    "label": "Accounts",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Identity and guilds",
+                    "color": "peach",
                     "x": -14,
                     "z": -7
                   },
                   {
                     "id": "guilds",
-                    "label": "Guilds & permissions",
+                    "label": "Channel access",
                     "role": "service",
-                    "color": "sky",
+                    "color": "peach",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Identity and guilds",
                     "x": 0,
                     "z": -7
                   },
                   {
                     "id": "guild-db",
-                    "label": "Guild data",
+                    "label": "Member roles",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Identity and guilds",
+                    "color": "peach",
                     "x": 0,
                     "z": -14
                   }
@@ -428,121 +325,22 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-3",
+                      "edge-3-return",
+                      "edge-2-return",
+                      "edge-4",
+                      "edge-5",
+                      "edge-5-return",
+                      "edge-4-return",
+                      "edge-1-return",
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-5-return",
-                    "route": [
-                      "edge-5-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -550,81 +348,76 @@
             },
             {
               "id": "system-design-step-3",
-              "title": "Connections, presence and fanout",
-              "description": "A WebSocket session receives live state. Guild and fanout processes coordinate online recipients; a TTL cache illustrates ephemeral presence rather than authoritative message history.",
+              "title": "Show who is online",
+              "description": "Maya’s phone keeps a live connection open. Her online status is remembered briefly, so the green dot can fade if her phone loses signal. Her saved messages will still be there when she returns.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
-                    "x": -21,
+                    "x": -5,
                     "z": 0
                   },
                   {
                     "id": "gateway",
-                    "label": "WebSocket gateway",
+                    "label": "Live connection",
                     "role": "gateway",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Live gateway",
                     "x": 0,
                     "z": 0
                   },
                   {
                     "id": "guilds",
-                    "label": "Guilds & permissions",
+                    "label": "Channel access",
                     "role": "service",
-                    "color": "sky",
+                    "color": "peach",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Identity and guilds",
                     "x": 0,
                     "z": -7
                   },
                   {
                     "id": "guild-db",
-                    "label": "Guild data",
+                    "label": "Member roles",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Identity and guilds",
+                    "color": "peach",
                     "x": 0,
                     "z": -14
                   },
                   {
                     "id": "presence",
-                    "label": "Presence service",
+                    "label": "Who’s online",
                     "role": "service",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Live gateway",
                     "x": 0,
                     "z": 7
                   },
                   {
                     "id": "redis",
-                    "label": "Presence cache · TTL",
+                    "label": "Last seen",
                     "role": "cache",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "redis",
                     "appearance": "icon",
-                    "group": "Live gateway",
                     "x": 0,
                     "z": 14
                   },
                   {
                     "id": "fanout",
-                    "label": "Realtime fanout",
+                    "label": "Reach members",
                     "role": "service",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "x": 7,
-                    "z": -7
+                    "x": 5,
+                    "z": 0
                   }
                 ],
                 "edges": [
@@ -681,51 +474,13 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-0",
+                      "edge-3",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
@@ -734,28 +489,8 @@
                       "edge-5"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -763,66 +498,62 @@
             },
             {
               "id": "system-design-step-4",
-              "title": "Persist a message before delivery",
-              "description": "An HTTP message request reaches the data service and durable storage. A committed message can drive asynchronous delivery. Rust data services and ScyllaDB are publicly documented; this event-delivery boundary is simplified.",
+              "title": "Save a message before delivering it",
+              "description": "Maya sends “Meet at six?” Follow her message to storage, then follow the news of the save toward the people online. Waiting for the write adds a delay, but a friend who reconnects can read the same message from history.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
-                    "x": -21,
-                    "z": 0
+                    "x": -7,
+                    "z": -3
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
-                    "x": -7,
-                    "z": 0
+                    "x": -2,
+                    "z": -3
                   },
                   {
                     "id": "messages",
-                    "label": "Message data service",
+                    "label": "Chat history",
                     "role": "service",
                     "color": "sky",
                     "technology": "rust",
                     "appearance": "icon",
-                    "group": "Message history",
-                    "x": 7,
-                    "z": 0
+                    "x": 3,
+                    "z": -3
                   },
                   {
                     "id": "message-db",
-                    "label": "Messages · ScyllaDB",
+                    "label": "Saved texts",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Message history",
-                    "x": 14,
-                    "z": 0
+                    "color": "sky",
+                    "x": 8,
+                    "z": -3
                   },
                   {
                     "id": "bus",
-                    "label": "Async event delivery",
+                    "label": "Saved event",
                     "role": "queue",
-                    "color": "lavender",
-                    "group": "Event consumers",
-                    "x": 7,
-                    "z": 7
+                    "color": "sand",
+                    "x": 3,
+                    "z": 3
                   },
                   {
                     "id": "fanout",
-                    "label": "Realtime fanout",
+                    "label": "Reach members",
                     "role": "service",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "x": 14,
-                    "z": 7
+                    "x": 8,
+                    "z": 3
                   }
                 ],
                 "edges": [
@@ -879,81 +610,16 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-3",
                       "edge-4"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -961,92 +627,84 @@
             },
             {
               "id": "system-design-step-5",
-              "title": "Independent background consumers",
-              "description": "Notifications, indexing, moderation and analytics consume events independently in this teaching model. Retry-safe consumers avoid repeating side effects; a slow consumer should not block the interactive request.",
+              "title": "What happens after sending?",
+              "description": "Follow the saved message to the notification service. Search, moderation and usage reports can each pick up their own copy of the event in this example. A slow search index can delay when the message is searchable while the chat keeps moving.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
-                    "x": -21,
-                    "z": 0
+                    "x": -7,
+                    "z": -10
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
-                    "x": -7,
-                    "z": 0
+                    "x": -2,
+                    "z": -10
                   },
                   {
                     "id": "messages",
-                    "label": "Message data service",
+                    "label": "Chat history",
                     "role": "service",
                     "color": "sky",
                     "technology": "rust",
                     "appearance": "icon",
-                    "group": "Message history",
-                    "x": 7,
-                    "z": 0
+                    "x": 3,
+                    "z": -10
                   },
                   {
                     "id": "bus",
-                    "label": "Async event delivery",
+                    "label": "Saved event",
                     "role": "queue",
-                    "color": "lavender",
-                    "group": "Event consumers",
-                    "x": 7,
-                    "z": 7
+                    "color": "sand",
+                    "x": 3,
+                    "z": -3
                   },
                   {
                     "id": "notify",
                     "label": "Notifications",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 7,
-                    "z": 14
+                    "color": "sand",
+                    "x": 3,
+                    "z": 4
                   },
                   {
                     "id": "search",
-                    "label": "Search indexer",
+                    "label": "Search index",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 14,
-                    "z": 7
+                    "color": "sand",
+                    "x": 9,
+                    "z": -3
                   },
                   {
                     "id": "moderation",
                     "label": "Moderation",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 14,
-                    "z": 14
+                    "color": "sand",
+                    "x": 9,
+                    "z": 4
                   },
                   {
                     "id": "analytics",
-                    "label": "Analytics",
+                    "label": "Count usage",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 14,
-                    "z": 21
+                    "color": "sand",
+                    "x": 9,
+                    "z": 11
                   },
                   {
                     "id": "warehouse",
-                    "label": "Analytical storage",
+                    "label": "Report data",
                     "role": "database",
                     "color": "sand",
-                    "group": "Event consumers",
-                    "x": 21,
-                    "z": 21
+                    "x": 15,
+                    "z": 11
                   }
                 ],
                 "edges": [
@@ -1115,101 +773,14 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
                       "edge-3"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-7",
-                    "route": [
-                      "edge-7"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -1217,45 +788,42 @@
             },
             {
               "id": "system-design-step-6",
-              "title": "Attachments and media",
-              "description": "The client requests an authorized upload path. Media checks and object storage separate large files from message records; the resulting attachment reference can be included in a message.",
+              "title": "Attach a photo",
+              "description": "Maya adds a photo of the meeting spot. The app asks for permission to upload it, then transfers the photo to file storage. The chat message can carry a reference to that file, which keeps a large image out of the message history itself.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
-                    "x": -21,
-                    "z": 0
+                    "x": -5,
+                    "z": 4
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
-                    "x": -14,
-                    "z": -7
+                    "x": -3,
+                    "z": -4
                   },
                   {
                     "id": "media",
-                    "label": "Media processing",
+                    "label": "Check files",
                     "role": "service",
-                    "color": "sky",
-                    "group": "Attachment delivery",
-                    "x": -7,
-                    "z": -7
+                    "color": "lavender",
+                    "x": 3,
+                    "z": -4
                   },
                   {
                     "id": "storage",
-                    "label": "Object storage / CDN",
+                    "label": "Saved files",
                     "role": "storage",
-                    "color": "sand",
-                    "group": "Attachment delivery",
-                    "x": 0,
-                    "z": 0
+                    "color": "lavender",
+                    "x": 5,
+                    "z": 4
                   }
                 ],
                 "edges": [
@@ -1312,81 +880,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
+                      "edge-0-return",
+                      "edge-3",
                       "edge-3-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -1394,48 +899,46 @@
             },
             {
               "id": "system-design-step-7",
-              "title": "Voice and video use another path",
-              "description": "Gateway and guild processes handle signaling and voice-server assignment. Media then travels through a voice/video forwarding server; audio packets do not need to traverse the message database.",
+              "title": "Join a voice call",
+              "description": "Maya joins the voice channel. The chat connection helps her find the server for the call. Once connected, her phone exchanges live audio with that server. Saving chat messages and carrying a voice call have different timing needs.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
-                    "x": -14,
-                    "z": 0
+                    "x": -5,
+                    "z": 4
                   },
                   {
                     "id": "gateway",
-                    "label": "WebSocket gateway",
+                    "label": "Live connection",
                     "role": "gateway",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": -7,
-                    "z": -7
+                    "x": -3,
+                    "z": -4
                   },
                   {
                     "id": "guilds",
-                    "label": "Guilds & permissions",
+                    "label": "Channel access",
                     "role": "service",
-                    "color": "sky",
+                    "color": "peach",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Identity and guilds",
-                    "x": 0,
-                    "z": -7
+                    "x": 3,
+                    "z": -4
                   },
                   {
                     "id": "voice",
-                    "label": "Voice / Video · SFU",
+                    "label": "Voice calls",
                     "role": "service",
-                    "color": "sky",
-                    "x": 7,
-                    "z": 0
+                    "color": "peach",
+                    "x": 5,
+                    "z": 4
                   }
                 ],
                 "edges": [
@@ -1492,81 +995,18 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
+                      "edge-0-return",
+                      "edge-3",
                       "edge-3-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -1574,80 +1014,74 @@
             },
             {
               "id": "system-design-step-8",
-              "title": "Recover without treating caches as history",
-              "description": "After reconnecting, the client can request durable history and resume live subscriptions. Cache loss and consumer retries need recovery paths; not every subsystem shares the same availability or consistency requirement.",
+              "title": "Catch up after losing signal",
+              "description": "Maya loses signal in a tunnel. When her phone reconnects, the top row shows how it fetches the messages she missed. The bottom row shows how it reopens the live connection and updates her online status.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
+                    "label": "Chat app",
                     "role": "browser",
                     "color": "sky",
-                    "x": -21,
+                    "x": -9,
                     "z": 0
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
-                    "x": -14,
-                    "z": -7
+                    "x": -4,
+                    "z": -6
                   },
                   {
                     "id": "messages",
-                    "label": "Message data service",
+                    "label": "Chat history",
                     "role": "service",
                     "color": "sky",
                     "technology": "rust",
                     "appearance": "icon",
-                    "group": "Message history",
-                    "x": -7,
-                    "z": -7
+                    "x": 2,
+                    "z": -6
                   },
                   {
                     "id": "message-db",
-                    "label": "Messages · ScyllaDB",
+                    "label": "Saved texts",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Message history",
-                    "x": 0,
-                    "z": -7
+                    "color": "sky",
+                    "x": 8,
+                    "z": -6
                   },
                   {
                     "id": "gateway",
-                    "label": "WebSocket gateway",
+                    "label": "Live connection",
                     "role": "gateway",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": 0,
-                    "z": 0
+                    "x": -4,
+                    "z": 6
                   },
                   {
                     "id": "presence",
-                    "label": "Presence service",
+                    "label": "Who’s online",
                     "role": "service",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": 0,
-                    "z": 7
+                    "x": 2,
+                    "z": 6
                   },
                   {
                     "id": "redis",
-                    "label": "Presence cache · TTL",
+                    "label": "Last seen",
                     "role": "cache",
-                    "color": "sky",
+                    "color": "sage",
                     "technology": "redis",
                     "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": 0,
-                    "z": 14
+                    "x": 8,
+                    "z": 6
                   }
                 ],
                 "edges": [
@@ -1722,111 +1156,28 @@
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
+                      "edge-0",
+                      "edge-1",
+                      "edge-2",
+                      "edge-2-return",
+                      "edge-1-return",
+                      "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   },
                   {
                     "id": "flow-3",
                     "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
+                      "edge-3",
+                      "edge-4",
                       "edge-5"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
@@ -1835,216 +1186,228 @@
             {
               "id": "system-design-step-9",
               "title": "The complete system",
-              "description": "All introduced components appear together. Connections summarize responsibility boundaries rather than every request, reply or deployment. Discord publishes multiple subsystem designs; this map combines those observations with illustrative supporting services.",
+              "description": "Maya taps Send on “Meet at six?” Follow the dot from her phone as the chat checks whether she can post in the channel. The message is saved in history, then it appears on her friend’s phone. Waiting for the save takes an extra moment, but an offline friend can still read the message later.",
               "metrics": [],
               "scene": {
                 "nodes": [
                   {
                     "id": "client",
-                    "label": "User · Desktop / Mobile",
-                    "role": "browser",
+                    "label": "Maya’s phone",
+                    "role": "mobile",
                     "color": "sky",
-                    "x": -21,
-                    "z": 0
+                    "x": -48,
+                    "z": -32,
+                    "group": "1. Send"
                   },
                   {
                     "id": "lb",
-                    "label": "Load balancer",
+                    "label": "Route requests",
                     "role": "load-balancer",
                     "color": "sky",
-                    "group": "HTTP ingress",
-                    "x": -14,
-                    "z": 0
+                    "x": -34,
+                    "z": -32,
+                    "group": "1. Send"
                   },
                   {
                     "id": "api",
-                    "label": "HTTP API",
+                    "label": "Chat API",
                     "role": "api",
                     "color": "sky",
-                    "group": "HTTP ingress",
-                    "x": -7,
-                    "z": 0
+                    "x": -20,
+                    "z": -32,
+                    "group": "1. Send"
                   },
                   {
                     "id": "auth",
-                    "label": "Authentication",
+                    "label": "Identity check",
                     "role": "service",
                     "color": "sky",
-                    "group": "Identity and guilds",
-                    "x": -7,
-                    "z": -7
+                    "x": -20,
+                    "z": -48,
+                    "group": "1. Send"
                   },
                   {
                     "id": "users",
-                    "label": "Identity data",
+                    "label": "Accounts",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Identity and guilds",
-                    "x": -14,
-                    "z": -7
+                    "color": "sky",
+                    "x": -34,
+                    "z": -48,
+                    "group": "1. Send"
                   },
                   {
                     "id": "guilds",
-                    "label": "Guilds & permissions",
+                    "label": "Channel access",
                     "role": "service",
                     "color": "sky",
                     "technology": "elixir",
                     "appearance": "icon",
-                    "group": "Identity and guilds",
-                    "x": 0,
-                    "z": -7
+                    "x": -20,
+                    "z": -19,
+                    "group": "1. Send"
                   },
                   {
                     "id": "guild-db",
-                    "label": "Guild data",
+                    "label": "Member roles",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Identity and guilds",
-                    "x": 0,
-                    "z": -14
-                  },
-                  {
-                    "id": "gateway",
-                    "label": "WebSocket gateway",
-                    "role": "gateway",
                     "color": "sky",
-                    "technology": "elixir",
-                    "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": 0,
-                    "z": 0
-                  },
-                  {
-                    "id": "presence",
-                    "label": "Presence service",
-                    "role": "service",
-                    "color": "sky",
-                    "technology": "elixir",
-                    "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": 0,
-                    "z": 7
-                  },
-                  {
-                    "id": "redis",
-                    "label": "Presence cache · TTL",
-                    "role": "cache",
-                    "color": "sky",
-                    "technology": "redis",
-                    "appearance": "icon",
-                    "group": "Live gateway",
-                    "x": 0,
-                    "z": 14
-                  },
-                  {
-                    "id": "fanout",
-                    "label": "Realtime fanout",
-                    "role": "service",
-                    "color": "sky",
-                    "technology": "elixir",
-                    "appearance": "icon",
-                    "x": 7,
-                    "z": -7
+                    "x": -33,
+                    "z": -14,
+                    "group": "1. Send"
                   },
                   {
                     "id": "voice",
-                    "label": "Voice / Video · SFU",
+                    "label": "Voice calls",
                     "role": "service",
                     "color": "sky",
-                    "x": 14,
-                    "z": -14
+                    "x": -47,
+                    "z": -21,
+                    "group": "1. Send"
                   },
                   {
                     "id": "messages",
-                    "label": "Message data service",
+                    "label": "Chat history",
                     "role": "service",
-                    "color": "sky",
+                    "color": "lavender",
                     "technology": "rust",
                     "appearance": "icon",
-                    "group": "Message history",
-                    "x": 7,
-                    "z": 0
+                    "x": -5,
+                    "z": -2,
+                    "group": "2. Save"
                   },
                   {
                     "id": "message-db",
-                    "label": "Messages · ScyllaDB",
+                    "label": "Saved texts",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Message history",
-                    "x": 14,
-                    "z": 0
+                    "color": "lavender",
+                    "x": 10,
+                    "z": -2,
+                    "group": "2. Save"
                   },
                   {
                     "id": "media",
-                    "label": "Media processing",
+                    "label": "Check files",
                     "role": "service",
-                    "color": "sky",
-                    "group": "Attachment delivery",
-                    "x": 14,
-                    "z": -7
+                    "color": "lavender",
+                    "x": 10,
+                    "z": -15,
+                    "group": "2. Save"
                   },
                   {
                     "id": "storage",
-                    "label": "Object storage / CDN",
+                    "label": "Saved files",
                     "role": "storage",
-                    "color": "sand",
-                    "group": "Attachment delivery",
-                    "x": 21,
-                    "z": -7
+                    "color": "lavender",
+                    "x": 24,
+                    "z": -15,
+                    "group": "2. Save"
                   },
                   {
                     "id": "bus",
-                    "label": "Async event delivery",
+                    "label": "Message saved",
                     "role": "queue",
-                    "color": "lavender",
-                    "group": "Event consumers",
-                    "x": 7,
-                    "z": 7
+                    "color": "sage",
+                    "x": 2,
+                    "z": 13,
+                    "group": "3. Deliver"
+                  },
+                  {
+                    "id": "fanout",
+                    "label": "Reach members",
+                    "role": "service",
+                    "color": "sage",
+                    "technology": "elixir",
+                    "appearance": "icon",
+                    "x": 16,
+                    "z": 13,
+                    "group": "3. Deliver"
+                  },
+                  {
+                    "id": "gateway",
+                    "label": "Live connection",
+                    "role": "gateway",
+                    "color": "sage",
+                    "technology": "elixir",
+                    "appearance": "icon",
+                    "x": 30,
+                    "z": 13,
+                    "group": "3. Deliver"
+                  },
+                  {
+                    "id": "friend",
+                    "label": "Friend’s phone",
+                    "role": "mobile",
+                    "group": "3. Deliver",
+                    "color": "sage",
+                    "x": 46,
+                    "z": 13
+                  },
+                  {
+                    "id": "presence",
+                    "label": "Who’s online",
+                    "role": "service",
+                    "color": "sage",
+                    "technology": "elixir",
+                    "appearance": "icon",
+                    "x": 31,
+                    "z": 31,
+                    "group": "3. Deliver"
+                  },
+                  {
+                    "id": "redis",
+                    "label": "Last seen",
+                    "role": "cache",
+                    "color": "sage",
+                    "technology": "redis",
+                    "appearance": "icon",
+                    "x": 46,
+                    "z": 34,
+                    "group": "3. Deliver"
                   },
                   {
                     "id": "notify",
                     "label": "Notifications",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 7,
-                    "z": 14
+                    "color": "sage",
+                    "x": -3,
+                    "z": 27,
+                    "group": "3. Deliver"
                   },
                   {
                     "id": "search",
-                    "label": "Search indexer",
+                    "label": "Search index",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 14,
-                    "z": 7
+                    "color": "sage",
+                    "x": 3,
+                    "z": 44,
+                    "group": "3. Deliver"
                   },
                   {
                     "id": "moderation",
                     "label": "Moderation",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 14,
-                    "z": 14
+                    "color": "sage",
+                    "x": 15,
+                    "z": 47,
+                    "group": "3. Deliver"
                   },
                   {
                     "id": "analytics",
-                    "label": "Analytics",
+                    "label": "Count usage",
                     "role": "worker",
-                    "color": "sky",
-                    "group": "Event consumers",
-                    "x": 14,
-                    "z": 21
+                    "color": "sage",
+                    "x": 20,
+                    "z": 29,
+                    "group": "3. Deliver"
                   },
                   {
                     "id": "warehouse",
-                    "label": "Analytical storage",
+                    "label": "Report data",
                     "role": "database",
-                    "color": "sand",
-                    "group": "Event consumers",
-                    "x": 21,
-                    "z": 21
+                    "color": "sage",
+                    "x": 30,
+                    "z": 45,
+                    "group": "3. Deliver"
                   }
                 ],
                 "edges": [
@@ -2052,498 +1415,166 @@
                     "id": "edge-0",
                     "from": "client",
                     "to": "lb",
-                    "label": "HTTPS"
+                    "label": "Send message"
                   },
                   {
                     "id": "edge-1",
                     "from": "lb",
                     "to": "api",
-                    "label": "Request routing"
+                    "label": "Route to chat"
                   },
                   {
                     "id": "edge-2",
                     "from": "api",
                     "to": "auth",
-                    "label": "Identity"
+                    "label": "Check identity"
                   },
                   {
                     "id": "edge-3",
                     "from": "auth",
                     "to": "users",
-                    "label": "Identity records"
+                    "label": "Find account"
                   },
                   {
                     "id": "edge-4",
                     "from": "api",
                     "to": "guilds",
-                    "label": "Permissions"
+                    "label": "Check channel access"
                   },
                   {
                     "id": "edge-5",
                     "from": "guilds",
                     "to": "guild-db",
-                    "label": "Guild state"
-                  },
-                  {
-                    "id": "edge-6",
-                    "from": "api",
-                    "to": "gateway",
-                    "label": "Session context"
-                  },
-                  {
-                    "id": "edge-7",
-                    "from": "gateway",
-                    "to": "presence",
-                    "label": "Presence"
-                  },
-                  {
-                    "id": "edge-8",
-                    "from": "presence",
-                    "to": "redis",
-                    "label": "TTL cache"
-                  },
-                  {
-                    "id": "edge-9",
-                    "from": "gateway",
-                    "to": "fanout",
-                    "label": "Recipient routing"
-                  },
-                  {
-                    "id": "edge-10",
-                    "from": "guilds",
-                    "to": "voice",
-                    "label": "Voice assignment"
-                  },
-                  {
-                    "id": "edge-11",
-                    "from": "gateway",
-                    "to": "messages",
-                    "label": "Message boundary"
-                  },
-                  {
-                    "id": "edge-12",
-                    "from": "messages",
-                    "to": "message-db",
-                    "label": "Durable history"
-                  },
-                  {
-                    "id": "edge-13",
-                    "from": "messages",
-                    "to": "media",
-                    "label": "Attachment references"
-                  },
-                  {
-                    "id": "edge-14",
-                    "from": "media",
-                    "to": "storage",
-                    "label": "Media objects"
-                  },
-                  {
-                    "id": "edge-15",
-                    "from": "messages",
-                    "to": "bus",
-                    "label": "Committed events"
-                  },
-                  {
-                    "id": "edge-16",
-                    "from": "bus",
-                    "to": "notify",
-                    "label": "Notification jobs"
-                  },
-                  {
-                    "id": "edge-17",
-                    "from": "bus",
-                    "to": "search",
-                    "label": "Indexing"
-                  },
-                  {
-                    "id": "edge-18",
-                    "from": "bus",
-                    "to": "moderation",
-                    "label": "Moderation jobs"
-                  },
-                  {
-                    "id": "edge-19",
-                    "from": "bus",
-                    "to": "analytics",
-                    "label": "Analytics events"
-                  },
-                  {
-                    "id": "edge-20",
-                    "from": "analytics",
-                    "to": "warehouse",
-                    "label": "Aggregates"
-                  },
-                  {
-                    "id": "edge-0-return",
-                    "from": "lb",
-                    "to": "client",
-                    "label": "Message view"
-                  },
-                  {
-                    "id": "edge-1-return",
-                    "from": "api",
-                    "to": "lb",
-                    "label": "API response"
-                  },
-                  {
-                    "id": "edge-2-return",
-                    "from": "auth",
-                    "to": "api",
-                    "label": "Identity result"
-                  },
-                  {
-                    "id": "edge-3-return",
-                    "from": "users",
-                    "to": "auth",
-                    "label": "Account record"
+                    "label": "Read member roles"
                   },
                   {
                     "id": "edge-4-return",
                     "from": "guilds",
                     "to": "api",
-                    "label": "Permission result"
+                    "label": "Allow this post"
                   },
                   {
-                    "id": "edge-5-return",
-                    "from": "guild-db",
-                    "to": "guilds",
-                    "label": "Guild record"
+                    "id": "edge-10",
+                    "from": "guilds",
+                    "to": "voice",
+                    "label": "Set up a call"
                   },
                   {
-                    "id": "edge-6-return",
-                    "from": "gateway",
-                    "to": "api",
-                    "label": "Session status"
+                    "id": "api-send-message",
+                    "from": "api",
+                    "to": "messages",
+                    "label": "Save message"
                   },
                   {
-                    "id": "edge-10-return",
-                    "from": "voice",
-                    "to": "guilds",
-                    "label": "Media placement"
-                  },
-                  {
-                    "id": "edge-11-return",
+                    "id": "edge-12",
                     "from": "messages",
-                    "to": "gateway",
-                    "label": "Message result"
+                    "to": "message-db",
+                    "label": "Write message"
                   },
                   {
                     "id": "edge-12-return",
                     "from": "message-db",
                     "to": "messages",
-                    "label": "Stored messages"
+                    "label": "Confirm save"
+                  },
+                  {
+                    "id": "edge-13",
+                    "from": "messages",
+                    "to": "media",
+                    "label": "Check attachment"
+                  },
+                  {
+                    "id": "edge-14",
+                    "from": "media",
+                    "to": "storage",
+                    "label": "Store file"
+                  },
+                  {
+                    "id": "edge-15",
+                    "from": "messages",
+                    "to": "bus",
+                    "label": "Announce the save"
+                  },
+                  {
+                    "id": "bus-fanout",
+                    "from": "bus",
+                    "to": "fanout",
+                    "label": "Find recipients"
+                  },
+                  {
+                    "id": "fanout-gateway",
+                    "from": "fanout",
+                    "to": "gateway",
+                    "label": "Reach online members"
+                  },
+                  {
+                    "id": "gateway-friend",
+                    "from": "gateway",
+                    "to": "friend",
+                    "label": "Show new message"
+                  },
+                  {
+                    "id": "edge-7",
+                    "from": "gateway",
+                    "to": "presence",
+                    "label": "Check who is online"
+                  },
+                  {
+                    "id": "edge-8",
+                    "from": "presence",
+                    "to": "redis",
+                    "label": "Look up activity"
+                  },
+                  {
+                    "id": "edge-16",
+                    "from": "bus",
+                    "to": "notify",
+                    "label": "Queue a notification"
+                  },
+                  {
+                    "id": "edge-17",
+                    "from": "bus",
+                    "to": "search",
+                    "label": "Update search"
+                  },
+                  {
+                    "id": "edge-18",
+                    "from": "bus",
+                    "to": "moderation",
+                    "label": "Queue a review"
+                  },
+                  {
+                    "id": "edge-19",
+                    "from": "bus",
+                    "to": "analytics",
+                    "label": "Count activity"
+                  },
+                  {
+                    "id": "edge-20",
+                    "from": "analytics",
+                    "to": "warehouse",
+                    "label": "Store totals"
                   }
                 ],
                 "flows": [
                   {
                     "id": "flow-0",
                     "route": [
-                      "edge-0"
+                      "edge-0",
+                      "edge-1",
+                      "edge-4",
+                      "edge-4-return",
+                      "api-send-message",
+                      "edge-12",
+                      "edge-12-return",
+                      "edge-15",
+                      "bus-fanout",
+                      "fanout-gateway",
+                      "gateway-friend"
                     ],
                     "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-1",
-                    "route": [
-                      "edge-1"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-2",
-                    "route": [
-                      "edge-2"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-3",
-                    "route": [
-                      "edge-3"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-4",
-                    "route": [
-                      "edge-4"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-5",
-                    "route": [
-                      "edge-5"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-6",
-                    "route": [
-                      "edge-6"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-7",
-                    "route": [
-                      "edge-7"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-8",
-                    "route": [
-                      "edge-8"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-9",
-                    "route": [
-                      "edge-9"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-10",
-                    "route": [
-                      "edge-10"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-11",
-                    "route": [
-                      "edge-11"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-12",
-                    "route": [
-                      "edge-12"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-13",
-                    "route": [
-                      "edge-13"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-14",
-                    "route": [
-                      "edge-14"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-15",
-                    "route": [
-                      "edge-15"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-16",
-                    "route": [
-                      "edge-16"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-17",
-                    "route": [
-                      "edge-17"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-18",
-                    "route": [
-                      "edge-18"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-19",
-                    "route": [
-                      "edge-19"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-20",
-                    "route": [
-                      "edge-20"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-0-return",
-                    "route": [
-                      "edge-0-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-1-return",
-                    "route": [
-                      "edge-1-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-2-return",
-                    "route": [
-                      "edge-2-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-3-return",
-                    "route": [
-                      "edge-3-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-4-return",
-                    "route": [
-                      "edge-4-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-5-return",
-                    "route": [
-                      "edge-5-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-6-return",
-                    "route": [
-                      "edge-6-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-10-return",
-                    "route": [
-                      "edge-10-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-11-return",
-                    "route": [
-                      "edge-11-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
-                    "bounce": false
-                  },
-                  {
-                    "id": "flow-edge-12-return",
-                    "route": [
-                      "edge-12-return"
-                    ],
-                    "kind": "request",
-                    "rate": 0.25,
-                    "speed": 0.6,
+                    "rate": 0.4,
+                    "speed": 0.95,
                     "bounce": false
                   }
                 ]
