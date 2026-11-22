@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "type": "company",
+  "groupName": "Instagram",
+  "pattern": "Ranked feeds and video publishing",
+  "summary": "Follow Lia from opening Instagram to seeing a Reel, posting one of her own, and getting a like.",
+  "scope": "An illustrative Instagram-like architecture based on the supplied sketch and Meta’s engineering publications. Meta describes Django at Instagram, ranking funnels, and multi-version video encoding. Service boundaries, caches, queues, and stores in the map are teaching examples.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "Engineering at Meta · Instagram’s Django server",
+      "url": "https://engineering.fb.com/2023/08/15/developer-tools/immortal-objects-for-python-instagram-meta/"
+    },
+    {
+      "title": "Engineering at Meta · Home Feed and Suggested Posts",
+      "url": "https://engineering.fb.com/2020/12/10/web/how-instagram-suggests-new-content/"
+    },
+    {
+      "title": "Engineering at Meta · Ranking and recommendation infrastructure",
+      "url": "https://engineering.fb.com/2025/05/21/production-engineering/journey-to-1000-models-scaling-instagrams-recommendation-system/"
+    },
+    {
+      "title": "Engineering at Meta · Instagram video encoding",
+      "url": "https://engineering.fb.com/2022/11/04/video-engineering/instagram-video-processing-encoding-reduction/"
+    },
+    {
+      "title": "Engineering at Meta · AV1 and delivery for Instagram Reels",
+      "url": "https://engineering.fb.com/2023/02/21/video-engineering/av1-codec-facebook-instagram-reels/"
+    }
+  ],
+  "componentNotes": {
+    "api": "The gateway is illustrative. Meta documents Python and Django on Instagram’s application servers.",
+    "feed": "Gather eligible posts for this viewer and return an ordered list of post references.",
+    "rank": "Meta describes progressively narrower ranking stages. The single block summarizes those stages.",
+    "cache": "A generic short-lived cache is shown as an illustrative fast path for a recent feed result.",
+    "posts": "Post records contain metadata and media references. The video itself is delivered separately.",
+    "encode": "Instagram generates versions for different clients. Meta documents FFmpeg in its video engineering examples and AV1 for selected Reels.",
+    "cdn": "The edge serves video bytes at a suitable quality. A post remains a separate record.",
+    "graph": "This store represents durable interactions and relationships such as follows and likes.",
+    "queue": "An illustrative queue separates writing a like from delivering any notification.",
+    "signals": "Aggregated activity can inform ranking over time. It is outside the reply path for an individual like."
+  }
+}

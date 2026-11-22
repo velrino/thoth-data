@@ -1,0 +1,1417 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "reference-instagram-feed-and-sharing",
+  "title": "Instagram: From a Reel to the Feed",
+  "entries": [
+    {
+      "kind": "lesson",
+      "id": "feed-and-sharing",
+      "title": "Instagram: From a Reel to the Feed",
+      "complete": false,
+      "steps": [
+        {
+          "id": "open-instagram",
+          "title": "Open Instagram",
+          "description": "Lia opens Instagram on her Android phone in the morning. An iPhone or a browser enters through the same public edge. Follow Lia’s request until the service checks her session and lets the app in.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "android",
+                "label": "Android app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -36,
+                "z": 0
+              },
+              {
+                "id": "api",
+                "label": "Instagram API",
+                "role": "gateway",
+                "color": "sky",
+                "x": -24,
+                "z": 0,
+                "technology": "django"
+              },
+              {
+                "id": "auth",
+                "label": "Check identity",
+                "role": "service",
+                "color": "sky",
+                "x": -24,
+                "z": -20
+              },
+              {
+                "id": "users",
+                "label": "Accounts",
+                "role": "database",
+                "color": "sky",
+                "x": -37,
+                "z": -20
+              },
+              {
+                "id": "ios",
+                "label": "iPhone app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": -11,
+                "technology": "apple"
+              },
+              {
+                "id": "web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": -48,
+                "z": 11,
+                "technology": "chrome"
+              }
+            ],
+            "edges": [
+              {
+                "id": "android-lb",
+                "from": "android",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "lb-api",
+                "from": "lb",
+                "to": "api",
+                "label": "Route request"
+              },
+              {
+                "id": "api-auth",
+                "from": "api",
+                "to": "auth",
+                "label": "Verify session"
+              },
+              {
+                "id": "auth-users",
+                "from": "auth",
+                "to": "users",
+                "label": "Look up account"
+              },
+              {
+                "id": "users-auth",
+                "from": "users",
+                "to": "auth",
+                "label": "Return account"
+              },
+              {
+                "id": "auth-api",
+                "from": "auth",
+                "to": "api",
+                "label": "Confirm identity"
+              },
+              {
+                "id": "api-lb",
+                "from": "api",
+                "to": "lb",
+                "label": "Return response"
+              },
+              {
+                "id": "lb-android",
+                "from": "lb",
+                "to": "android",
+                "label": "Back to the app"
+              },
+              {
+                "id": "ios-lb",
+                "from": "ios",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "web-lb",
+                "from": "web",
+                "to": "lb",
+                "label": "Open Instagram"
+              }
+            ],
+            "flows": [
+              {
+                "id": "check-session",
+                "route": [
+                  "android-lb",
+                  "lb-api",
+                  "api-auth",
+                  "auth-users",
+                  "users-auth",
+                  "auth-api",
+                  "api-lb",
+                  "lb-android"
+                ],
+                "kind": "request",
+                "rate": 0.32,
+                "speed": 1.5,
+                "bounce": false
+              },
+              {
+                "id": "ios-access",
+                "route": [
+                  "ios-lb",
+                  "lb-api"
+                ],
+                "kind": "request",
+                "rate": 0.22,
+                "speed": 1.25,
+                "bounce": false
+              },
+              {
+                "id": "web-access",
+                "route": [
+                  "web-lb",
+                  "lb-api"
+                ],
+                "kind": "request",
+                "rate": 0.24,
+                "speed": 1.4,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "rank-the-feed",
+          "title": "Find a Reel in the home feed",
+          "description": "Lia sees Bruno’s coffee Reel near the top. If the feed already has a recent result, a cache hit can return it quickly. Otherwise, the service gathers candidates, ranks them, and returns an ordered feed. A short-lived cache saves work and can show a slightly older ordering.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "android",
+                "label": "Android app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -36,
+                "z": 0
+              },
+              {
+                "id": "api",
+                "label": "Instagram API",
+                "role": "gateway",
+                "color": "sky",
+                "x": -24,
+                "z": 0,
+                "technology": "django"
+              },
+              {
+                "id": "feed",
+                "label": "Build home feed",
+                "role": "service",
+                "color": "lavender",
+                "x": -7,
+                "z": -29
+              },
+              {
+                "id": "cache",
+                "label": "Feed cache",
+                "role": "cache",
+                "color": "lavender",
+                "x": 8,
+                "z": -42
+              },
+              {
+                "id": "posts",
+                "label": "Post records",
+                "role": "database",
+                "color": "lavender",
+                "x": 25,
+                "z": -29
+              },
+              {
+                "id": "rank",
+                "label": "Rank posts",
+                "role": "worker",
+                "color": "lavender",
+                "x": 8,
+                "z": -29
+              }
+            ],
+            "edges": [
+              {
+                "id": "android-lb",
+                "from": "android",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "lb-api",
+                "from": "lb",
+                "to": "api",
+                "label": "Route request"
+              },
+              {
+                "id": "api-feed",
+                "from": "api",
+                "to": "feed",
+                "label": "Ask for home feed"
+              },
+              {
+                "id": "feed-cache",
+                "from": "feed",
+                "to": "cache",
+                "label": "Check cached feed"
+              },
+              {
+                "id": "cache-feed",
+                "from": "cache",
+                "to": "feed",
+                "label": "Return cached feed"
+              },
+              {
+                "id": "feed-api",
+                "from": "feed",
+                "to": "api",
+                "label": "Return ordered feed"
+              },
+              {
+                "id": "api-lb",
+                "from": "api",
+                "to": "lb",
+                "label": "Return response"
+              },
+              {
+                "id": "lb-android",
+                "from": "lb",
+                "to": "android",
+                "label": "Back to the app"
+              },
+              {
+                "id": "feed-posts",
+                "from": "feed",
+                "to": "posts",
+                "label": "Find candidate posts"
+              },
+              {
+                "id": "posts-rank",
+                "from": "posts",
+                "to": "rank",
+                "label": "Send candidates"
+              },
+              {
+                "id": "rank-feed",
+                "from": "rank",
+                "to": "feed",
+                "label": "Return ranked posts"
+              }
+            ],
+            "flows": [
+              {
+                "id": "reuse-a-recent-feed",
+                "route": [
+                  "android-lb",
+                  "lb-api",
+                  "api-feed",
+                  "feed-cache",
+                  "cache-feed",
+                  "feed-api",
+                  "api-lb",
+                  "lb-android"
+                ],
+                "kind": "request",
+                "rate": 0.24,
+                "speed": 1.55,
+                "bounce": false
+              },
+              {
+                "id": "rank-a-fresh-feed",
+                "route": [
+                  "api-feed",
+                  "feed-posts",
+                  "posts-rank",
+                  "rank-feed",
+                  "feed-api",
+                  "api-lb",
+                  "lb-android"
+                ],
+                "kind": "request",
+                "rate": 0.23,
+                "speed": 1.7,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "publish-a-reel",
+          "title": "Publish a Reel",
+          "description": "Lia records her own coffee clip and taps Post. The pipeline prepares versions for different devices and connections. In this design, publication is confirmed after the post can reference stored media. The delivery edge serves viewers the bytes separately from the post record.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "android",
+                "label": "Android app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -36,
+                "z": 0
+              },
+              {
+                "id": "api",
+                "label": "Instagram API",
+                "role": "gateway",
+                "color": "sky",
+                "x": -24,
+                "z": 0,
+                "technology": "django"
+              },
+              {
+                "id": "media",
+                "label": "Accept video",
+                "role": "service",
+                "color": "sage",
+                "x": -7,
+                "z": -10
+              },
+              {
+                "id": "encode",
+                "label": "Encode video",
+                "role": "worker",
+                "color": "sage",
+                "x": 8,
+                "z": -10
+              },
+              {
+                "id": "storage",
+                "label": "Video storage",
+                "role": "storage",
+                "color": "sage",
+                "x": 25,
+                "z": -10
+              },
+              {
+                "id": "posts",
+                "label": "Post records",
+                "role": "database",
+                "color": "lavender",
+                "x": 25,
+                "z": -29
+              },
+              {
+                "id": "cdn",
+                "label": "Deliver video",
+                "role": "cdn",
+                "color": "sage",
+                "x": 42,
+                "z": -10
+              }
+            ],
+            "edges": [
+              {
+                "id": "android-lb",
+                "from": "android",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "lb-api",
+                "from": "lb",
+                "to": "api",
+                "label": "Route request"
+              },
+              {
+                "id": "api-media",
+                "from": "api",
+                "to": "media",
+                "label": "Send video upload"
+              },
+              {
+                "id": "media-encode",
+                "from": "media",
+                "to": "encode",
+                "label": "Prepare video"
+              },
+              {
+                "id": "encode-storage",
+                "from": "encode",
+                "to": "storage",
+                "label": "Store renditions"
+              },
+              {
+                "id": "storage-posts",
+                "from": "storage",
+                "to": "posts",
+                "label": "Provide media reference"
+              },
+              {
+                "id": "posts-media",
+                "from": "posts",
+                "to": "media",
+                "label": "Return saved post"
+              },
+              {
+                "id": "media-api",
+                "from": "media",
+                "to": "api",
+                "label": "Confirm publication"
+              },
+              {
+                "id": "api-lb",
+                "from": "api",
+                "to": "lb",
+                "label": "Return response"
+              },
+              {
+                "id": "lb-android",
+                "from": "lb",
+                "to": "android",
+                "label": "Back to the app"
+              },
+              {
+                "id": "storage-cdn",
+                "from": "storage",
+                "to": "cdn",
+                "label": "Serve media to edge"
+              }
+            ],
+            "flows": [
+              {
+                "id": "publish-video",
+                "route": [
+                  "android-lb",
+                  "lb-api",
+                  "api-media",
+                  "media-encode",
+                  "encode-storage",
+                  "storage-posts",
+                  "posts-media",
+                  "media-api",
+                  "api-lb",
+                  "lb-android"
+                ],
+                "kind": "heavy",
+                "rate": 0.25,
+                "speed": 1.65,
+                "bounce": false
+              },
+              {
+                "id": "serve-video-from-edge",
+                "route": [
+                  "storage-cdn"
+                ],
+                "kind": "heavy",
+                "rate": 0.23,
+                "speed": 1.6,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "record-a-like",
+          "title": "Save a like",
+          "description": "Bruno finds Lia’s Reel and taps Like. Follow the write into social activity, then the confirmation back to the app. The like can be shown once the action is saved. Sending Lia an alert can happen later.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "android",
+                "label": "Android app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -36,
+                "z": 0
+              },
+              {
+                "id": "api",
+                "label": "Instagram API",
+                "role": "gateway",
+                "color": "sky",
+                "x": -24,
+                "z": 0,
+                "technology": "django"
+              },
+              {
+                "id": "like",
+                "label": "Save a like",
+                "role": "service",
+                "color": "peach",
+                "x": -7,
+                "z": 10
+              },
+              {
+                "id": "graph",
+                "label": "Social activity",
+                "role": "database",
+                "color": "peach",
+                "x": -7,
+                "z": 22
+              }
+            ],
+            "edges": [
+              {
+                "id": "android-lb",
+                "from": "android",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "lb-api",
+                "from": "lb",
+                "to": "api",
+                "label": "Route request"
+              },
+              {
+                "id": "api-like",
+                "from": "api",
+                "to": "like",
+                "label": "Submit a like"
+              },
+              {
+                "id": "like-graph",
+                "from": "like",
+                "to": "graph",
+                "label": "Record the action"
+              },
+              {
+                "id": "graph-like",
+                "from": "graph",
+                "to": "like",
+                "label": "Confirm the write"
+              },
+              {
+                "id": "like-api",
+                "from": "like",
+                "to": "api",
+                "label": "Confirm the like"
+              },
+              {
+                "id": "api-lb",
+                "from": "api",
+                "to": "lb",
+                "label": "Return response"
+              },
+              {
+                "id": "lb-android",
+                "from": "lb",
+                "to": "android",
+                "label": "Back to the app"
+              }
+            ],
+            "flows": [
+              {
+                "id": "save-like",
+                "route": [
+                  "android-lb",
+                  "lb-api",
+                  "api-like",
+                  "like-graph",
+                  "graph-like",
+                  "like-api",
+                  "api-lb",
+                  "lb-android"
+                ],
+                "kind": "request",
+                "rate": 0.42,
+                "speed": 1.66,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "after-the-like",
+          "title": "Send alerts and learn from activity",
+          "description": "Lia can get an alert after Bruno’s like is saved. A queue lets the workers deliver it separately from the original request. Meanwhile, an impression or watch event can take a separate route into aggregate analytics and become a signal for later ranking.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "like",
+                "label": "Save a like",
+                "role": "service",
+                "color": "peach",
+                "x": -7,
+                "z": 10
+              },
+              {
+                "id": "notify",
+                "label": "Request alert",
+                "role": "service",
+                "color": "peach",
+                "x": 8,
+                "z": 10
+              },
+              {
+                "id": "queue",
+                "label": "Alert queue",
+                "role": "queue",
+                "color": "peach",
+                "x": 22,
+                "z": 10
+              },
+              {
+                "id": "workers",
+                "label": "Send alerts",
+                "role": "worker",
+                "color": "peach",
+                "x": 42,
+                "z": 14
+              },
+              {
+                "id": "api",
+                "label": "Instagram API",
+                "role": "gateway",
+                "color": "sky",
+                "x": -24,
+                "z": 0,
+                "technology": "django"
+              },
+              {
+                "id": "event",
+                "label": "Collect events",
+                "role": "service",
+                "color": "sand",
+                "x": -7,
+                "z": 36
+              },
+              {
+                "id": "stream",
+                "label": "Process events",
+                "role": "worker",
+                "color": "sand",
+                "x": 4,
+                "z": 36
+              },
+              {
+                "id": "warehouse",
+                "label": "Analytics data",
+                "role": "database",
+                "color": "sand",
+                "x": 25,
+                "z": 36
+              },
+              {
+                "id": "signals",
+                "label": "Ranking signals",
+                "role": "service",
+                "color": "sand",
+                "x": 42,
+                "z": 36
+              }
+            ],
+            "edges": [
+              {
+                "id": "like-notify",
+                "from": "like",
+                "to": "notify",
+                "label": "Signal saved like"
+              },
+              {
+                "id": "notify-queue",
+                "from": "notify",
+                "to": "queue",
+                "label": "Queue notification"
+              },
+              {
+                "id": "queue-workers",
+                "from": "queue",
+                "to": "workers",
+                "label": "Deliver the job"
+              },
+              {
+                "id": "api-event",
+                "from": "api",
+                "to": "event",
+                "label": "Log feed activity"
+              },
+              {
+                "id": "event-stream",
+                "from": "event",
+                "to": "stream",
+                "label": "Stream events"
+              },
+              {
+                "id": "stream-warehouse",
+                "from": "stream",
+                "to": "warehouse",
+                "label": "Store aggregates"
+              },
+              {
+                "id": "warehouse-signals",
+                "from": "warehouse",
+                "to": "signals",
+                "label": "Build signals"
+              }
+            ],
+            "flows": [
+              {
+                "id": "deliver-alert",
+                "route": [
+                  "like-notify",
+                  "notify-queue",
+                  "queue-workers"
+                ],
+                "kind": "request",
+                "rate": 0.35,
+                "speed": 2.3,
+                "bounce": false
+              },
+              {
+                "id": "process-feed-signals",
+                "route": [
+                  "api-event",
+                  "event-stream",
+                  "stream-warehouse",
+                  "warehouse-signals"
+                ],
+                "kind": "request",
+                "rate": 0.29,
+                "speed": 2.5,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "complete-architecture",
+          "title": "See the complete system",
+          "description": "Lia opened the app, watched Bruno’s Reel and published her own clip. Bruno’s like was saved before Lia received an alert. Follow the colored groups from the three clients to the feed and publishing paths, then see how notifications and analytics continue in the background.",
+          "metrics": [],
+          "cameraTour": [
+            {
+              "kind": "focus",
+              "x": -42,
+              "z": 0,
+              "span": 27,
+              "moveMs": 500,
+              "orientation": {
+                "yawDegrees": -53,
+                "pitchDegrees": 25
+              }
+            },
+            {
+              "kind": "focus",
+              "x": 5,
+              "z": -23,
+              "span": 42,
+              "moveMs": 2300
+            },
+            {
+              "kind": "focus",
+              "x": 16,
+              "z": 11,
+              "span": 55,
+              "moveMs": 2200
+            },
+            {
+              "kind": "fit",
+              "moveMs": 1000
+            }
+          ],
+          "scene": {
+            "nodes": [
+              {
+                "id": "android",
+                "label": "Android app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": 0,
+                "technology": "android",
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "lb",
+                "label": "Spread requests",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -36,
+                "z": 0,
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "api",
+                "label": "Instagram API",
+                "role": "gateway",
+                "color": "sky",
+                "x": -24,
+                "z": 0,
+                "technology": "django",
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "ios",
+                "label": "iPhone app",
+                "role": "mobile",
+                "color": "sky",
+                "x": -48,
+                "z": -11,
+                "technology": "apple",
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "web",
+                "label": "Web browser",
+                "role": "browser",
+                "color": "sky",
+                "x": -48,
+                "z": 11,
+                "technology": "chrome",
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "auth",
+                "label": "Check identity",
+                "role": "service",
+                "color": "sky",
+                "x": -24,
+                "z": -20,
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "users",
+                "label": "Accounts",
+                "role": "database",
+                "color": "sky",
+                "x": -37,
+                "z": -20,
+                "group": "1. Clients & access"
+              },
+              {
+                "id": "posts",
+                "label": "Post records",
+                "role": "database",
+                "color": "lavender",
+                "x": 25,
+                "z": -29,
+                "group": "2. Home feed"
+              },
+              {
+                "id": "feed",
+                "label": "Build home feed",
+                "role": "service",
+                "color": "lavender",
+                "x": -7,
+                "z": -29,
+                "group": "2. Home feed"
+              },
+              {
+                "id": "rank",
+                "label": "Rank posts",
+                "role": "worker",
+                "color": "lavender",
+                "x": 8,
+                "z": -29,
+                "group": "2. Home feed"
+              },
+              {
+                "id": "cache",
+                "label": "Feed cache",
+                "role": "cache",
+                "color": "lavender",
+                "x": 8,
+                "z": -42,
+                "group": "2. Home feed"
+              },
+              {
+                "id": "media",
+                "label": "Accept video",
+                "role": "service",
+                "color": "sage",
+                "x": -7,
+                "z": -10,
+                "group": "3. Video publishing"
+              },
+              {
+                "id": "encode",
+                "label": "Encode video",
+                "role": "worker",
+                "color": "sage",
+                "x": 8,
+                "z": -10,
+                "group": "3. Video publishing"
+              },
+              {
+                "id": "storage",
+                "label": "Video storage",
+                "role": "storage",
+                "color": "sage",
+                "x": 25,
+                "z": -10,
+                "group": "3. Video publishing"
+              },
+              {
+                "id": "cdn",
+                "label": "Deliver video",
+                "role": "cdn",
+                "color": "sage",
+                "x": 42,
+                "z": -10,
+                "group": "3. Video publishing"
+              },
+              {
+                "id": "like",
+                "label": "Save a like",
+                "role": "service",
+                "color": "peach",
+                "x": -7,
+                "z": 10,
+                "group": "4. Likes & alerts"
+              },
+              {
+                "id": "graph",
+                "label": "Social activity",
+                "role": "database",
+                "color": "peach",
+                "x": -7,
+                "z": 22,
+                "group": "4. Likes & alerts"
+              },
+              {
+                "id": "notify",
+                "label": "Request alert",
+                "role": "service",
+                "color": "peach",
+                "x": 8,
+                "z": 10,
+                "group": "4. Likes & alerts"
+              },
+              {
+                "id": "queue",
+                "label": "Alert queue",
+                "role": "queue",
+                "color": "peach",
+                "x": 22,
+                "z": 10,
+                "group": "4. Likes & alerts"
+              },
+              {
+                "id": "workers",
+                "label": "Send alerts",
+                "role": "worker",
+                "color": "peach",
+                "x": 42,
+                "z": 14,
+                "group": "4. Likes & alerts"
+              },
+              {
+                "id": "event",
+                "label": "Collect events",
+                "role": "service",
+                "color": "sand",
+                "x": -7,
+                "z": 36,
+                "group": "5. Analytics"
+              },
+              {
+                "id": "stream",
+                "label": "Process events",
+                "role": "worker",
+                "color": "sand",
+                "x": 4,
+                "z": 36,
+                "group": "5. Analytics"
+              },
+              {
+                "id": "warehouse",
+                "label": "Analytics data",
+                "role": "database",
+                "color": "sand",
+                "x": 25,
+                "z": 36,
+                "group": "5. Analytics"
+              },
+              {
+                "id": "signals",
+                "label": "Ranking signals",
+                "role": "service",
+                "color": "sand",
+                "x": 42,
+                "z": 36,
+                "group": "5. Analytics"
+              }
+            ],
+            "edges": [
+              {
+                "id": "android-lb",
+                "from": "android",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "lb-api",
+                "from": "lb",
+                "to": "api",
+                "label": "Route request"
+              },
+              {
+                "id": "api-media",
+                "from": "api",
+                "to": "media",
+                "label": "Send video upload"
+              },
+              {
+                "id": "media-encode",
+                "from": "media",
+                "to": "encode",
+                "label": "Prepare video"
+              },
+              {
+                "id": "encode-storage",
+                "from": "encode",
+                "to": "storage",
+                "label": "Store renditions"
+              },
+              {
+                "id": "storage-posts",
+                "from": "storage",
+                "to": "posts",
+                "label": "Provide media reference"
+              },
+              {
+                "id": "ios-lb",
+                "from": "ios",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "api-feed",
+                "from": "api",
+                "to": "feed",
+                "label": "Ask for home feed"
+              },
+              {
+                "id": "feed-posts",
+                "from": "feed",
+                "to": "posts",
+                "label": "Find candidate posts"
+              },
+              {
+                "id": "posts-rank",
+                "from": "posts",
+                "to": "rank",
+                "label": "Send candidates"
+              },
+              {
+                "id": "rank-feed",
+                "from": "rank",
+                "to": "feed",
+                "label": "Return ranked posts"
+              },
+              {
+                "id": "web-lb",
+                "from": "web",
+                "to": "lb",
+                "label": "Open Instagram"
+              },
+              {
+                "id": "feed-cache",
+                "from": "feed",
+                "to": "cache",
+                "label": "Check cached feed"
+              },
+              {
+                "id": "api-auth",
+                "from": "api",
+                "to": "auth",
+                "label": "Verify session"
+              },
+              {
+                "id": "auth-users",
+                "from": "auth",
+                "to": "users",
+                "label": "Look up account"
+              },
+              {
+                "id": "feed-api",
+                "from": "feed",
+                "to": "api",
+                "label": "Return ordered feed"
+              },
+              {
+                "id": "api-lb",
+                "from": "api",
+                "to": "lb",
+                "label": "Return response"
+              },
+              {
+                "id": "lb-android",
+                "from": "lb",
+                "to": "android",
+                "label": "Back to the app"
+              },
+              {
+                "id": "cache-feed",
+                "from": "cache",
+                "to": "feed",
+                "label": "Return cached feed"
+              },
+              {
+                "id": "posts-media",
+                "from": "posts",
+                "to": "media",
+                "label": "Return saved post"
+              },
+              {
+                "id": "media-api",
+                "from": "media",
+                "to": "api",
+                "label": "Confirm publication"
+              },
+              {
+                "id": "storage-cdn",
+                "from": "storage",
+                "to": "cdn",
+                "label": "Serve media to edge"
+              },
+              {
+                "id": "api-like",
+                "from": "api",
+                "to": "like",
+                "label": "Submit a like"
+              },
+              {
+                "id": "like-graph",
+                "from": "like",
+                "to": "graph",
+                "label": "Record the action"
+              },
+              {
+                "id": "graph-like",
+                "from": "graph",
+                "to": "like",
+                "label": "Confirm the write"
+              },
+              {
+                "id": "like-api",
+                "from": "like",
+                "to": "api",
+                "label": "Confirm the like"
+              },
+              {
+                "id": "like-notify",
+                "from": "like",
+                "to": "notify",
+                "label": "Signal saved like"
+              },
+              {
+                "id": "notify-queue",
+                "from": "notify",
+                "to": "queue",
+                "label": "Queue notification"
+              },
+              {
+                "id": "queue-workers",
+                "from": "queue",
+                "to": "workers",
+                "label": "Deliver the job"
+              },
+              {
+                "id": "api-event",
+                "from": "api",
+                "to": "event",
+                "label": "Log feed activity"
+              },
+              {
+                "id": "event-stream",
+                "from": "event",
+                "to": "stream",
+                "label": "Stream events"
+              },
+              {
+                "id": "stream-warehouse",
+                "from": "stream",
+                "to": "warehouse",
+                "label": "Store aggregates"
+              },
+              {
+                "id": "warehouse-signals",
+                "from": "warehouse",
+                "to": "signals",
+                "label": "Build signals"
+              }
+            ],
+            "flows": [
+              {
+                "id": "android-reel",
+                "route": [
+                  "android-lb",
+                  "lb-api",
+                  "api-media",
+                  "media-encode",
+                  "encode-storage",
+                  "storage-posts"
+                ],
+                "kind": "heavy",
+                "rate": 0.28,
+                "speed": 1.65,
+                "bounce": false
+              },
+              {
+                "id": "ios-feed",
+                "route": [
+                  "ios-lb",
+                  "lb-api",
+                  "api-feed",
+                  "feed-posts",
+                  "posts-rank",
+                  "rank-feed"
+                ],
+                "kind": "request",
+                "rate": 0.23,
+                "speed": 1.5,
+                "bounce": false
+              },
+              {
+                "id": "browser-feed",
+                "route": [
+                  "web-lb",
+                  "lb-api",
+                  "api-feed",
+                  "feed-cache"
+                ],
+                "kind": "request",
+                "rate": 0.25,
+                "speed": 1.4,
+                "bounce": false
+              },
+              {
+                "id": "verify-account",
+                "route": [
+                  "api-auth",
+                  "auth-users"
+                ],
+                "kind": "request",
+                "rate": 0.21,
+                "speed": 1.65,
+                "bounce": false
+              },
+              {
+                "id": "return-ranked-feed",
+                "route": [
+                  "feed-api",
+                  "api-lb",
+                  "lb-android"
+                ],
+                "kind": "request",
+                "rate": 0.23,
+                "speed": 1.7,
+                "bounce": false
+              },
+              {
+                "id": "cached-feed",
+                "route": [
+                  "cache-feed"
+                ],
+                "kind": "request",
+                "rate": 0.21,
+                "speed": 1.7,
+                "bounce": false
+              },
+              {
+                "id": "return-publication",
+                "route": [
+                  "posts-media",
+                  "media-api"
+                ],
+                "kind": "request",
+                "rate": 0.21,
+                "speed": 1.63,
+                "bounce": false
+              },
+              {
+                "id": "deliver-renditions",
+                "route": [
+                  "storage-cdn"
+                ],
+                "kind": "heavy",
+                "rate": 0.24,
+                "speed": 1.7,
+                "bounce": false
+              },
+              {
+                "id": "record-a-like",
+                "route": [
+                  "api-like",
+                  "like-graph"
+                ],
+                "kind": "request",
+                "rate": 0.25,
+                "speed": 1.65,
+                "bounce": false
+              },
+              {
+                "id": "confirm-a-like",
+                "route": [
+                  "graph-like",
+                  "like-api"
+                ],
+                "kind": "request",
+                "rate": 0.21,
+                "speed": 1.7,
+                "bounce": false
+              },
+              {
+                "id": "deliver-alert",
+                "route": [
+                  "like-notify",
+                  "notify-queue",
+                  "queue-workers"
+                ],
+                "kind": "request",
+                "rate": 0.3,
+                "speed": 2.4,
+                "bounce": false
+              },
+              {
+                "id": "process-feed-signals",
+                "route": [
+                  "api-event",
+                  "event-stream",
+                  "stream-warehouse",
+                  "warehouse-signals"
+                ],
+                "kind": "request",
+                "rate": 0.27,
+                "speed": 2.6,
+                "bounce": false
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

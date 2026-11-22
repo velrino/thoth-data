@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 1,
+  "title": "Instagram: de um Reel até o feed",
+  "pattern": "Feed ranqueado e publicação de vídeos",
+  "summary": "Acompanhe Lia ao abrir o Instagram, ver um Reel, postar o próprio vídeo e receber uma curtida.",
+  "scope": "Arquitetura ilustrativa baseada no esboço fornecido e em publicações de engenharia da Meta. A Meta descreve Django no Instagram, ranking em etapas e múltiplas versões de vídeo. As fronteiras dos serviços, caches, filas e bancos são exemplos didáticos.",
+  "steps": {
+    "open-instagram": {
+      "title": "Abra o Instagram",
+      "description": "Lia abre o Instagram no Android pela manhã. Um iPhone ou navegador entra pelo mesmo ponto de acesso. Siga o pedido até o serviço verificar a sessão e liberar a entrada no app.",
+      "nodes": {
+        "android": {
+          "label": "App no Android"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "API do Instagram"
+        },
+        "auth": {
+          "label": "Verificar identidade"
+        },
+        "users": {
+          "label": "Contas"
+        },
+        "ios": {
+          "label": "App no iPhone"
+        },
+        "web": {
+          "label": "Navegador"
+        }
+      },
+      "edges": {
+        "android-lb": {
+          "label": "Abrir Instagram"
+        },
+        "lb-api": {
+          "label": "Encaminhar pedido"
+        },
+        "api-auth": {
+          "label": "Verificar sessão"
+        },
+        "auth-users": {
+          "label": "Consultar conta"
+        },
+        "users-auth": {
+          "label": "Retornar conta"
+        },
+        "auth-api": {
+          "label": "Confirmar identidade"
+        },
+        "api-lb": {
+          "label": "Retornar resposta"
+        },
+        "lb-android": {
+          "label": "Voltar ao app"
+        },
+        "ios-lb": {
+          "label": "Abrir Instagram"
+        },
+        "web-lb": {
+          "label": "Abrir Instagram"
+        }
+      }
+    },
+    "rank-the-feed": {
+      "title": "Encontre um Reel no feed inicial",
+      "description": "O Reel de café do Bruno aparece perto do topo. Se o feed já tem um resultado recente, o cache pode devolvê-lo rápido. Senão, o serviço reúne candidatos, ordena e devolve o feed. Um cache de curta duração economiza trabalho e pode mostrar uma ordem um pouco antiga.",
+      "nodes": {
+        "android": {
+          "label": "App no Android"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "API do Instagram"
+        },
+        "feed": {
+          "label": "Montar feed inicial"
+        },
+        "cache": {
+          "label": "Cache do feed"
+        },
+        "posts": {
+          "label": "Registros de posts"
+        },
+        "rank": {
+          "label": "Ordenar posts"
+        }
+      },
+      "edges": {
+        "android-lb": {
+          "label": "Abrir Instagram"
+        },
+        "lb-api": {
+          "label": "Encaminhar pedido"
+        },
+        "api-feed": {
+          "label": "Pedir feed inicial"
+        },
+        "feed-cache": {
+          "label": "Consultar cache"
+        },
+        "cache-feed": {
+          "label": "Retornar feed em cache"
+        },
+        "feed-api": {
+          "label": "Retornar feed ordenado"
+        },
+        "api-lb": {
+          "label": "Retornar resposta"
+        },
+        "lb-android": {
+          "label": "Voltar ao app"
+        },
+        "feed-posts": {
+          "label": "Buscar posts candidatos"
+        },
+        "posts-rank": {
+          "label": "Enviar candidatos"
+        },
+        "rank-feed": {
+          "label": "Retornar posts ordenados"
+        }
+      }
+    },
+    "publish-a-reel": {
+      "title": "Publique um Reel",
+      "description": "Lia grava seu próprio vídeo de café e toca em Publicar. O processamento prepara versões para diferentes aparelhos e conexões. Neste desenho, o app recebe a confirmação quando o post pode apontar pra mídia guardada. A entrega do vídeo acontece separadamente do registro do post.",
+      "nodes": {
+        "android": {
+          "label": "App no Android"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "API do Instagram"
+        },
+        "media": {
+          "label": "Receber vídeo"
+        },
+        "encode": {
+          "label": "Codificar vídeo"
+        },
+        "storage": {
+          "label": "Armazenar vídeos"
+        },
+        "posts": {
+          "label": "Registros de posts"
+        },
+        "cdn": {
+          "label": "Entregar vídeo"
+        }
+      },
+      "edges": {
+        "android-lb": {
+          "label": "Abrir Instagram"
+        },
+        "lb-api": {
+          "label": "Encaminhar pedido"
+        },
+        "api-media": {
+          "label": "Enviar vídeo"
+        },
+        "media-encode": {
+          "label": "Preparar vídeo"
+        },
+        "encode-storage": {
+          "label": "Guardar versões"
+        },
+        "storage-posts": {
+          "label": "Fornecer referência da mídia"
+        },
+        "posts-media": {
+          "label": "Retornar post salvo"
+        },
+        "media-api": {
+          "label": "Confirmar publicação"
+        },
+        "api-lb": {
+          "label": "Retornar resposta"
+        },
+        "lb-android": {
+          "label": "Voltar ao app"
+        },
+        "storage-cdn": {
+          "label": "Servir mídia na borda"
+        }
+      }
+    },
+    "record-a-like": {
+      "title": "Registre uma curtida",
+      "description": "Bruno encontra o Reel da Lia e toca em Curtir. Siga a gravação da atividade social e a confirmação de volta ao app. A curtida pode aparecer assim que a ação é salva. O aviso pra Lia pode chegar depois.",
+      "nodes": {
+        "android": {
+          "label": "App no Android"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "API do Instagram"
+        },
+        "like": {
+          "label": "Registrar curtida"
+        },
+        "graph": {
+          "label": "Atividade social"
+        }
+      },
+      "edges": {
+        "android-lb": {
+          "label": "Abrir Instagram"
+        },
+        "lb-api": {
+          "label": "Encaminhar pedido"
+        },
+        "api-like": {
+          "label": "Enviar curtida"
+        },
+        "like-graph": {
+          "label": "Registrar ação"
+        },
+        "graph-like": {
+          "label": "Confirmar gravação"
+        },
+        "like-api": {
+          "label": "Confirmar curtida"
+        },
+        "api-lb": {
+          "label": "Retornar resposta"
+        },
+        "lb-android": {
+          "label": "Voltar ao app"
+        }
+      }
+    },
+    "after-the-like": {
+      "title": "Envie avisos e aprenda com a atividade",
+      "description": "Lia pode receber um aviso depois que a curtida do Bruno é salva. A fila deixa os workers entregarem o aviso sem prender o pedido original. Ao mesmo tempo, uma impressão ou evento de visualização pode seguir outro caminho, alimentar a análise agregada e virar um sinal para rankings futuros.",
+      "nodes": {
+        "like": {
+          "label": "Registrar curtida"
+        },
+        "notify": {
+          "label": "Solicitar aviso"
+        },
+        "queue": {
+          "label": "Fila de avisos"
+        },
+        "workers": {
+          "label": "Enviar avisos"
+        },
+        "api": {
+          "label": "API do Instagram"
+        },
+        "event": {
+          "label": "Coletar eventos"
+        },
+        "stream": {
+          "label": "Processar eventos"
+        },
+        "warehouse": {
+          "label": "Dados de análise"
+        },
+        "signals": {
+          "label": "Sinais pro ranking"
+        }
+      },
+      "edges": {
+        "like-notify": {
+          "label": "Avisar que a curtida foi salva"
+        },
+        "notify-queue": {
+          "label": "Enfileirar aviso"
+        },
+        "queue-workers": {
+          "label": "Entregar tarefa"
+        },
+        "api-event": {
+          "label": "Registrar atividade do feed"
+        },
+        "event-stream": {
+          "label": "Enviar eventos"
+        },
+        "stream-warehouse": {
+          "label": "Guardar agregados"
+        },
+        "warehouse-signals": {
+          "label": "Gerar sinais"
+        }
+      }
+    },
+    "complete-architecture": {
+      "title": "Veja o sistema completo",
+      "description": "Lia abriu o app, viu o Reel do Bruno e publicou o próprio vídeo. A curtida dele foi salva antes de a Lia receber o aviso. Siga os grupos coloridos dos três clientes até o feed e a publicação. Depois veja os avisos e a análise continuarem em segundo plano.",
+      "nodes": {
+        "android": {
+          "label": "App no Android"
+        },
+        "lb": {
+          "label": "Distribuir pedidos"
+        },
+        "api": {
+          "label": "API do Instagram"
+        },
+        "media": {
+          "label": "Receber vídeo"
+        },
+        "encode": {
+          "label": "Codificar vídeo"
+        },
+        "storage": {
+          "label": "Armazenar vídeos"
+        },
+        "posts": {
+          "label": "Registros de posts"
+        },
+        "ios": {
+          "label": "App no iPhone"
+        },
+        "feed": {
+          "label": "Montar feed inicial"
+        },
+        "rank": {
+          "label": "Ordenar posts"
+        },
+        "web": {
+          "label": "Navegador"
+        },
+        "cache": {
+          "label": "Cache do feed"
+        },
+        "auth": {
+          "label": "Verificar identidade"
+        },
+        "users": {
+          "label": "Contas"
+        },
+        "cdn": {
+          "label": "Entregar vídeo"
+        },
+        "like": {
+          "label": "Registrar curtida"
+        },
+        "graph": {
+          "label": "Atividade social"
+        },
+        "notify": {
+          "label": "Solicitar aviso"
+        },
+        "queue": {
+          "label": "Fila de avisos"
+        },
+        "workers": {
+          "label": "Enviar avisos"
+        },
+        "event": {
+          "label": "Coletar eventos"
+        },
+        "stream": {
+          "label": "Processar eventos"
+        },
+        "warehouse": {
+          "label": "Dados de análise"
+        },
+        "signals": {
+          "label": "Sinais pro ranking"
+        }
+      },
+      "edges": {
+        "android-lb": {
+          "label": "Abrir Instagram"
+        },
+        "lb-api": {
+          "label": "Encaminhar pedido"
+        },
+        "api-media": {
+          "label": "Enviar vídeo"
+        },
+        "media-encode": {
+          "label": "Preparar vídeo"
+        },
+        "encode-storage": {
+          "label": "Guardar versões"
+        },
+        "storage-posts": {
+          "label": "Fornecer referência da mídia"
+        },
+        "ios-lb": {
+          "label": "Abrir Instagram"
+        },
+        "api-feed": {
+          "label": "Pedir feed inicial"
+        },
+        "feed-posts": {
+          "label": "Buscar posts candidatos"
+        },
+        "posts-rank": {
+          "label": "Enviar candidatos"
+        },
+        "rank-feed": {
+          "label": "Retornar posts ordenados"
+        },
+        "web-lb": {
+          "label": "Abrir Instagram"
+        },
+        "feed-cache": {
+          "label": "Consultar cache"
+        },
+        "api-auth": {
+          "label": "Verificar sessão"
+        },
+        "auth-users": {
+          "label": "Consultar conta"
+        },
+        "feed-api": {
+          "label": "Retornar feed ordenado"
+        },
+        "api-lb": {
+          "label": "Retornar resposta"
+        },
+        "lb-android": {
+          "label": "Voltar ao app"
+        },
+        "cache-feed": {
+          "label": "Retornar feed em cache"
+        },
+        "posts-media": {
+          "label": "Retornar post salvo"
+        },
+        "media-api": {
+          "label": "Confirmar publicação"
+        },
+        "storage-cdn": {
+          "label": "Servir mídia na borda"
+        },
+        "api-like": {
+          "label": "Enviar curtida"
+        },
+        "like-graph": {
+          "label": "Registrar ação"
+        },
+        "graph-like": {
+          "label": "Confirmar gravação"
+        },
+        "like-api": {
+          "label": "Confirmar curtida"
+        },
+        "like-notify": {
+          "label": "Avisar que a curtida foi salva"
+        },
+        "notify-queue": {
+          "label": "Enfileirar aviso"
+        },
+        "queue-workers": {
+          "label": "Entregar tarefa"
+        },
+        "api-event": {
+          "label": "Registrar atividade do feed"
+        },
+        "event-stream": {
+          "label": "Enviar eventos"
+        },
+        "stream-warehouse": {
+          "label": "Guardar agregados"
+        },
+        "warehouse-signals": {
+          "label": "Gerar sinais"
+        }
+      }
+    }
+  },
+  "componentNotes": {
+    "api": "O gateway é ilustrativo. A Meta documenta Python e Django nos servidores de aplicação do Instagram.",
+    "feed": "Reúne posts elegíveis para quem está vendo e devolve uma lista ordenada de referências.",
+    "rank": "A Meta descreve etapas de ranking que trabalham com um conjunto cada vez menor. O bloco resume essas etapas.",
+    "cache": "Um cache genérico de curta duração ilustra o caminho rápido para um resultado recente.",
+    "posts": "Os registros guardam metadados e referências. O vídeo chega por um caminho separado.",
+    "encode": "O Instagram gera versões para diferentes clientes. A Meta documenta exemplos com FFmpeg e o uso de AV1 em Reels selecionados.",
+    "cdn": "A borda entrega os bytes de vídeo numa qualidade adequada. O registro do post fica separado.",
+    "graph": "O armazenamento representa interações e relações duráveis, como curtidas e contas seguidas.",
+    "queue": "A fila ilustrativa separa salvar a curtida de entregar um eventual aviso.",
+    "signals": "Atividade agregada pode alimentar o ranking ao longo do tempo. Esse trabalho fica fora da resposta de uma curtida."
+  }
+}
