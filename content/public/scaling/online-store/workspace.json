@@ -1,0 +1,1634 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "study-scaling-online-store",
+  "title": "Scaling an Online Store",
+  "entries": [
+    {
+      "kind": "lesson",
+      "id": "online-store",
+      "title": "Scaling an Online Store",
+      "complete": false,
+      "steps": [
+        {
+          "id": "one-server",
+          "title": "Start with one server",
+          "description": "Lia opens a sneaker page and places an order during a sale. Her phone sends both requests to the store app, and the app reads or writes the database before it replies. Both processes share one server. As traffic grows, look for rising response times and CPU contention on that machine.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -17,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -3,
+                "z": 0,
+                "group": "One server"
+              },
+              {
+                "id": "db",
+                "label": "Store database",
+                "role": "database",
+                "color": "lavender",
+                "x": 11,
+                "z": 0,
+                "technology": "postgresql",
+                "group": "One server"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-app",
+                "from": "client",
+                "to": "app",
+                "label": "Send store request"
+              },
+              {
+                "id": "app-client",
+                "from": "app",
+                "to": "client",
+                "label": "Return store response"
+              },
+              {
+                "id": "app-db",
+                "from": "app",
+                "to": "db",
+                "label": "Read or save order data"
+              },
+              {
+                "id": "db-app",
+                "from": "db",
+                "to": "app",
+                "label": "Return data or confirm save"
+              }
+            ],
+            "flows": [
+              {
+                "id": "store-request",
+                "route": [
+                  "client-app",
+                  "app-db",
+                  "db-app",
+                  "app-client"
+                ],
+                "kind": "request",
+                "rate": 0.27,
+                "speed": 1.7,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "separate-database",
+          "title": "Give the database its own server",
+          "description": "The same sale drives more database work. The team moves the database to its own machine, so a CPU or memory upgrade can target the tier that needs it. Lia still waits for her order to be saved. There is now a network hop between the app and the database.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -17,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -3,
+                "z": 0,
+                "group": "App server"
+              },
+              {
+                "id": "db",
+                "label": "Store database",
+                "role": "database",
+                "color": "lavender",
+                "x": 11,
+                "z": 0,
+                "technology": "postgresql",
+                "group": "Database server"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-app",
+                "from": "client",
+                "to": "app",
+                "label": "Send store request"
+              },
+              {
+                "id": "app-client",
+                "from": "app",
+                "to": "client",
+                "label": "Return store response"
+              },
+              {
+                "id": "app-db",
+                "from": "app",
+                "to": "db",
+                "label": "Read or save order data"
+              },
+              {
+                "id": "db-app",
+                "from": "db",
+                "to": "app",
+                "label": "Return data or confirm save"
+              }
+            ],
+            "flows": [
+              {
+                "id": "store-request",
+                "route": [
+                  "client-app",
+                  "app-db",
+                  "db-app",
+                  "app-client"
+                ],
+                "kind": "request",
+                "rate": 0.27,
+                "speed": 1.7,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "second-app-server",
+          "title": "Add a second app server",
+          "description": "The app tier still slows down when too many people arrive together. A load balancer sends Lia’s sign-in to server A and her checkout to server B. Both read or write the same session store, so she stays signed in. Adding app servers increases app capacity, while the shared session store becomes a dependency to watch.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -30,
+                "z": -9,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Load balancer",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -18,
+                "z": -9
+              },
+              {
+                "id": "app",
+                "label": "App server A",
+                "role": "service",
+                "color": "sage",
+                "x": -5,
+                "z": -19
+              },
+              {
+                "id": "sessions",
+                "label": "Shared sessions",
+                "role": "cache",
+                "color": "sage",
+                "x": -5,
+                "z": -9,
+                "technology": "redis"
+              },
+              {
+                "id": "app-b",
+                "label": "App server B",
+                "role": "service",
+                "color": "sage",
+                "x": -5,
+                "z": 1
+              },
+              {
+                "id": "db",
+                "label": "Primary database",
+                "role": "database",
+                "color": "lavender",
+                "x": 10,
+                "z": 1,
+                "technology": "postgresql"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-lb",
+                "from": "client",
+                "to": "lb",
+                "label": "Send next request"
+              },
+              {
+                "id": "lb-client",
+                "from": "lb",
+                "to": "client",
+                "label": "Respond to the phone"
+              },
+              {
+                "id": "lb-app",
+                "from": "lb",
+                "to": "app",
+                "label": "Route sign-in to A"
+              },
+              {
+                "id": "app-lb",
+                "from": "app",
+                "to": "lb",
+                "label": "Return sign-in response"
+              },
+              {
+                "id": "app-sessions",
+                "from": "app",
+                "to": "sessions",
+                "label": "Store session"
+              },
+              {
+                "id": "sessions-app",
+                "from": "sessions",
+                "to": "app",
+                "label": "Confirm session"
+              },
+              {
+                "id": "lb-app-b",
+                "from": "lb",
+                "to": "app-b",
+                "label": "Route checkout to B"
+              },
+              {
+                "id": "app-b-lb",
+                "from": "app-b",
+                "to": "lb",
+                "label": "Return order response"
+              },
+              {
+                "id": "app-b-sessions",
+                "from": "app-b",
+                "to": "sessions",
+                "label": "Read shared session"
+              },
+              {
+                "id": "sessions-app-b",
+                "from": "sessions",
+                "to": "app-b",
+                "label": "Return session"
+              },
+              {
+                "id": "app-b-db",
+                "from": "app-b",
+                "to": "db",
+                "label": "Save order"
+              },
+              {
+                "id": "db-app-b",
+                "from": "db",
+                "to": "app-b",
+                "label": "Confirm order saved"
+              }
+            ],
+            "flows": [
+              {
+                "id": "sign-in-on-a",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-sessions",
+                  "sessions-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "request",
+                "rate": 0.25,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "checkout-on-b",
+                "route": [
+                  "client-lb",
+                  "lb-app-b",
+                  "app-b-sessions",
+                  "sessions-app-b",
+                  "app-b-db",
+                  "db-app-b",
+                  "app-b-lb",
+                  "lb-client"
+                ],
+                "kind": "heavy",
+                "rate": 0.22,
+                "speed": 2.0,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "reads-and-writes",
+          "title": "Split reads and writes",
+          "description": "Many shoppers are browsing the same sneakers. The app can read the catalog from a replica, while Lia’s order goes to the primary. Follow the order confirmation back to her phone and the separate replication stream. If replication lags, the order page reads the primary to show the purchase she just made.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -34,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Load balancer",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -23,
+                "z": 0
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -11,
+                "z": 0
+              },
+              {
+                "id": "db",
+                "label": "Primary database",
+                "role": "database",
+                "color": "lavender",
+                "x": 3,
+                "z": 0,
+                "technology": "postgresql"
+              },
+              {
+                "id": "replica",
+                "label": "Read replica",
+                "role": "database",
+                "color": "lavender",
+                "x": 3,
+                "z": -13,
+                "technology": "postgresql"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-lb",
+                "from": "client",
+                "to": "lb",
+                "label": "Send store request"
+              },
+              {
+                "id": "lb-app",
+                "from": "lb",
+                "to": "app",
+                "label": "Forward to app server"
+              },
+              {
+                "id": "app-lb",
+                "from": "app",
+                "to": "lb",
+                "label": "Return store response"
+              },
+              {
+                "id": "lb-client",
+                "from": "lb",
+                "to": "client",
+                "label": "Respond to the phone"
+              },
+              {
+                "id": "app-db",
+                "from": "app",
+                "to": "db",
+                "label": "Read or save order data"
+              },
+              {
+                "id": "db-app",
+                "from": "db",
+                "to": "app",
+                "label": "Return data or confirm save"
+              },
+              {
+                "id": "app-replica",
+                "from": "app",
+                "to": "replica",
+                "label": "Read product catalog"
+              },
+              {
+                "id": "replica-app",
+                "from": "replica",
+                "to": "app",
+                "label": "Return catalog data"
+              },
+              {
+                "id": "db-replica",
+                "from": "db",
+                "to": "replica",
+                "label": "Replicate committed writes"
+              }
+            ],
+            "flows": [
+              {
+                "id": "browse-catalog",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-replica",
+                  "replica-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "request",
+                "rate": 0.27,
+                "speed": 1.9,
+                "bounce": false
+              },
+              {
+                "id": "write-order",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-db",
+                  "db-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "heavy",
+                "rate": 0.22,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "replication",
+                "route": [
+                  "db-replica"
+                ],
+                "kind": "request",
+                "rate": 0.2,
+                "speed": 1.6,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "cache-and-cdn",
+          "title": "Cache product data and serve images nearby",
+          "description": "Lia reopens the sneaker page. The app checks its product cache before reading the catalog database. Her phone fetches the sneaker image separately from the CDN. A miss sends each request to its own source. Watch the cache hit rate and use expiration or invalidation to limit stale product details.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -24,
+                "z": -11,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Load balancer",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -24,
+                "z": 3
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -12,
+                "z": 3
+              },
+              {
+                "id": "cache",
+                "label": "Product cache",
+                "role": "cache",
+                "color": "lavender",
+                "x": 0,
+                "z": 3,
+                "technology": "redis"
+              },
+              {
+                "id": "replica",
+                "label": "Catalog replica",
+                "role": "database",
+                "color": "lavender",
+                "x": 0,
+                "z": 16,
+                "technology": "postgresql"
+              },
+              {
+                "id": "cdn",
+                "label": "Image CDN",
+                "role": "cdn",
+                "color": "sky",
+                "x": -12,
+                "z": -11
+              },
+              {
+                "id": "origin",
+                "label": "Image origin",
+                "role": "storage",
+                "color": "sky",
+                "x": 0,
+                "z": -11
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-lb",
+                "from": "client",
+                "to": "lb",
+                "label": "Send store request"
+              },
+              {
+                "id": "lb-app",
+                "from": "lb",
+                "to": "app",
+                "label": "Forward to app server"
+              },
+              {
+                "id": "app-lb",
+                "from": "app",
+                "to": "lb",
+                "label": "Return store response"
+              },
+              {
+                "id": "lb-client",
+                "from": "lb",
+                "to": "client",
+                "label": "Respond to the phone"
+              },
+              {
+                "id": "app-cache",
+                "from": "app",
+                "to": "cache",
+                "label": "Look up or fill product cache"
+              },
+              {
+                "id": "cache-app",
+                "from": "cache",
+                "to": "app",
+                "label": "Return hit or miss"
+              },
+              {
+                "id": "app-replica",
+                "from": "app",
+                "to": "replica",
+                "label": "Read product on cache miss"
+              },
+              {
+                "id": "replica-app",
+                "from": "replica",
+                "to": "app",
+                "label": "Return product data"
+              },
+              {
+                "id": "client-cdn",
+                "from": "client",
+                "to": "cdn",
+                "label": "Request product image"
+              },
+              {
+                "id": "cdn-client",
+                "from": "cdn",
+                "to": "client",
+                "label": "Deliver product image"
+              },
+              {
+                "id": "cdn-origin",
+                "from": "cdn",
+                "to": "origin",
+                "label": "Fetch image on cache miss"
+              },
+              {
+                "id": "origin-cdn",
+                "from": "origin",
+                "to": "cdn",
+                "label": "Return image to CDN"
+              }
+            ],
+            "flows": [
+              {
+                "id": "product-cache-hit",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-cache",
+                  "cache-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "request",
+                "rate": 0.26,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "product-cache-miss",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-cache",
+                  "cache-app",
+                  "app-replica",
+                  "replica-app",
+                  "app-cache",
+                  "cache-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "heavy",
+                "rate": 0.2,
+                "speed": 2.1,
+                "bounce": false
+              },
+              {
+                "id": "image-cache-hit",
+                "route": [
+                  "client-cdn",
+                  "cdn-client"
+                ],
+                "kind": "request",
+                "rate": 0.24,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "image-cache-miss",
+                "route": [
+                  "client-cdn",
+                  "cdn-origin",
+                  "origin-cdn",
+                  "cdn-client"
+                ],
+                "kind": "heavy",
+                "rate": 0.2,
+                "speed": 1.9,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "queue-receipt",
+          "title": "Confirm the order and queue the email",
+          "description": "During the sale, slow email delivery starts delaying checkout. The app now saves Lia’s order and a receipt event in one database transaction, then says the order is placed. A relay publishes the event and a worker sends the email later. Watch queue depth to spot a backlog. The worker deduplicates retried delivery by order ID.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -29,
+                "z": -11,
+                "technology": "android"
+              },
+              {
+                "id": "lb",
+                "label": "Load balancer",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -17,
+                "z": -11
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -5,
+                "z": -11
+              },
+              {
+                "id": "db",
+                "label": "Orders + outbox",
+                "role": "database",
+                "color": "lavender",
+                "x": -5,
+                "z": 3,
+                "technology": "postgresql"
+              },
+              {
+                "id": "relay",
+                "label": "Publish job",
+                "role": "service",
+                "color": "peach",
+                "x": 7,
+                "z": 3
+              },
+              {
+                "id": "queue",
+                "label": "Email queue",
+                "role": "queue",
+                "color": "peach",
+                "x": 19,
+                "z": 3
+              },
+              {
+                "id": "worker",
+                "label": "Email worker",
+                "role": "worker",
+                "color": "peach",
+                "x": 31,
+                "z": 3
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-lb",
+                "from": "client",
+                "to": "lb",
+                "label": "Send store request"
+              },
+              {
+                "id": "lb-app",
+                "from": "lb",
+                "to": "app",
+                "label": "Forward to app server"
+              },
+              {
+                "id": "app-lb",
+                "from": "app",
+                "to": "lb",
+                "label": "Return store response"
+              },
+              {
+                "id": "lb-client",
+                "from": "lb",
+                "to": "client",
+                "label": "Respond to the phone"
+              },
+              {
+                "id": "app-db",
+                "from": "app",
+                "to": "db",
+                "label": "Save order and outbox event"
+              },
+              {
+                "id": "db-app",
+                "from": "db",
+                "to": "app",
+                "label": "Confirm order commit"
+              },
+              {
+                "id": "db-relay",
+                "from": "db",
+                "to": "relay",
+                "label": "Read committed outbox event"
+              },
+              {
+                "id": "relay-queue",
+                "from": "relay",
+                "to": "queue",
+                "label": "Publish receipt job"
+              },
+              {
+                "id": "queue-worker",
+                "from": "queue",
+                "to": "worker",
+                "label": "Deliver receipt job"
+              },
+              {
+                "id": "worker-queue",
+                "from": "worker",
+                "to": "queue",
+                "label": "Acknowledge after sending"
+              }
+            ],
+            "flows": [
+              {
+                "id": "confirm-order",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-db",
+                  "db-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "request",
+                "rate": 0.29,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "deliver-receipt",
+                "route": [
+                  "db-relay",
+                  "relay-queue",
+                  "queue-worker",
+                  "worker-queue"
+                ],
+                "kind": "heavy",
+                "rate": 0.23,
+                "speed": 1.8,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "shard-orders",
+          "title": "Split orders across shards",
+          "description": "Lia is one of many shoppers buying the same product. Even with read replicas, one orders primary can become a write bottleneck. The app now routes orders by a hash of order ID, so orders for that same sneaker can land on different shards. Lia’s order goes to B in this example. A store-wide sales report now needs data from both shards.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -28,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -15,
+                "z": 0
+              },
+              {
+                "id": "router",
+                "label": "Order router",
+                "role": "gateway",
+                "color": "lavender",
+                "x": -2,
+                "z": 0
+              },
+              {
+                "id": "shard-a",
+                "label": "Orders shard A",
+                "role": "database",
+                "color": "lavender",
+                "x": 13,
+                "z": -11,
+                "technology": "postgresql"
+              },
+              {
+                "id": "shard-b",
+                "label": "Orders shard B",
+                "role": "database",
+                "color": "lavender",
+                "x": 13,
+                "z": 11,
+                "technology": "postgresql"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-app",
+                "from": "client",
+                "to": "app",
+                "label": "Send store request"
+              },
+              {
+                "id": "app-client",
+                "from": "app",
+                "to": "client",
+                "label": "Return store response"
+              },
+              {
+                "id": "app-router",
+                "from": "app",
+                "to": "router",
+                "label": "Route order by ID"
+              },
+              {
+                "id": "router-app",
+                "from": "router",
+                "to": "app",
+                "label": "Return saved order"
+              },
+              {
+                "id": "router-shard-a",
+                "from": "router",
+                "to": "shard-a",
+                "label": "Write to shard A"
+              },
+              {
+                "id": "shard-a-router",
+                "from": "shard-a",
+                "to": "router",
+                "label": "Confirm shard A write"
+              },
+              {
+                "id": "router-shard-b",
+                "from": "router",
+                "to": "shard-b",
+                "label": "Write to shard B"
+              },
+              {
+                "id": "shard-b-router",
+                "from": "shard-b",
+                "to": "router",
+                "label": "Confirm shard B write"
+              }
+            ],
+            "flows": [
+              {
+                "id": "lia-orders-on-b",
+                "route": [
+                  "client-app",
+                  "app-router",
+                  "router-shard-b",
+                  "shard-b-router",
+                  "router-app",
+                  "app-client"
+                ],
+                "kind": "request",
+                "rate": 0.28,
+                "speed": 1.85,
+                "bounce": false
+              },
+              {
+                "id": "other-order-ids",
+                "route": [
+                  "router-shard-a",
+                  "shard-a-router"
+                ],
+                "kind": "heavy",
+                "rate": 0.2,
+                "speed": 1.6,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "survive-region-outage",
+          "title": "Keep the store reachable during an outage",
+          "description": "Lia retries checkout after the primary region stops responding. Once the standby app is ready and its copy of the orders data is promoted for writes, DNS can point new lookups to the standby region. Existing DNS caches and replication lag can delay recovery. The retry reuses the same order ID so that a previous save can be recognized from the recovered data.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -29,
+                "z": 0,
+                "technology": "android"
+              },
+              {
+                "id": "dns",
+                "label": "Failover DNS",
+                "role": "external",
+                "color": "sky",
+                "x": -29,
+                "z": -15
+              },
+              {
+                "id": "app",
+                "label": "Primary app",
+                "role": "service",
+                "color": "sage",
+                "x": -9,
+                "z": -10,
+                "group": "Primary region"
+              },
+              {
+                "id": "db",
+                "label": "Primary orders",
+                "role": "database",
+                "color": "lavender",
+                "x": 6,
+                "z": -10,
+                "technology": "postgresql",
+                "group": "Primary region"
+              },
+              {
+                "id": "standby-app",
+                "label": "Standby app",
+                "role": "service",
+                "color": "sand",
+                "x": -9,
+                "z": 10,
+                "group": "Standby region"
+              },
+              {
+                "id": "standby-db",
+                "label": "Standby orders",
+                "role": "database",
+                "color": "sand",
+                "x": 6,
+                "z": 10,
+                "technology": "postgresql",
+                "group": "Standby region"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-dns",
+                "from": "client",
+                "to": "dns",
+                "label": "Resolve the store address"
+              },
+              {
+                "id": "dns-client",
+                "from": "dns",
+                "to": "client",
+                "label": "Return healthy region address"
+              },
+              {
+                "id": "client-app",
+                "from": "client",
+                "to": "app",
+                "label": "Request fails in primary region"
+              },
+              {
+                "id": "app-db",
+                "from": "app",
+                "to": "db",
+                "label": "Write orders when healthy"
+              },
+              {
+                "id": "db-standby-db",
+                "from": "db",
+                "to": "standby-db",
+                "label": "Replicate before outage"
+              },
+              {
+                "id": "client-standby-app",
+                "from": "client",
+                "to": "standby-app",
+                "label": "Retry checkout in standby region"
+              },
+              {
+                "id": "standby-app-standby-db",
+                "from": "standby-app",
+                "to": "standby-db",
+                "label": "Save after promotion"
+              },
+              {
+                "id": "standby-db-standby-app",
+                "from": "standby-db",
+                "to": "standby-app",
+                "label": "Confirm saved order"
+              },
+              {
+                "id": "standby-app-client",
+                "from": "standby-app",
+                "to": "client",
+                "label": "Return order confirmation"
+              }
+            ],
+            "flows": [
+              {
+                "id": "failed-primary-request",
+                "route": [
+                  "client-app"
+                ],
+                "kind": "failure",
+                "rate": 0.22,
+                "speed": 1.7,
+                "bounce": false
+              },
+              {
+                "id": "resolve-standby",
+                "route": [
+                  "client-dns",
+                  "dns-client"
+                ],
+                "kind": "request",
+                "rate": 0.24,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "retry-checkout",
+                "route": [
+                  "client-standby-app",
+                  "standby-app-standby-db",
+                  "standby-db-standby-app",
+                  "standby-app-client"
+                ],
+                "kind": "heavy",
+                "rate": 0.27,
+                "speed": 1.85,
+                "bounce": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "complete-architecture",
+          "title": "Follow one order through the full system",
+          "description": "Lia opens the sneaker page and buys it. Start at her phone, follow checkout through the app and order router to shard B, and watch the confirmation return. The committed outbox event then travels to the email worker. Pull back to see product caching, the second app server and the standby region. The highlighted order is one example route through this design.",
+          "metrics": [],
+          "cameraTour": [
+            {
+              "kind": "focus",
+              "x": -36,
+              "z": -3,
+              "span": 30,
+              "moveMs": 700,
+              "holdMs": 450,
+              "orientation": {
+                "yawDegrees": -46,
+                "pitchDegrees": 32
+              }
+            },
+            {
+              "kind": "focus",
+              "x": -6,
+              "z": 0,
+              "span": 36,
+              "moveMs": 2200,
+              "holdMs": 650
+            },
+            {
+              "kind": "focus",
+              "x": 30,
+              "z": -10,
+              "span": 42,
+              "moveMs": 2000,
+              "holdMs": 600
+            },
+            {
+              "kind": "fit",
+              "moveMs": 1400
+            }
+          ],
+          "scene": {
+            "nodes": [
+              {
+                "id": "client",
+                "label": "Mobile",
+                "role": "mobile",
+                "color": "sky",
+                "x": -46,
+                "z": 0,
+                "technology": "android",
+                "group": "1. Client & edge"
+              },
+              {
+                "id": "dns",
+                "label": "DNS",
+                "role": "external",
+                "color": "sky",
+                "x": -46,
+                "z": -13,
+                "group": "1. Client & edge"
+              },
+              {
+                "id": "cdn",
+                "label": "CDN",
+                "role": "cdn",
+                "color": "sky",
+                "x": -39,
+                "z": -25,
+                "group": "1. Client & edge"
+              },
+              {
+                "id": "origin",
+                "label": "Images",
+                "role": "storage",
+                "color": "sky",
+                "x": -26,
+                "z": -25,
+                "group": "1. Client & edge"
+              },
+              {
+                "id": "lb",
+                "label": "Balance traffic",
+                "role": "load-balancer",
+                "color": "sky",
+                "x": -33,
+                "z": 0,
+                "group": "1. Client & edge"
+              },
+              {
+                "id": "app",
+                "label": "Store app",
+                "role": "service",
+                "color": "sage",
+                "x": -20,
+                "z": 0,
+                "group": "2. App tier"
+              },
+              {
+                "id": "app-b",
+                "label": "App server B",
+                "role": "service",
+                "color": "sage",
+                "x": -22,
+                "z": 15,
+                "group": "2. App tier"
+              },
+              {
+                "id": "sessions",
+                "label": "Sessions",
+                "role": "cache",
+                "color": "sage",
+                "x": -8,
+                "z": 15,
+                "technology": "redis",
+                "group": "2. App tier"
+              },
+              {
+                "id": "cache",
+                "label": "Cache",
+                "role": "cache",
+                "color": "lavender",
+                "x": -5,
+                "z": -13,
+                "technology": "redis",
+                "group": "3. Data"
+              },
+              {
+                "id": "replica",
+                "label": "Catalog",
+                "role": "database",
+                "color": "lavender",
+                "x": 12,
+                "z": -13,
+                "technology": "postgresql",
+                "group": "3. Data"
+              },
+              {
+                "id": "router",
+                "label": "Route order",
+                "role": "gateway",
+                "color": "lavender",
+                "x": -5,
+                "z": 0,
+                "group": "3. Data"
+              },
+              {
+                "id": "shard-a",
+                "label": "Shard A",
+                "role": "database",
+                "color": "lavender",
+                "x": 12,
+                "z": 13,
+                "technology": "postgresql",
+                "group": "3. Data"
+              },
+              {
+                "id": "shard-b",
+                "label": "Shard B",
+                "role": "database",
+                "color": "lavender",
+                "x": 12,
+                "z": 0,
+                "technology": "postgresql",
+                "group": "3. Data"
+              },
+              {
+                "id": "relay",
+                "label": "Publish job",
+                "role": "service",
+                "color": "peach",
+                "x": 24,
+                "z": -14,
+                "group": "4. Email jobs"
+              },
+              {
+                "id": "queue",
+                "label": "Email queue",
+                "role": "queue",
+                "color": "peach",
+                "x": 36,
+                "z": -14,
+                "group": "4. Email jobs"
+              },
+              {
+                "id": "worker",
+                "label": "Send email",
+                "role": "worker",
+                "color": "peach",
+                "x": 48,
+                "z": -14,
+                "group": "4. Email jobs"
+              },
+              {
+                "id": "standby-app",
+                "label": "Standby app",
+                "role": "service",
+                "color": "sand",
+                "x": -7,
+                "z": 31,
+                "group": "5. Standby"
+              },
+              {
+                "id": "standby-db",
+                "label": "Standby data",
+                "role": "database",
+                "color": "sand",
+                "x": 20,
+                "z": 31,
+                "technology": "postgresql",
+                "group": "5. Standby"
+              }
+            ],
+            "edges": [
+              {
+                "id": "client-lb",
+                "from": "client",
+                "to": "lb",
+                "label": "Send store request"
+              },
+              {
+                "id": "lb-app",
+                "from": "lb",
+                "to": "app",
+                "label": "Forward to app server"
+              },
+              {
+                "id": "app-lb",
+                "from": "app",
+                "to": "lb",
+                "label": "Return store response"
+              },
+              {
+                "id": "lb-client",
+                "from": "lb",
+                "to": "client",
+                "label": "Respond to the phone"
+              },
+              {
+                "id": "client-dns",
+                "from": "client",
+                "to": "dns",
+                "label": "Resolve the store address"
+              },
+              {
+                "id": "dns-client",
+                "from": "dns",
+                "to": "client",
+                "label": "Return healthy region address"
+              },
+              {
+                "id": "client-cdn",
+                "from": "client",
+                "to": "cdn",
+                "label": "Request product image"
+              },
+              {
+                "id": "cdn-client",
+                "from": "cdn",
+                "to": "client",
+                "label": "Deliver product image"
+              },
+              {
+                "id": "cdn-origin",
+                "from": "cdn",
+                "to": "origin",
+                "label": "Fetch image on cache miss"
+              },
+              {
+                "id": "origin-cdn",
+                "from": "origin",
+                "to": "cdn",
+                "label": "Return image to CDN"
+              },
+              {
+                "id": "app-cache",
+                "from": "app",
+                "to": "cache",
+                "label": "Look up or fill product cache"
+              },
+              {
+                "id": "cache-app",
+                "from": "cache",
+                "to": "app",
+                "label": "Return hit or miss"
+              },
+              {
+                "id": "app-replica",
+                "from": "app",
+                "to": "replica",
+                "label": "Read product on cache miss"
+              },
+              {
+                "id": "replica-app",
+                "from": "replica",
+                "to": "app",
+                "label": "Return product data"
+              },
+              {
+                "id": "app-router",
+                "from": "app",
+                "to": "router",
+                "label": "Route order by ID"
+              },
+              {
+                "id": "router-app",
+                "from": "router",
+                "to": "app",
+                "label": "Return saved order"
+              },
+              {
+                "id": "router-shard-a",
+                "from": "router",
+                "to": "shard-a",
+                "label": "Write to shard A"
+              },
+              {
+                "id": "shard-a-router",
+                "from": "shard-a",
+                "to": "router",
+                "label": "Confirm shard A write"
+              },
+              {
+                "id": "router-shard-b",
+                "from": "router",
+                "to": "shard-b",
+                "label": "Write to shard B"
+              },
+              {
+                "id": "shard-b-router",
+                "from": "shard-b",
+                "to": "router",
+                "label": "Confirm shard B write"
+              },
+              {
+                "id": "lb-app-b",
+                "from": "lb",
+                "to": "app-b",
+                "label": "Send another request to B"
+              },
+              {
+                "id": "app-b-sessions",
+                "from": "app-b",
+                "to": "sessions",
+                "label": "Read shared session"
+              },
+              {
+                "id": "app-sessions",
+                "from": "app",
+                "to": "sessions",
+                "label": "Read shared session"
+              },
+              {
+                "id": "shard-b-relay",
+                "from": "shard-b",
+                "to": "relay",
+                "label": "Read committed outbox event"
+              },
+              {
+                "id": "shard-b-standby-db",
+                "from": "shard-b",
+                "to": "standby-db",
+                "label": "Replicate orders before outage"
+              },
+              {
+                "id": "relay-queue",
+                "from": "relay",
+                "to": "queue",
+                "label": "Publish receipt job"
+              },
+              {
+                "id": "queue-worker",
+                "from": "queue",
+                "to": "worker",
+                "label": "Deliver receipt job"
+              },
+              {
+                "id": "worker-queue",
+                "from": "worker",
+                "to": "queue",
+                "label": "Acknowledge after sending"
+              },
+              {
+                "id": "client-standby-app",
+                "from": "client",
+                "to": "standby-app",
+                "label": "Retry checkout in standby region"
+              },
+              {
+                "id": "standby-app-standby-db",
+                "from": "standby-app",
+                "to": "standby-db",
+                "label": "Save after promotion"
+              },
+              {
+                "id": "standby-db-standby-app",
+                "from": "standby-db",
+                "to": "standby-app",
+                "label": "Confirm saved order"
+              },
+              {
+                "id": "standby-app-client",
+                "from": "standby-app",
+                "to": "client",
+                "label": "Return order confirmation"
+              }
+            ],
+            "flows": [
+              {
+                "id": "follow-checkout",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-router",
+                  "router-shard-b",
+                  "shard-b-router",
+                  "router-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "heavy",
+                "rate": 0.28,
+                "speed": 2.15,
+                "bounce": false
+              },
+              {
+                "id": "serve-cached-product",
+                "route": [
+                  "client-lb",
+                  "lb-app",
+                  "app-cache",
+                  "cache-app",
+                  "app-lb",
+                  "lb-client"
+                ],
+                "kind": "request",
+                "rate": 0.24,
+                "speed": 1.85,
+                "bounce": false
+              },
+              {
+                "id": "serve-image",
+                "route": [
+                  "client-cdn",
+                  "cdn-origin",
+                  "origin-cdn",
+                  "cdn-client"
+                ],
+                "kind": "request",
+                "rate": 0.22,
+                "speed": 1.8,
+                "bounce": false
+              },
+              {
+                "id": "email-after-order",
+                "route": [
+                  "shard-b-relay",
+                  "relay-queue",
+                  "queue-worker",
+                  "worker-queue"
+                ],
+                "kind": "request",
+                "rate": 0.27,
+                "speed": 1.9,
+                "bounce": false
+              }
+            ],
+            "groups": [
+              {
+                "name": "1. Client & edge",
+                "color": "#4478D7"
+              },
+              {
+                "name": "2. App tier",
+                "color": "#168C7D"
+              },
+              {
+                "name": "3. Data",
+                "color": "#7955C5"
+              },
+              {
+                "name": "4. Email jobs",
+                "color": "#269BBE"
+              },
+              {
+                "name": "5. Standby",
+                "color": "#6275BE"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

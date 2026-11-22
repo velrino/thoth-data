@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "type": "study",
+  "groupName": "Scaling",
+  "pattern": "Scaling a web store",
+  "summary": "Follow Lia’s sneaker order as a one-server store adds capacity, queues and regional recovery.",
+  "scope": "An illustrative store based on the scaling chapter of system-design-notes. Each scene highlights one architectural decision. The diagrams show example routes and contain no measured traffic or capacity claims.",
+  "author": "Thoth",
+  "sources": [
+    {
+      "title": "System Design Notes · Scaling",
+      "url": "https://github.com/velrino/system-design-notes/blob/9d8388721e7231442763ad37398b8d82224aa68f/01.%20Scaling/Readme.md"
+    },
+    {
+      "title": "PostgreSQL · Standby servers and streaming replication",
+      "url": "https://www.postgresql.org/docs/current/warm-standby.html"
+    },
+    {
+      "title": "Amazon CloudFront · How CloudFront delivers content",
+      "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowCloudFrontWorks.html"
+    },
+    {
+      "title": "AWS Prescriptive Guidance · Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+    },
+    {
+      "title": "Amazon Route 53 · Active-passive failover",
+      "url": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-types.html"
+    }
+  ],
+  "componentNotes": {
+    "client": "Lia uses the same product page and checkout across all nine steps. The store and its workload are illustrative.",
+    "lb": "Routes API requests to healthy app servers in the active region. The DNS failover step covers switching regions.",
+    "sessions": "Sign-in state lives in a shared store, so another app server can serve the next request.",
+    "replica": "A lagging replica can show older data. Read the primary for a purchase just confirmed to the customer.",
+    "cache": "The app caches product details on read. Cache expiration and invalidation determine how long a change can be missing from the cached view.",
+    "cdn": "An edge hit returns the image near the viewer. On a miss the CDN fetches the object from the origin.",
+    "relay": "Reads committed outbox rows and publishes receipt jobs. Storing the event with the order avoids losing it between the database commit and publishing.",
+    "worker": "The worker uses the order ID to recognize retried jobs and acknowledges delivery after the receipt is sent.",
+    "router": "This example routes by a hash of order ID at the application layer. Cross-shard reporting needs a separate query or aggregation strategy.",
+    "dns": "This example uses active-passive DNS failover. DNS supplies an address. The phone then sends the HTTPS checkout to the chosen destination.",
+    "standby-db": "A replicated copy must be safe to promote before the standby region accepts checkout writes. In an asynchronous design, recent commits can be missing from the recovered copy."
+  }
+}

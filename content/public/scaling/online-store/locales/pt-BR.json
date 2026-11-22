@@ -1,0 +1,575 @@
+{
+  "schemaVersion": 1,
+  "title": "Como escalar uma loja online",
+  "groupName": "Escalabilidade",
+  "pattern": "Escala de uma loja online",
+  "summary": "Acompanhe a compra do tênis da Lia enquanto a loja ganha capacidade, filas e recuperação regional.",
+  "scope": "Loja ilustrativa baseada no capítulo sobre escalabilidade de system-design-notes. Cada cena destaca uma decisão de arquitetura. Os diagramas mostram caminhos de exemplo, sem medições reais de tráfego ou capacidade.",
+  "componentNotes": {
+    "client": "Lia usa a mesma página de produto e o mesmo checkout nos nove passos. A loja e sua carga são exemplos.",
+    "lb": "Distribui chamadas da API entre servidores saudáveis da região ativa. O passo de DNS mostra a troca de região.",
+    "sessions": "A sessão fica num armazenamento compartilhado, então outro servidor pode atender a próxima requisição.",
+    "replica": "Uma réplica atrasada pode mostrar dados antigos. Consulte o primário pra mostrar uma compra acabada de confirmar.",
+    "cache": "O app guarda detalhes do produto em cache ao ler. A expiração e a invalidação determinam por quanto tempo uma atualização pode demorar a aparecer.",
+    "cdn": "Um acerto no cache de borda entrega a imagem perto de quem vê. Quando falta, a CDN busca o arquivo na origem.",
+    "relay": "Lê eventos confirmados na outbox e publica tarefas de recibo. Gravar o evento com o pedido evita perdê-lo entre salvar e publicar.",
+    "worker": "O worker usa o ID do pedido pra reconhecer novas tentativas e confirma a entrega da tarefa depois de enviar o recibo.",
+    "router": "Neste exemplo, a aplicação roteia pelo hash do ID do pedido. Relatórios entre shards precisam de uma estratégia própria de consulta ou agregação.",
+    "dns": "Neste exemplo, o DNS faz failover ativo-passivo. Ele informa um endereço. Depois o celular envia a compra por HTTPS ao destino escolhido.",
+    "standby-db": "A cópia replicada precisa poder ser promovida com segurança antes de a região de contingência aceitar compras. Com replicação assíncrona, gravações recentes podem faltar na cópia recuperada."
+  },
+  "steps": {
+    "one-server": {
+      "title": "Comece com um servidor",
+      "description": "Lia abre a página de um tênis e faz um pedido durante uma promoção. O celular manda as duas requisições ao app, que consulta ou grava no banco antes de responder. Os dois processos dividem um servidor. Com o aumento do tráfego, acompanhe o tempo de resposta e a disputa por CPU nessa máquina.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "db": {
+          "label": "Banco da loja"
+        }
+      },
+      "edges": {
+        "client-app": {
+          "label": "Enviar pedido à loja"
+        },
+        "app-client": {
+          "label": "Responder ao cliente"
+        },
+        "app-db": {
+          "label": "Ler ou salvar dados do pedido"
+        },
+        "db-app": {
+          "label": "Retornar dados ou confirmar gravação"
+        }
+      }
+    },
+    "separate-database": {
+      "title": "Dê um servidor próprio ao banco",
+      "description": "A mesma promoção aumenta o trabalho do banco. A equipe coloca o banco em outra máquina, então pode aumentar CPU ou memória só na camada que precisa. Lia continua esperando o pedido ser salvo. Agora há um salto de rede entre o app e o banco.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "db": {
+          "label": "Banco da loja"
+        }
+      },
+      "edges": {
+        "client-app": {
+          "label": "Enviar pedido à loja"
+        },
+        "app-client": {
+          "label": "Responder ao cliente"
+        },
+        "app-db": {
+          "label": "Ler ou salvar dados do pedido"
+        },
+        "db-app": {
+          "label": "Retornar dados ou confirmar gravação"
+        }
+      }
+    },
+    "second-app-server": {
+      "title": "Adicione um segundo servidor de app",
+      "description": "O app ainda fica lento quando muita gente chega de uma vez. O balanceador manda o login da Lia ao servidor A e a compra ao servidor B. Os dois usam o mesmo armazenamento de sessões, então ela continua conectada. Adicionar servidores aumenta a capacidade do app, e o armazenamento de sessões vira uma dependência a observar.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Balanceador"
+        },
+        "app": {
+          "label": "Servidor A"
+        },
+        "sessions": {
+          "label": "Sessões compartilhadas"
+        },
+        "app-b": {
+          "label": "Servidor B"
+        },
+        "db": {
+          "label": "Banco primário"
+        }
+      },
+      "edges": {
+        "client-lb": {
+          "label": "Enviar próxima requisição"
+        },
+        "lb-client": {
+          "label": "Responder ao celular"
+        },
+        "lb-app": {
+          "label": "Enviar login para A"
+        },
+        "app-lb": {
+          "label": "Devolver resposta do login"
+        },
+        "app-sessions": {
+          "label": "Salvar sessão"
+        },
+        "sessions-app": {
+          "label": "Confirmar sessão"
+        },
+        "lb-app-b": {
+          "label": "Enviar compra para B"
+        },
+        "app-b-lb": {
+          "label": "Devolver resposta do pedido"
+        },
+        "app-b-sessions": {
+          "label": "Consultar sessão compartilhada"
+        },
+        "sessions-app-b": {
+          "label": "Retornar sessão"
+        },
+        "app-b-db": {
+          "label": "Salvar pedido"
+        },
+        "db-app-b": {
+          "label": "Confirmar pedido salvo"
+        }
+      }
+    },
+    "reads-and-writes": {
+      "title": "Separe leituras e gravações",
+      "description": "Muita gente está olhando o mesmo tênis. O app pode ler o catálogo de uma réplica, enquanto o pedido da Lia vai ao primário. Siga a confirmação até o celular e o fluxo separado de replicação. Se a réplica estiver atrasada, a página do pedido consulta o primário pra mostrar a compra que ela acabou de fazer.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Balanceador"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "db": {
+          "label": "Banco primário"
+        },
+        "replica": {
+          "label": "Réplica de leitura"
+        }
+      },
+      "edges": {
+        "client-lb": {
+          "label": "Enviar pedido à loja"
+        },
+        "lb-app": {
+          "label": "Encaminhar ao servidor"
+        },
+        "app-lb": {
+          "label": "Devolver resposta"
+        },
+        "lb-client": {
+          "label": "Responder ao celular"
+        },
+        "app-db": {
+          "label": "Ler ou salvar dados do pedido"
+        },
+        "db-app": {
+          "label": "Retornar dados ou confirmar gravação"
+        },
+        "app-replica": {
+          "label": "Ler catálogo de produtos"
+        },
+        "replica-app": {
+          "label": "Retornar dados do catálogo"
+        },
+        "db-replica": {
+          "label": "Replicar gravações confirmadas"
+        }
+      }
+    },
+    "cache-and-cdn": {
+      "title": "Use cache para produtos e uma CDN para imagens",
+      "description": "Lia reabre a página do tênis. O app consulta o cache de produtos antes de ler o banco do catálogo. O celular busca a foto separadamente na CDN. Quando há uma falta, cada requisição vai à sua própria origem. Acompanhe a taxa de acerto e use expiração ou invalidação pra limitar dados desatualizados.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Balanceador"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "cache": {
+          "label": "Cache de produtos"
+        },
+        "replica": {
+          "label": "Réplica do catálogo"
+        },
+        "cdn": {
+          "label": "CDN de imagens"
+        },
+        "origin": {
+          "label": "Origem das imagens"
+        }
+      },
+      "edges": {
+        "client-lb": {
+          "label": "Enviar pedido à loja"
+        },
+        "lb-app": {
+          "label": "Encaminhar ao servidor"
+        },
+        "app-lb": {
+          "label": "Devolver resposta"
+        },
+        "lb-client": {
+          "label": "Responder ao celular"
+        },
+        "app-cache": {
+          "label": "Consultar ou preencher cache do produto"
+        },
+        "cache-app": {
+          "label": "Retornar acerto ou falta"
+        },
+        "app-replica": {
+          "label": "Ler produto quando faltar no cache"
+        },
+        "replica-app": {
+          "label": "Retornar dados do produto"
+        },
+        "client-cdn": {
+          "label": "Pedir imagem do produto"
+        },
+        "cdn-client": {
+          "label": "Entregar imagem do produto"
+        },
+        "cdn-origin": {
+          "label": "Buscar imagem quando o cache falhar"
+        },
+        "origin-cdn": {
+          "label": "Retornar imagem à CDN"
+        }
+      }
+    },
+    "queue-receipt": {
+      "title": "Confirme o pedido e coloque o e-mail na fila",
+      "description": "Durante a promoção, a demora do e-mail começa a atrasar a compra. O app agora salva o pedido da Lia e um evento de recibo na mesma transação e confirma a compra. Um publicador envia o evento, e um worker entrega o e-mail depois. A profundidade da fila mostra o acúmulo. O worker evita e-mails duplicados usando o ID do pedido.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "lb": {
+          "label": "Balanceador"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "db": {
+          "label": "Pedidos e outbox"
+        },
+        "relay": {
+          "label": "Publicador"
+        },
+        "queue": {
+          "label": "Fila de e-mails"
+        },
+        "worker": {
+          "label": "Worker de e-mail"
+        }
+      },
+      "edges": {
+        "client-lb": {
+          "label": "Enviar pedido à loja"
+        },
+        "lb-app": {
+          "label": "Encaminhar ao servidor"
+        },
+        "app-lb": {
+          "label": "Devolver resposta"
+        },
+        "lb-client": {
+          "label": "Responder ao celular"
+        },
+        "app-db": {
+          "label": "Salvar pedido e evento na outbox"
+        },
+        "db-app": {
+          "label": "Confirmar gravação do pedido"
+        },
+        "db-relay": {
+          "label": "Ler evento confirmado na outbox"
+        },
+        "relay-queue": {
+          "label": "Publicar tarefa de e-mail"
+        },
+        "queue-worker": {
+          "label": "Entregar tarefa de e-mail"
+        },
+        "worker-queue": {
+          "label": "Confirmar depois de enviar"
+        }
+      }
+    },
+    "shard-orders": {
+      "title": "Distribua pedidos entre shards",
+      "description": "Lia é uma de muitas pessoas comprando o mesmo tênis. Mesmo com réplicas de leitura, um primário de pedidos pode saturar nas gravações. O app passa a rotear pedidos pelo hash do ID do pedido, então compras do mesmo tênis podem ir pra shards diferentes. Neste exemplo, o pedido da Lia vai pro B. Um relatório de vendas da loja inteira agora precisa dos dois shards.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "router": {
+          "label": "Roteador de pedidos"
+        },
+        "shard-a": {
+          "label": "Shard A de pedidos"
+        },
+        "shard-b": {
+          "label": "Shard B de pedidos"
+        }
+      },
+      "edges": {
+        "client-app": {
+          "label": "Enviar pedido à loja"
+        },
+        "app-client": {
+          "label": "Responder ao cliente"
+        },
+        "app-router": {
+          "label": "Rotear pedido pelo ID"
+        },
+        "router-app": {
+          "label": "Retornar pedido gravado"
+        },
+        "router-shard-a": {
+          "label": "Gravar no shard A"
+        },
+        "shard-a-router": {
+          "label": "Confirmar gravação no shard A"
+        },
+        "router-shard-b": {
+          "label": "Gravar no shard B"
+        },
+        "shard-b-router": {
+          "label": "Confirmar gravação no shard B"
+        }
+      }
+    },
+    "survive-region-outage": {
+      "title": "Mantenha a loja acessível se uma região cair",
+      "description": "Lia tenta finalizar a compra de novo quando a região principal para de responder. Depois que o app de contingência está pronto e a cópia dos dados de pedidos é promovida pra aceitar gravações, o DNS pode apontar novas consultas pra essa região. Cache de DNS e atraso de replicação podem atrasar a recuperação. A nova tentativa usa o mesmo ID pra reconhecer um pedido já salvo que esteja nos dados recuperados.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "dns": {
+          "label": "DNS de contingência"
+        },
+        "app": {
+          "label": "App principal"
+        },
+        "db": {
+          "label": "Pedidos no primário"
+        },
+        "standby-app": {
+          "label": "App de contingência"
+        },
+        "standby-db": {
+          "label": "Réplica de pedidos"
+        }
+      },
+      "edges": {
+        "client-dns": {
+          "label": "Resolver endereço da loja"
+        },
+        "dns-client": {
+          "label": "Retornar endereço da região saudável"
+        },
+        "client-app": {
+          "label": "Requisição falha na região principal"
+        },
+        "app-db": {
+          "label": "Gravar pedidos quando saudável"
+        },
+        "db-standby-db": {
+          "label": "Replicar antes da queda"
+        },
+        "client-standby-app": {
+          "label": "Tentar compra na região de contingência"
+        },
+        "standby-app-standby-db": {
+          "label": "Gravar após promoção"
+        },
+        "standby-db-standby-app": {
+          "label": "Confirmar pedido gravado"
+        },
+        "standby-app-client": {
+          "label": "Retornar confirmação do pedido"
+        }
+      }
+    },
+    "complete-architecture": {
+      "title": "Siga um pedido pelo sistema completo",
+      "description": "Lia abre a página do tênis e faz o pedido. Comece no celular, siga a compra pelo app e pelo roteador até o shard B e veja a confirmação voltar. O evento gravado na outbox segue pro worker de e-mail. Afaste a câmera pra ver o cache de produtos, o segundo servidor e a região de contingência. O pedido em destaque é um exemplo de caminho nessa arquitetura.",
+      "nodes": {
+        "client": {
+          "label": "Celular"
+        },
+        "dns": {
+          "label": "DNS"
+        },
+        "cdn": {
+          "label": "CDN"
+        },
+        "origin": {
+          "label": "Imagens"
+        },
+        "lb": {
+          "label": "Distribuir tráfego"
+        },
+        "app": {
+          "label": "App da loja"
+        },
+        "app-b": {
+          "label": "Servidor B"
+        },
+        "sessions": {
+          "label": "Sessões"
+        },
+        "cache": {
+          "label": "Cache"
+        },
+        "replica": {
+          "label": "Catálogo"
+        },
+        "router": {
+          "label": "Rotear pedido"
+        },
+        "shard-a": {
+          "label": "Shard A"
+        },
+        "shard-b": {
+          "label": "Shard B"
+        },
+        "relay": {
+          "label": "Publicar tarefa"
+        },
+        "queue": {
+          "label": "Fila de e-mail"
+        },
+        "worker": {
+          "label": "Enviar e-mail"
+        },
+        "standby-app": {
+          "label": "App de contingência"
+        },
+        "standby-db": {
+          "label": "Dados reserva"
+        }
+      },
+      "edges": {
+        "client-lb": {
+          "label": "Enviar pedido à loja"
+        },
+        "lb-app": {
+          "label": "Encaminhar ao servidor"
+        },
+        "app-lb": {
+          "label": "Devolver resposta"
+        },
+        "lb-client": {
+          "label": "Responder ao celular"
+        },
+        "client-dns": {
+          "label": "Resolver endereço da loja"
+        },
+        "dns-client": {
+          "label": "Retornar endereço da região saudável"
+        },
+        "client-cdn": {
+          "label": "Pedir imagem do produto"
+        },
+        "cdn-client": {
+          "label": "Entregar imagem do produto"
+        },
+        "cdn-origin": {
+          "label": "Buscar imagem quando o cache falhar"
+        },
+        "origin-cdn": {
+          "label": "Retornar imagem à CDN"
+        },
+        "app-cache": {
+          "label": "Consultar ou preencher cache do produto"
+        },
+        "cache-app": {
+          "label": "Retornar acerto ou falta"
+        },
+        "app-replica": {
+          "label": "Ler produto quando faltar no cache"
+        },
+        "replica-app": {
+          "label": "Retornar dados do produto"
+        },
+        "app-router": {
+          "label": "Rotear pedido pelo ID"
+        },
+        "router-app": {
+          "label": "Retornar pedido gravado"
+        },
+        "router-shard-a": {
+          "label": "Gravar no shard A"
+        },
+        "shard-a-router": {
+          "label": "Confirmar gravação no shard A"
+        },
+        "router-shard-b": {
+          "label": "Gravar no shard B"
+        },
+        "shard-b-router": {
+          "label": "Confirmar gravação no shard B"
+        },
+        "lb-app-b": {
+          "label": "Enviar outra requisição ao B"
+        },
+        "app-b-sessions": {
+          "label": "Consultar sessão compartilhada"
+        },
+        "app-sessions": {
+          "label": "Consultar sessão compartilhada"
+        },
+        "shard-b-relay": {
+          "label": "Ler evento confirmado na outbox"
+        },
+        "shard-b-standby-db": {
+          "label": "Replicar pedidos antes da queda"
+        },
+        "relay-queue": {
+          "label": "Publicar tarefa de e-mail"
+        },
+        "queue-worker": {
+          "label": "Entregar tarefa de e-mail"
+        },
+        "worker-queue": {
+          "label": "Confirmar depois de enviar"
+        },
+        "client-standby-app": {
+          "label": "Tentar compra na região de contingência"
+        },
+        "standby-app-standby-db": {
+          "label": "Gravar após promoção"
+        },
+        "standby-db-standby-app": {
+          "label": "Confirmar pedido gravado"
+        },
+        "standby-app-client": {
+          "label": "Retornar confirmação do pedido"
+        }
+      }
+    }
+  }
+}
