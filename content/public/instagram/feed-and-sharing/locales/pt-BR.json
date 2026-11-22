@@ -240,7 +240,7 @@
     },
     "after-the-like": {
       "title": "Envie avisos e aprenda com a atividade",
-      "description": "Lia pode receber um aviso depois que a curtida do Bruno é salva. A fila deixa os workers entregarem o aviso sem prender o pedido original. Ao mesmo tempo, uma impressão ou evento de visualização pode seguir outro caminho, alimentar a análise agregada e virar um sinal para rankings futuros.",
+      "description": "A API do Instagram encaminha a curtida do Bruno para o serviço que a registra. Depois que a curtida é salva, o serviço de notificações coloca um aviso na fila para a Lia receber mais tarde. A atividade do feed segue outro caminho a partir da API, alimenta a análise de dados e vira um sinal para rankings futuros.",
       "nodes": {
         "like": {
           "label": "Registrar curtida"
@@ -271,6 +271,9 @@
         }
       },
       "edges": {
+        "api-like": {
+          "label": "Enviar curtida"
+        },
         "like-notify": {
           "label": "Avisar que a curtida foi salva"
         },

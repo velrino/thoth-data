@@ -48,16 +48,16 @@
                 "label": "Check identity",
                 "role": "service",
                 "color": "sky",
-                "x": -24,
-                "z": -20
+                "x": -14,
+                "z": 0
               },
               {
                 "id": "users",
                 "label": "Accounts",
                 "role": "database",
                 "color": "sky",
-                "x": -37,
-                "z": -20
+                "x": -4,
+                "z": 0
               },
               {
                 "id": "ios",
@@ -195,8 +195,8 @@
                 "label": "Android app",
                 "role": "mobile",
                 "color": "sky",
-                "x": -48,
-                "z": 0,
+                "x": -36,
+                "z": -13,
                 "technology": "android"
               },
               {
@@ -221,32 +221,32 @@
                 "label": "Build home feed",
                 "role": "service",
                 "color": "lavender",
-                "x": -7,
-                "z": -29
+                "x": -14,
+                "z": 0
               },
               {
                 "id": "cache",
                 "label": "Feed cache",
                 "role": "cache",
                 "color": "lavender",
-                "x": 8,
-                "z": -42
+                "x": -5,
+                "z": -9
               },
               {
                 "id": "posts",
                 "label": "Post records",
                 "role": "database",
                 "color": "lavender",
-                "x": 25,
-                "z": -29
+                "x": 4,
+                "z": 0
               },
               {
                 "id": "rank",
                 "label": "Rank posts",
                 "role": "worker",
                 "color": "lavender",
-                "x": 8,
-                "z": -23
+                "x": -2,
+                "z": 9
               }
             ],
             "edges": [
@@ -366,8 +366,8 @@
                 "label": "Android app",
                 "role": "mobile",
                 "color": "sky",
-                "x": -48,
-                "z": 0,
+                "x": -36,
+                "z": -13,
                 "technology": "android"
               },
               {
@@ -392,40 +392,40 @@
                 "label": "Accept video",
                 "role": "service",
                 "color": "sage",
-                "x": -7,
-                "z": -10
+                "x": -14,
+                "z": 0
               },
               {
                 "id": "encode",
                 "label": "Encode video",
                 "role": "worker",
                 "color": "sage",
-                "x": 8,
-                "z": -10
+                "x": -4,
+                "z": 0
               },
               {
                 "id": "storage",
                 "label": "Video storage",
                 "role": "storage",
                 "color": "sage",
-                "x": 25,
-                "z": -10
+                "x": -4,
+                "z": 14
               },
               {
                 "id": "posts",
                 "label": "Post records",
                 "role": "database",
                 "color": "lavender",
-                "x": 25,
-                "z": -29
+                "x": -14,
+                "z": 14
               },
               {
                 "id": "cdn",
                 "label": "Deliver video",
                 "role": "cdn",
                 "color": "sage",
-                "x": 42,
-                "z": -10
+                "x": 8,
+                "z": 14
               }
             ],
             "edges": [
@@ -541,7 +541,7 @@
                 "label": "Android app",
                 "role": "mobile",
                 "color": "sky",
-                "x": -48,
+                "x": -44,
                 "z": 0,
                 "technology": "android"
               },
@@ -550,7 +550,7 @@
                 "label": "Spread requests",
                 "role": "load-balancer",
                 "color": "sky",
-                "x": -36,
+                "x": -34,
                 "z": 0
               },
               {
@@ -567,16 +567,16 @@
                 "label": "Save a like",
                 "role": "service",
                 "color": "peach",
-                "x": -7,
-                "z": 10
+                "x": -14,
+                "z": 0
               },
               {
                 "id": "graph",
                 "label": "Social activity",
                 "role": "database",
                 "color": "peach",
-                "x": -7,
-                "z": 22
+                "x": -4,
+                "z": 0
               }
             ],
             "edges": [
@@ -653,7 +653,7 @@
         {
           "id": "after-the-like",
           "title": "Send alerts and learn from activity",
-          "description": "Lia can get an alert after Bruno’s like is saved. A queue lets the workers deliver it separately from the original request. Meanwhile, an impression or watch event can take a separate route into aggregate analytics and become a signal for later ranking.",
+          "description": "The Instagram API forwards Bruno’s like to the service that saves it. Once the like is saved, the notification service queues an alert for Lia to receive later. Feed activity follows a separate path from the API into analytics and becomes a signal for future ranking.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -662,32 +662,32 @@
                 "label": "Save a like",
                 "role": "service",
                 "color": "peach",
-                "x": -7,
-                "z": 10
+                "x": -13,
+                "z": 0
               },
               {
                 "id": "notify",
                 "label": "Request alert",
                 "role": "service",
                 "color": "peach",
-                "x": 8,
-                "z": 10
+                "x": -2,
+                "z": 0
               },
               {
                 "id": "queue",
                 "label": "Alert queue",
                 "role": "queue",
                 "color": "peach",
-                "x": 22,
-                "z": 10
+                "x": 9,
+                "z": 0
               },
               {
                 "id": "workers",
                 "label": "Send alerts",
                 "role": "worker",
                 "color": "peach",
-                "x": 42,
-                "z": 14
+                "x": 20,
+                "z": 0
               },
               {
                 "id": "api",
@@ -695,7 +695,7 @@
                 "role": "gateway",
                 "color": "sky",
                 "x": -24,
-                "z": 0,
+                "z": 6,
                 "technology": "django"
               },
               {
@@ -703,35 +703,41 @@
                 "label": "Collect events",
                 "role": "service",
                 "color": "sand",
-                "x": -7,
-                "z": 36
+                "x": -13,
+                "z": 12
               },
               {
                 "id": "stream",
                 "label": "Process events",
                 "role": "worker",
                 "color": "sand",
-                "x": 4,
-                "z": 36
+                "x": -2,
+                "z": 12
               },
               {
                 "id": "warehouse",
                 "label": "Analytics data",
                 "role": "database",
                 "color": "sand",
-                "x": 25,
-                "z": 36
+                "x": 9,
+                "z": 12
               },
               {
                 "id": "signals",
                 "label": "Ranking signals",
                 "role": "service",
                 "color": "sand",
-                "x": 42,
-                "z": 36
+                "x": 20,
+                "z": 12
               }
             ],
             "edges": [
+              {
+                "id": "api-like",
+                "from": "api",
+                "to": "like",
+                "label": "Submit a like"
+              },
               {
                 "id": "like-notify",
                 "from": "like",
@@ -779,6 +785,7 @@
               {
                 "id": "deliver-alert",
                 "route": [
+                  "api-like",
                   "like-notify",
                   "notify-queue",
                   "queue-workers"
