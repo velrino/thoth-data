@@ -986,7 +986,8 @@
                               "maxLength": 100
                             },
                             "label": { "type": "string", "maxLength": 80 },
-                            "notes": { "type": "string", "maxLength": 1000 }
+                            "notes": { "type": "string", "maxLength": 1000 },
+                            "bend": { "type": "number", "minimum": -24, "maximum": 24 }
                           },
                           "required": ["id", "from", "to", "label"],
                           "additionalProperties": false

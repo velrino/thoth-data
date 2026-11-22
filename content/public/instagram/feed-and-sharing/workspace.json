@@ -940,7 +940,7 @@
                 "role": "worker",
                 "color": "lavender",
                 "x": 8,
-                "z": -23,
+                "z": -29,
                 "group": "2. Home feed"
               },
               {
@@ -1030,7 +1030,7 @@
                 "role": "worker",
                 "color": "peach",
                 "x": 42,
-                "z": 14,
+                "z": 10,
                 "group": "4. Likes & alerts"
               },
               {
@@ -1123,7 +1123,8 @@
                 "id": "feed-posts",
                 "from": "feed",
                 "to": "posts",
-                "label": "Find candidate posts"
+                "label": "Find candidate posts",
+                "bend": -5
               },
               {
                 "id": "posts-rank",
