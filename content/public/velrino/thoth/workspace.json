@@ -29,8 +29,8 @@
                     "color": "sky",
                     "technology": "nextjs",
                     "appearance": "icon",
-                    "group": "Browser and local storage",
-                    "x": -18.2,
+                    "group": "Browser",
+                    "x": -17,
                     "z": 0
                   },
                   {
@@ -40,17 +40,17 @@
                     "color": "sky",
                     "technology": "vercel",
                     "appearance": "icon",
-                    "x": -18.2,
-                    "z": -9.799999999999999
+                    "x": -17,
+                    "z": -12
                   },
                   {
                     "id": "local",
                     "label": "On this device",
                     "role": "storage",
                     "color": "sand",
-                    "group": "Browser and local storage",
-                    "x": -18.2,
-                    "z": 9.450000000000001
+                    "group": "Browser",
+                    "x": -17,
+                    "z": 12
                   },
                   {
                     "id": "posthog",
@@ -59,7 +59,7 @@
                     "color": "sky",
                     "technology": "posthog",
                     "appearance": "icon",
-                    "x": -27.3,
+                    "x": -29,
                     "z": 0
                   },
                   {
@@ -69,9 +69,9 @@
                     "color": "sky",
                     "technology": "amazonwebservices",
                     "appearance": "icon",
-                    "group": "Lightsail API",
-                    "x": -8.049999999999999,
-                    "z": -3.15
+                    "group": "Lightsail",
+                    "x": -5,
+                    "z": 0
                   },
                   {
                     "id": "api",
@@ -80,9 +80,9 @@
                     "color": "sky",
                     "technology": "go",
                     "appearance": "icon",
-                    "group": "Lightsail API",
-                    "x": 0,
-                    "z": 3.15
+                    "group": "Lightsail",
+                    "x": 7,
+                    "z": 0
                   },
                   {
                     "id": "mongo",
@@ -91,8 +91,8 @@
                     "color": "sand",
                     "technology": "mongodb",
                     "appearance": "icon",
-                    "x": 8.049999999999999,
-                    "z": -10.5
+                    "x": 19,
+                    "z": -12
                   },
                   {
                     "id": "redis",
@@ -101,8 +101,8 @@
                     "color": "sky",
                     "technology": "redis",
                     "appearance": "icon",
-                    "x": 12.25,
-                    "z": -1.4000000000000001
+                    "x": 19,
+                    "z": 0
                   },
                   {
                     "id": "queue",
@@ -111,9 +111,8 @@
                     "color": "lavender",
                     "technology": "amazonwebservices",
                     "appearance": "icon",
-                    "group": "Amazon SQS",
-                    "x": 12.950000000000001,
-                    "z": 7.3500000000000005
+                    "x": 19,
+                    "z": 12
                   },
                   {
                     "id": "sentry",
@@ -122,8 +121,8 @@
                     "color": "sky",
                     "technology": "sentry",
                     "appearance": "icon",
-                    "x": 0,
-                    "z": 11.549999999999999
+                    "x": 7,
+                    "z": 12
                   }
                 ],
                 "edges": [
@@ -221,7 +220,64 @@
                     ],
                     "kind": "request",
                     "rate": 0.4,
-                    "speed": 0.95,
+                    "speed": 2.45,
+                    "bounce": false
+                  },
+                  {
+                    "id": "health-check",
+                    "route": [
+                      "edge-3",
+                      "edge-4",
+                      "edge-5",
+                      "edge-5-return",
+                      "edge-4-return",
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.3,
+                    "speed": 2.65,
+                    "bounce": false
+                  },
+                  {
+                    "id": "check-cache",
+                    "route": [
+                      "edge-6",
+                      "edge-6-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.28,
+                    "speed": 2.4,
+                    "bounce": false
+                  },
+                  {
+                    "id": "check-queue",
+                    "route": [
+                      "edge-7",
+                      "edge-7-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.27,
+                    "speed": 2.4,
+                    "bounce": false
+                  },
+                  {
+                    "id": "browser-events",
+                    "route": [
+                      "edge-2"
+                    ],
+                    "kind": "request",
+                    "rate": 0.26,
+                    "speed": 2.05,
+                    "bounce": false
+                  },
+                  {
+                    "id": "api-traces",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "request",
+                    "rate": 0.25,
+                    "speed": 2.1,
                     "bounce": false
                   }
                 ]
@@ -252,7 +308,7 @@
                     "technology": "firebase",
                     "appearance": "icon",
                     "x": -7,
-                    "z": -8.75
+                    "z": -11
                   },
                   {
                     "id": "proxy",
@@ -281,7 +337,7 @@
                     "color": "sand",
                     "technology": "mongodb",
                     "appearance": "icon",
-                    "x": 10.15,
+                    "x": 9,
                     "z": 0
                   }
                 ],
@@ -349,10 +405,19 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-0",
+                    "id": "sign-in",
                     "route": [
                       "edge-0",
-                      "edge-0-return",
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.38,
+                    "speed": 2.25,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-0",
+                    "route": [
                       "edge-1",
                       "edge-2",
                       "edge-3",
@@ -363,8 +428,8 @@
                       "edge-1-return"
                     ],
                     "kind": "request",
-                    "rate": 0.4,
-                    "speed": 0.95,
+                    "rate": 0.42,
+                    "speed": 2.55,
                     "bounce": false
                   }
                 ]
@@ -384,7 +449,7 @@
                     "color": "sky",
                     "technology": "nextjs",
                     "appearance": "icon",
-                    "x": -14,
+                    "x": -12,
                     "z": 0
                   },
                   {
@@ -403,7 +468,7 @@
                     "role": "browser",
                     "color": "sky",
                     "x": 0,
-                    "z": 8.75
+                    "z": 11
                   },
                   {
                     "id": "mongo",
@@ -412,7 +477,7 @@
                     "color": "sand",
                     "technology": "mongodb",
                     "appearance": "icon",
-                    "x": 10.15,
+                    "x": 12,
                     "z": 0
                   }
                 ],
@@ -464,8 +529,8 @@
                       "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.4,
-                    "speed": 0.95,
+                    "rate": 0.37,
+                    "speed": 2.35,
                     "bounce": false
                   },
                   {
@@ -477,8 +542,8 @@
                       "edge-1-return"
                     ],
                     "kind": "request",
-                    "rate": 0.4,
-                    "speed": 0.95,
+                    "rate": 0.3,
+                    "speed": 2.2,
                     "bounce": false
                   }
                 ]
@@ -498,7 +563,7 @@
                     "color": "sky",
                     "technology": "nextjs",
                     "appearance": "icon",
-                    "x": -14,
+                    "x": -12,
                     "z": 0
                   },
                   {
@@ -519,7 +584,7 @@
                     "technology": "mongodb",
                     "appearance": "icon",
                     "x": 0,
-                    "z": 8.75
+                    "z": 12
                   },
                   {
                     "id": "stripe",
@@ -528,7 +593,7 @@
                     "color": "sky",
                     "technology": "stripe",
                     "appearance": "icon",
-                    "x": 10.15,
+                    "x": 12,
                     "z": 0
                   },
                   {
@@ -538,8 +603,8 @@
                     "color": "sky",
                     "technology": "stripe",
                     "appearance": "icon",
-                    "x": 10.15,
-                    "z": -9.450000000000001
+                    "x": 12,
+                    "z": -12
                   }
                 ],
                 "edges": [
@@ -607,12 +672,33 @@
                       "edge-1-return",
                       "edge-2",
                       "edge-2-return",
-                      "edge-0-return",
-                      "edge-3"
+                      "edge-0-return"
                     ],
                     "kind": "request",
-                    "rate": 0.4,
-                    "speed": 0.95,
+                    "rate": 0.36,
+                    "speed": 2.5,
+                    "bounce": false
+                  },
+                  {
+                    "id": "hosted-checkout",
+                    "route": [
+                      "edge-3",
+                      "edge-3-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.29,
+                    "speed": 2.25,
+                    "bounce": false
+                  },
+                  {
+                    "id": "payment",
+                    "route": [
+                      "edge-3",
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.26,
+                    "speed": 2.55,
                     "bounce": false
                   }
                 ]
@@ -632,9 +718,9 @@
                     "color": "sky",
                     "technology": "nextjs",
                     "appearance": "icon",
-                    "group": "Browser and local storage",
-                    "x": -19.599999999999998,
-                    "z": 7
+                    "group": "1. Editor & API",
+                    "x": -27,
+                    "z": 0
                   },
                   {
                     "id": "api",
@@ -643,8 +729,8 @@
                     "color": "sky",
                     "technology": "go",
                     "appearance": "icon",
-                    "group": "Lightsail API",
-                    "x": -9.799999999999999,
+                    "group": "1. Editor & API",
+                    "x": -15,
                     "z": 0
                   },
                   {
@@ -654,9 +740,9 @@
                     "color": "sky",
                     "technology": "stripe",
                     "appearance": "icon",
-                    "group": "Stripe billing",
-                    "x": -9.799999999999999,
-                    "z": -9.799999999999999
+                    "group": "2. Billing & access",
+                    "x": -15,
+                    "z": -13
                   },
                   {
                     "id": "inbox",
@@ -665,8 +751,9 @@
                     "color": "sand",
                     "technology": "mongodb",
                     "appearance": "icon",
-                    "x": 0,
-                    "z": 7
+                    "x": -3,
+                    "z": 0,
+                    "group": "3. Durable jobs"
                   },
                   {
                     "id": "dispatcher",
@@ -675,9 +762,9 @@
                     "color": "sky",
                     "technology": "go",
                     "appearance": "icon",
-                    "group": "Billing workers",
-                    "x": 9.799999999999999,
-                    "z": 0
+                    "group": "3. Durable jobs",
+                    "x": -3,
+                    "z": 13
                   },
                   {
                     "id": "queue",
@@ -686,9 +773,9 @@
                     "color": "lavender",
                     "technology": "amazonwebservices",
                     "appearance": "icon",
-                    "group": "Amazon SQS",
-                    "x": 19.599999999999998,
-                    "z": 7
+                    "group": "3. Durable jobs",
+                    "x": 9,
+                    "z": 13
                   },
                   {
                     "id": "worker",
@@ -697,9 +784,9 @@
                     "color": "sky",
                     "technology": "go",
                     "appearance": "icon",
-                    "group": "Billing workers",
-                    "x": 19.599999999999998,
-                    "z": -9.799999999999999
+                    "group": "2. Billing & access",
+                    "x": 9,
+                    "z": -13
                   },
                   {
                     "id": "entitlement",
@@ -708,8 +795,9 @@
                     "color": "sand",
                     "technology": "mongodb",
                     "appearance": "icon",
-                    "x": 9.799999999999999,
-                    "z": -17.5
+                    "x": 21,
+                    "z": -13,
+                    "group": "2. Billing & access"
                   },
                   {
                     "id": "dlq",
@@ -718,9 +806,9 @@
                     "color": "lavender",
                     "technology": "amazonwebservices",
                     "appearance": "icon",
-                    "group": "Amazon SQS",
-                    "x": 19.599999999999998,
-                    "z": 16.099999999999998
+                    "group": "3. Durable jobs",
+                    "x": 9,
+                    "z": 26
                   }
                 ],
                 "edges": [
@@ -812,21 +900,77 @@
                 ],
                 "flows": [
                   {
-                    "id": "flow-1",
+                    "id": "editor-access",
+                    "route": [
+                      "edge-0",
+                      "edge-0-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.33,
+                    "speed": 2.35,
+                    "bounce": false
+                  },
+                  {
+                    "id": "record-webhook",
                     "route": [
                       "edge-1",
                       "edge-2",
+                      "edge-2-return",
+                      "edge-1-return"
+                    ],
+                    "kind": "request",
+                    "rate": 0.34,
+                    "speed": 2.6,
+                    "bounce": false
+                  },
+                  {
+                    "id": "send-pending",
+                    "route": [
+                      "edge-3",
                       "edge-3-return",
-                      "edge-4",
+                      "edge-4"
+                    ],
+                    "kind": "request",
+                    "rate": 0.35,
+                    "speed": 2.45,
+                    "bounce": false
+                  },
+                  {
+                    "id": "flow-1",
+                    "route": [
                       "edge-5",
                       "edge-6",
                       "edge-6-return",
                       "edge-7"
                     ],
                     "kind": "request",
-                    "rate": 0.4,
-                    "speed": 0.95,
+                    "rate": 0.35,
+                    "speed": 2.65,
                     "bounce": false
+                  },
+                  {
+                    "id": "repeated-failure",
+                    "route": [
+                      "edge-8"
+                    ],
+                    "kind": "failure",
+                    "rate": 0.24,
+                    "speed": 2.2,
+                    "bounce": false
+                  }
+                ],
+                "groups": [
+                  {
+                    "name": "1. Editor & API",
+                    "color": "#4478D7"
+                  },
+                  {
+                    "name": "2. Billing & access",
+                    "color": "#7955C5"
+                  },
+                  {
+                    "name": "3. Durable jobs",
+                    "color": "#168C7D"
                   }
                 ]
               }
