@@ -246,7 +246,7 @@
                 "role": "worker",
                 "color": "lavender",
                 "x": 8,
-                "z": -29
+                "z": -23
               }
             ],
             "edges": [
@@ -933,7 +933,7 @@
                 "role": "worker",
                 "color": "lavender",
                 "x": 8,
-                "z": -29,
+                "z": -23,
                 "group": "2. Home feed"
               },
               {
