@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "title": "Reviewer · Antes e depois",
+  "groupName": "Evolução de Arquitetura",
+  "pattern": "Tarefas em segundo plano, preparo e reaproveitamento de texto",
+  "summary": "Acompanhe a evolução de uma plataforma fictícia de revisão pelos clientes, APIs, filas, preparo de arquivos, modelos e dados compartilhados. Compare os custos simulados da revisão.",
+  "scope": "Comparação fictícia e simplificada. O desenho mais recente mostra preparo dedicado e texto reutilizável nos fluxos compatíveis. Documentos, volume, taxas e custos são sintéticos.",
+  "steps": {
+    "overview": {
+      "title": "Como mudou a revisão de documentos?",
+      "description": "Ana envia o mesmo lote nos dois desenhos. Siga a tarefa pela API, fila e worker da arquitetura inicial. Na versão mais recente, um processador recebe os arquivos e uma API de assistência transmite rascunhos interativos. A revisão em lote e a interativa compartilham o acesso aos modelos. Na revisão em lote, a rubrica vinha da atividade, mas o rascunho seguia o mesmo estilo para todos os professores. Na revisão guiada, Ana pode pedir um tom encorajador com emojis, enquanto outro professor prefere comentários diretos, sem emojis. As tabelas comparam cinco volumes de usuários ativos por mês, com dez revisões por pessoa. Observe o custo fixo de Redis e computação em baixo volume e como workers e chamadas ao modelo pesam com o aumento de uso."
+    }
+  }
+}

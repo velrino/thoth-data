@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "type": "study",
+  "title": "Reviewer · Document Review Before and After",
+  "groupName": "Architecture Evolution",
+  "pattern": "Background jobs, document preparation and artifact reuse",
+  "summary": "Trace the evolution of a fictional review platform across clients, interactive and batch APIs, file intake, job queues, model access and shared data. Compare modeled review costs.",
+  "scope": "A fictional, simplified architecture comparison. The later snapshot depicts dedicated preparation and reusable text on supported paths. Documents, volume, rates, and costs are synthetic.",
+  "sources": [
+    {
+      "title": "Azure Architecture Center · Queue-Based Load Leveling",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/queue-based-load-leveling"
+    }
+  ]
+}

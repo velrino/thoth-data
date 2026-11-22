@@ -1,0 +1,27 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "review-desk",
+  "title": "Reviewer · Document Review Before and After",
+  "entries": [
+    {
+      "kind": "lesson",
+      "id": "review-desk",
+      "title": "Reviewer · Document Review Before and After",
+      "complete": false,
+      "steps": [
+        {
+          "id": "overview",
+          "title": "How did document review change?",
+          "description": "Ana submits the same batch in both designs. Follow the classic job through the API, queue and review worker. The later platform also accepts uploads through a file processor and streams interactive drafts through an assistant API. The execution paths share model access and persist review outcomes. Batch review applied the assignment rubric and drafted feedback in a common style. In guided review, Ana can ask for encouragement with emojis, while another teacher can ask for direct comments without them. The cost tables compare five monthly active-user volumes, assuming ten reviews per person. Follow the fixed Redis and compute costs at low volume, then compare worker capacity and model calls as usage grows.",
+          "metrics": [],
+          "scene": {
+            "nodes": [],
+            "edges": [],
+            "flows": []
+          }
+        }
+      ]
+    }
+  ]
+}
