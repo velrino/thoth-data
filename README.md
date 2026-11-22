@@ -1,4 +1,8 @@
-# Thoth Community Data
+<p align="center">
+  <img src="assets/logo/thoth.png" alt="Thoth logo" width="240" />
+</p>
+
+<h1 align="center">Thoth Community Data</h1>
 
 `velrino/thoth-data` is the default official catalog repository for Thoth, an interactive tool for building, animating, and sharing architecture diagrams. This public repository gives people a place to inspect diagram JSON, review changes in Git, and propose additions or corrections. [Open Thoth](https://thoth.velrino.co/)
 
