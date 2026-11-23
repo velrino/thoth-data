@@ -1,0 +1,171 @@
+{
+  "format": "thoth-workspace",
+  "schemaVersion": 1,
+  "id": "study-pdf-upload",
+  "title": "Extract structured data from PDFs",
+  "entries": [
+    {
+      "kind": "lesson",
+      "id": "pdf-upload",
+      "title": "Extract structured data from PDFs",
+      "complete": false,
+      "steps": [
+        {
+          "id": "upload",
+          "title": "Extract the fields you need",
+          "description": "Upload a batch of PDFs with different layouts. The API sends each file to the File Processor. Gemini reads the available text or uses OCR on scans and fills the fields defined in a JSON schema. The worker checks each value against its format and source text before saving. Missing or ambiguous values stay null. This scenario assumes three seconds per PDF, with several files processed in parallel.",
+          "metrics": [],
+          "scene": {
+            "nodes": [
+              {
+                "id": "web",
+                "label": "Web client",
+                "role": "browser",
+                "color": "sky",
+                "technology": "react",
+                "appearance": "icon",
+                "x": 6,
+                "z": -13
+              },
+              {
+                "id": "api",
+                "label": "API",
+                "role": "api",
+                "color": "sky",
+                "technology": "go",
+                "appearance": "icon",
+                "x": 12,
+                "z": -13
+              },
+              {
+                "id": "processor",
+                "label": "File Processor",
+                "role": "worker",
+                "color": "sky",
+                "technology": "go",
+                "appearance": "icon",
+                "x": 20,
+                "z": -13
+              },
+              {
+                "id": "ocr",
+                "label": "Gemini OCR",
+                "role": "external",
+                "color": "sky",
+                "technology": "gemini",
+                "appearance": "icon",
+                "x": 28,
+                "z": -13
+              },
+              {
+                "id": "job",
+                "label": "Firestore",
+                "role": "database",
+                "color": "sage",
+                "technology": "firebase",
+                "appearance": "icon",
+                "x": 12,
+                "z": -5
+              },
+              {
+                "id": "files",
+                "label": "Cloud Storage",
+                "role": "storage",
+                "color": "sage",
+                "technology": "googlecloud",
+                "appearance": "icon",
+                "x": 20,
+                "z": -19
+              }
+            ],
+            "edges": [
+              {
+                "id": "upload-pdf",
+                "from": "web",
+                "to": "api",
+                "label": "Send PDF"
+              },
+              {
+                "id": "create",
+                "from": "api",
+                "to": "job",
+                "label": "Register job"
+              },
+              {
+                "id": "start",
+                "from": "api",
+                "to": "processor",
+                "label": "Submit PDF for processing"
+              },
+              {
+                "id": "read",
+                "from": "processor",
+                "to": "ocr",
+                "label": "Read text or scan"
+              },
+              {
+                "id": "text",
+                "from": "ocr",
+                "to": "processor",
+                "label": "Fields and evidence"
+              },
+              {
+                "id": "save",
+                "from": "processor",
+                "to": "files",
+                "label": "Save checked JSON"
+              },
+              {
+                "id": "saved",
+                "from": "files",
+                "to": "processor",
+                "label": "Write complete"
+              },
+              {
+                "id": "progress",
+                "from": "processor",
+                "to": "job",
+                "label": "Update status"
+              },
+              {
+                "id": "live",
+                "from": "job",
+                "to": "web",
+                "label": "Show progress"
+              }
+            ],
+            "flows": [
+              {
+                "id": "upload-request",
+                "route": [
+                  "upload-pdf",
+                  "start",
+                  "read",
+                  "text",
+                  "save",
+                  "saved",
+                  "progress",
+                  "live"
+                ],
+                "kind": "request",
+                "rate": 0.36,
+                "speed": 1.4,
+                "bounce": false
+              },
+              {
+                "id": "register-job",
+                "route": [
+                  "create"
+                ],
+                "kind": "request",
+                "rate": 0.36,
+                "speed": 1.4,
+                "bounce": false
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

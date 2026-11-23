@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "type": "study",
+  "groupName": "Data Pipelines",
+  "pattern": "PDF extraction with field-level evidence",
+  "summary": "Extract the same set of fields from PDFs with different layouts and check the values before saving the JSON.",
+  "scope": "Illustrative design. The scenario assumes three seconds per PDF. The API registers jobs so other uploads can arrive while the workers process documents with bounded concurrency.",
+  "showConnectionLabels": false,
+  "sources": [
+    {
+      "title": "Google Gemini · Document understanding",
+      "url": "https://ai.google.dev/gemini-api/docs/document-processing"
+    },
+    {
+      "title": "Google Gemini · Structured outputs",
+      "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+    }
+  ],
+  "componentNotes": {
+    "web": "Send the PDF to the API and follow the status for its job.",
+    "api": "Receive the upload, register its initial status in Firestore and submit the PDF and job ID to the Go File Processor.",
+    "job": "Store the initial status from the API and progress updates from the worker. The web client listens for changes to its job.",
+    "processor": "Process multiple PDFs concurrently within provider limits. Check each field against its expected type, format and supporting text before saving the JSON. Keep missing or ambiguous values null.",
+    "ocr": "Use embedded text where it is readable and OCR for scans. Fill the agreed JSON schema and attach a source excerpt to each extracted value for validation.",
+    "files": "Store the validated JSON and its supporting excerpts. A field without a clear value stays null."
+  }
+}

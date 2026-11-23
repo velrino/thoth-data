@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "title": "Extração de dados de PDFs",
+  "groupName": "Pipelines de Dados",
+  "pattern": "Extração de campos com evidência",
+  "summary": "Extraia os mesmos campos de PDFs com layouts diferentes e valide os valores antes de salvar o JSON.",
+  "scope": "Cenário ilustrativo com três segundos por PDF. A API registra as tarefas e pode receber novos envios enquanto os workers processam os documentos com concorrência limitada.",
+  "steps": {
+    "upload": {
+      "title": "Extraia os campos que você precisa",
+      "description": "Você envia um lote de PDFs com layouts diferentes. A API encaminha cada arquivo ao File Processor. O Gemini lê o texto disponível ou usa OCR nas digitalizações e preenche os campos definidos no esquema JSON. Antes de salvar, o worker confere o formato de cada valor e o trecho de onde ele saiu. Campos ausentes ou ambíguos ficam nulos. Neste cenário, cada PDF leva 3 segundos e vários arquivos são processados em paralelo.",
+      "nodes": {
+        "web": {
+          "label": "Cliente web"
+        }
+      },
+      "edges": {
+        "upload-pdf": {
+          "label": "Enviar PDF"
+        },
+        "create": {
+          "label": "Registrar tarefa"
+        },
+        "start": {
+          "label": "Enviar PDF para processamento"
+        },
+        "read": {
+          "label": "Ler texto ou imagem"
+        },
+        "text": {
+          "label": "Campos e evidências"
+        },
+        "save": {
+          "label": "Salvar JSON conferido"
+        },
+        "saved": {
+          "label": "Gravação concluída"
+        },
+        "progress": {
+          "label": "Atualizar estado"
+        },
+        "live": {
+          "label": "Exibir progresso"
+        }
+      }
+    }
+  },
+  "componentNotes": {
+    "web": "Envia o PDF à API e acompanha o estado da tarefa.",
+    "api": "Recebe o upload, registra o estado inicial no Firestore e envia o PDF e o ID da tarefa para o File Processor em Go.",
+    "job": "Guarda o estado inicial enviado pela API e o progresso informado pelo worker. O cliente web acompanha as atualizações da sua tarefa.",
+    "processor": "Processa vários PDFs em paralelo dentro do limite do provedor. Confere o tipo, o formato e o trecho que sustenta cada valor antes de salvar o JSON. Campos ausentes ou ambíguos ficam nulos.",
+    "ocr": "Usa o texto embutido quando legível e faz OCR das digitalizações. Preenche o esquema JSON e associa cada valor extraído a um trecho do documento para validação.",
+    "files": "Guarda o JSON validado e os trechos que sustentam os valores. Um campo sem valor claro fica nulo."
+  }
+}
