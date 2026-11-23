@@ -13,7 +13,7 @@
         {
           "id": "upload",
           "title": "Extract the fields you need",
-          "description": "Upload a batch of PDFs with different layouts. The API sends each file to the File Processor. Gemini reads the available text or uses OCR on scans and fills the fields defined in a JSON schema. The worker checks each value against its format and source text before saving. Missing or ambiguous values stay null. This scenario assumes three seconds per PDF, with several files processed in parallel.",
+          "description": "The API stores each PDF in Cloud Storage and queues a job with its file reference. Cloud Tasks dispatches jobs to the File Processor on Cloud Run. The worker reads the PDF, asks a multimodal LLM to extract the requested fields, and checks each value against the source before saving it in Firestore. Ambiguous values stay null. The client sees the result when the job updates.",
           "metrics": [],
           "scene": {
             "nodes": [
@@ -24,7 +24,7 @@
                 "color": "sky",
                 "technology": "react",
                 "appearance": "icon",
-                "x": 6,
+                "x": 0,
                 "z": -13
               },
               {
@@ -34,7 +34,17 @@
                 "color": "sky",
                 "technology": "go",
                 "appearance": "icon",
-                "x": 12,
+                "x": 8,
+                "z": -13
+              },
+              {
+                "id": "queue",
+                "label": "Cloud Tasks",
+                "role": "queue",
+                "color": "sky",
+                "technology": "cloudtasks",
+                "appearance": "icon",
+                "x": 16,
                 "z": -13
               },
               {
@@ -44,18 +54,18 @@
                 "color": "sky",
                 "technology": "go",
                 "appearance": "icon",
-                "x": 20,
+                "x": 24,
                 "z": -13
               },
               {
                 "id": "ocr",
-                "label": "Gemini OCR",
+                "label": "LLM",
                 "role": "external",
                 "color": "sky",
-                "technology": "gemini",
-                "appearance": "icon",
-                "x": 28,
-                "z": -13
+                "x": 32,
+                "z": -13,
+                "technology": "vertexai",
+                "appearance": "icon"
               },
               {
                 "id": "job",
@@ -64,7 +74,7 @@
                 "color": "sage",
                 "technology": "firebase",
                 "appearance": "icon",
-                "x": 12,
+                "x": 8,
                 "z": -5
               },
               {
@@ -74,8 +84,8 @@
                 "color": "sage",
                 "technology": "googlecloud",
                 "appearance": "icon",
-                "x": 20,
-                "z": -19
+                "x": 16,
+                "z": -20
               }
             ],
             "edges": [
@@ -86,22 +96,58 @@
                 "label": "Send PDF"
               },
               {
+                "id": "store",
+                "from": "api",
+                "to": "files",
+                "label": "Store PDF"
+              },
+              {
+                "id": "stored",
+                "from": "files",
+                "to": "api",
+                "label": "Object reference"
+              },
+              {
                 "id": "create",
                 "from": "api",
                 "to": "job",
                 "label": "Register job"
               },
               {
+                "id": "registered",
+                "from": "job",
+                "to": "api",
+                "label": "Job ID"
+              },
+              {
                 "id": "start",
                 "from": "api",
+                "to": "queue",
+                "label": "Enqueue job ID and file reference"
+              },
+              {
+                "id": "dispatch",
+                "from": "queue",
                 "to": "processor",
-                "label": "Submit PDF for processing"
+                "label": "Dispatch task"
+              },
+              {
+                "id": "fetch",
+                "from": "processor",
+                "to": "files",
+                "label": "Read PDF"
+              },
+              {
+                "id": "fetched",
+                "from": "files",
+                "to": "processor",
+                "label": "PDF content"
               },
               {
                 "id": "read",
                 "from": "processor",
                 "to": "ocr",
-                "label": "Read text or scan"
+                "label": "Extract fields"
               },
               {
                 "id": "text",
@@ -110,28 +156,16 @@
                 "label": "Fields and evidence"
               },
               {
-                "id": "save",
-                "from": "processor",
-                "to": "files",
-                "label": "Save checked JSON"
-              },
-              {
-                "id": "saved",
-                "from": "files",
-                "to": "processor",
-                "label": "Write complete"
-              },
-              {
                 "id": "progress",
                 "from": "processor",
                 "to": "job",
-                "label": "Update status"
+                "label": "Save result and status"
               },
               {
                 "id": "live",
                 "from": "job",
                 "to": "web",
-                "label": "Show progress"
+                "label": "Show result"
               }
             ],
             "flows": [
@@ -139,23 +173,18 @@
                 "id": "upload-request",
                 "route": [
                   "upload-pdf",
+                  "store",
+                  "stored",
+                  "create",
+                  "registered",
                   "start",
+                  "dispatch",
+                  "fetch",
+                  "fetched",
                   "read",
                   "text",
-                  "save",
-                  "saved",
                   "progress",
                   "live"
-                ],
-                "kind": "request",
-                "rate": 0.36,
-                "speed": 1.4,
-                "bounce": false
-              },
-              {
-                "id": "register-job",
-                "route": [
-                  "create"
                 ],
                 "kind": "request",
                 "rate": 0.36,

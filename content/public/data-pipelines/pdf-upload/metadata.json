@@ -4,8 +4,8 @@
   "groupName": "Data Pipelines",
   "pattern": "PDF extraction with field-level evidence",
   "summary": "Extract the same set of fields from PDFs with different layouts and check the values before saving the JSON.",
-  "scope": "Illustrative design. The scenario assumes three seconds per PDF. The API registers jobs so other uploads can arrive while the workers process documents with bounded concurrency.",
-  "showConnectionLabels": false,
+  "scope": "Illustrative design. At an assumed three seconds per PDF, ten concurrent workers can complete about three PDFs per second. The example queue allows ten concurrent dispatches and a steady dispatch rate of up to five per second.",
+  "showConnectionLabels": true,
   "sources": [
     {
       "title": "Google Gemini · Document understanding",
@@ -14,14 +14,19 @@
     {
       "title": "Google Gemini · Structured outputs",
       "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+    },
+    {
+      "title": "Google Cloud Tasks · Dispatch limits and retries",
+      "url": "https://cloud.google.com/tasks/docs/configuring-queues"
     }
   ],
   "componentNotes": {
     "web": "Send the PDF to the API and follow the status for its job.",
-    "api": "Receive the upload, register its initial status in Firestore and submit the PDF and job ID to the Go File Processor.",
-    "job": "Store the initial status from the API and progress updates from the worker. The web client listens for changes to its job.",
-    "processor": "Process multiple PDFs concurrently within provider limits. Check each field against its expected type, format and supporting text before saving the JSON. Keep missing or ambiguous values null.",
+    "api": "Store the PDF and register the job. Enqueue its job ID and object reference so the worker can fetch the file.",
+    "job": "Keep the job status and validated fields. The client listens for updates to its job.",
+    "processor": "Fetch the PDF on Cloud Run. Validate the extracted values and their source excerpts before saving by job ID. Check for a completed job on redelivery.",
     "ocr": "Use embedded text where it is readable and OCR for scans. Fill the agreed JSON schema and attach a source excerpt to each extracted value for validation.",
-    "files": "Store the validated JSON and its supporting excerpts. A field without a clear value stays null."
+    "files": "Keep the source PDF available for processing and retries.",
+    "queue": "Dispatch one task per PDF. Limit concurrent requests and the dispatch rate to stay within worker capacity and model quotas. Retry transient failures with backoff."
   }
 }

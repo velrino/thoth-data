@@ -4,11 +4,11 @@
   "groupName": "Pipelines de Dados",
   "pattern": "Extração de campos com evidência",
   "summary": "Extraia os mesmos campos de PDFs com layouts diferentes e valide os valores antes de salvar o JSON.",
-  "scope": "Cenário ilustrativo com três segundos por PDF. A API registra as tarefas e pode receber novos envios enquanto os workers processam os documentos com concorrência limitada.",
+  "scope": "Cenário ilustrativo. Com três segundos por PDF e dez tarefas em paralelo, o sistema pode concluir cerca de três PDFs por segundo. A fila permite dez despachos simultâneos e uma taxa sustentada de até cinco despachos por segundo.",
   "steps": {
     "upload": {
       "title": "Extraia os campos que você precisa",
-      "description": "Você envia um lote de PDFs com layouts diferentes. A API encaminha cada arquivo ao File Processor. O Gemini lê o texto disponível ou usa OCR nas digitalizações e preenche os campos definidos no esquema JSON. Antes de salvar, o worker confere o formato de cada valor e o trecho de onde ele saiu. Campos ausentes ou ambíguos ficam nulos. Neste cenário, cada PDF leva 3 segundos e vários arquivos são processados em paralelo.",
+      "description": "A API guarda cada PDF no Cloud Storage e enfileira uma tarefa com a referência do arquivo. O Cloud Tasks despacha a tarefa para o File Processor no Cloud Run. O worker lê o PDF, pede a um LLM multimodal que extraia os campos e confere cada valor no documento antes de salvá-lo no Firestore. Valores ambíguos ficam nulos. O cliente vê o resultado quando o estado da tarefa muda.",
       "nodes": {
         "web": {
           "label": "Cliente web"
@@ -18,39 +18,52 @@
         "upload-pdf": {
           "label": "Enviar PDF"
         },
+        "store": {
+          "label": "Guardar PDF"
+        },
+        "stored": {
+          "label": "Referência do arquivo"
+        },
         "create": {
           "label": "Registrar tarefa"
         },
+        "registered": {
+          "label": "ID da tarefa"
+        },
         "start": {
-          "label": "Enviar PDF para processamento"
+          "label": "Enfileirar ID e referência"
+        },
+        "dispatch": {
+          "label": "Despachar tarefa"
+        },
+        "fetch": {
+          "label": "Ler PDF"
+        },
+        "fetched": {
+          "label": "Conteúdo do PDF"
         },
         "read": {
-          "label": "Ler texto ou imagem"
+          "label": "Extrair campos"
         },
         "text": {
           "label": "Campos e evidências"
         },
-        "save": {
-          "label": "Salvar JSON conferido"
-        },
-        "saved": {
-          "label": "Gravação concluída"
-        },
         "progress": {
-          "label": "Atualizar estado"
+          "label": "Salvar resultado e estado"
         },
         "live": {
-          "label": "Exibir progresso"
+          "label": "Exibir resultado"
         }
       }
     }
   },
   "componentNotes": {
     "web": "Envia o PDF à API e acompanha o estado da tarefa.",
-    "api": "Recebe o upload, registra o estado inicial no Firestore e envia o PDF e o ID da tarefa para o File Processor em Go.",
-    "job": "Guarda o estado inicial enviado pela API e o progresso informado pelo worker. O cliente web acompanha as atualizações da sua tarefa.",
-    "processor": "Processa vários PDFs em paralelo dentro do limite do provedor. Confere o tipo, o formato e o trecho que sustenta cada valor antes de salvar o JSON. Campos ausentes ou ambíguos ficam nulos.",
+    "api": "Guarda o PDF, registra a tarefa e enfileira o ID e a referência ao arquivo.",
+    "job": "Guarda o estado e os campos validados. O cliente acompanha as atualizações da sua tarefa.",
+    "processor": "Lê o PDF no Cloud Run e valida os campos e as evidências antes de salvar pelo ID da tarefa. Em uma nova entrega, verifica se o trabalho já foi concluído.",
     "ocr": "Usa o texto embutido quando legível e faz OCR das digitalizações. Preenche o esquema JSON e associa cada valor extraído a um trecho do documento para validação.",
-    "files": "Guarda o JSON validado e os trechos que sustentam os valores. Um campo sem valor claro fica nulo."
+    "files": "Mantém o PDF disponível para processamento e novas tentativas.",
+    "queue": "Despacha uma tarefa por PDF. Limita a concorrência e a taxa de despacho conforme a capacidade dos workers e a cota do modelo. Repete falhas transitórias com intervalos crescentes."
   }
 }
